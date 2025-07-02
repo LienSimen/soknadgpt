@@ -5,7 +5,7 @@
 ## Running it locally
 After cloning this repo, you can run it locally by following these steps:
 
-1. Install [Wasp](https://wasp.sh) by running `curl -sSL https://get.wasp-lang.dev/installer.sh | sh` in your terminal.
+1. Install [Wasp](https://wasp.sh) by running `curl -sSL https://get.wasp.sh/installer.sh | sh` in your terminal.
 2. Create a `.env.server` file in the root of the project
 3. Copy the `env.server.example` file contents to `.env.server` and fill in your API keys
 4. Make sure you have a Database connected and running. Here are two quick options:

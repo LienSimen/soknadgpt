@@ -19,7 +19,7 @@ app CoverLetterGPT {
         "<meta name=\"twitter:image:height\" content=\"400\" />",
         "<meta name=\"twitter:card\" content=\"summary_large_image\" />",
   ],
-  // 🔐 Auth out of the box! https://wasp-lang.dev/docs/language/features#authentication--authorization
+  // 🔐 Auth out of the box! https://wasp.sh/docs/language/features#authentication--authorization
   auth: {
     userEntity: User,
     methods: {
@@ -38,13 +38,13 @@ app CoverLetterGPT {
     provider: SendGrid,
     defaultFrom: {
       name: "CoverLetterGPT",
-      email: "vince@wasp-lang.dev",
+      email: "vince@wasp.sh",
     },
   },
 }
 
 /* 📡 These are the Wasp Routes (You can protect them easily w/ 'authRequired: true');
- * https://wasp-lang.dev/docs/language/features#route
+ * https://wasp.sh/docs/language/features#route
  */
 
 route RootRoute { path: "/", to: MainPage }
@@ -84,7 +84,7 @@ page CheckoutPage {
 route TosRoute { path: "/tos", to: TosPage }
 page TosPage {
   component: import Tos from "@src/client/legal/TosPage"
-} 
+}
 
 route PrivacyRoute { path: "/privacy", to: PrivacyPage }
 page PrivacyPage {
@@ -92,7 +92,7 @@ page PrivacyPage {
 }
 
 /* ⛑ These are the Wasp Operations, which allow the client and server to interact:
- * https://wasp-lang.dev/docs/language/features#queries-and-actions-aka-operations
+ * https://wasp.sh/docs/language/features#queries-and-actions-aka-operations
  */
 
 // 📝 Actions aka Mutations
@@ -208,8 +208,8 @@ query getCoverLetterCount {
 }
 
 /* 📡 These are custom Wasp API Endpoints. Use them for callbacks, webhooks, etc.
- * https://wasp-lang.dev/docs/language/features#apis
- */ 
+ * https://wasp.sh/docs/language/features#apis
+ */
 
 api stripeWebhook {
   fn: import { stripeWebhook } from "@src/server/webhooks.js",
@@ -224,7 +224,7 @@ api lnLogin {
 }
 
 /* 🕵️‍♂️ These are the Wasp Cron Jobs. Use them to set up recurring tasks or queues:
- * https://wasp-lang.dev/docs/language/features#jobs
+ * https://wasp.sh/docs/language/features#jobs
  */
 
 job checkUserSubscription {
@@ -233,7 +233,7 @@ job checkUserSubscription {
     fn: import { updateUserSubscription } from "@src/server/workers/updateUserSubscription.js"
   },
   schedule: {
-    cron: "0 23 * * *" 
+    cron: "0 23 * * *"
   },
   entities: [User]
 }
