@@ -1,7 +1,7 @@
 # SøknadGPT
 
 Norwegian dub. Note for Windows users:
-Make sure you are running commands inside a real WSL (Windows Subsystem for Linux) terminal (like Ubuntu from the Start menu), not just using /wsl or a Windows path in your terminal. Running commands from a Windows terminal with /wsl is not the same as being inside the actual Linux environment, and can cause many issues. If you use VSL, you install "Remote - WSL" and connect via that.
+Make sure you are running commands inside a real WSL (Windows Subsystem for Linux) terminal (like Ubuntu from the Start menu), not just using /wsl or a Windows path in your terminal. Running commands from a Windows terminal with /wsl is not the same as being inside the actual Linux environment, and can cause many issues. If you use VSC, you install "Remote - WSL" and connect via that.
 
 <img src='public/homepage.png' width='600px'/>
 
