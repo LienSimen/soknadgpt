@@ -27,7 +27,7 @@ export default function DescriptionModal({ description, isOpen, onClose, onOpen 
     <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={copyButtonRef}>
       <ModalOverlay backdropFilter='auto' backdropInvert='15%' backdropBlur='2px' />
       <ModalContent maxH='lg' maxW='lg' bgColor='bg-modal'>
-        <ModalHeader>Job Description</ModalHeader>
+        <ModalHeader>Stillingsbeskrivelse</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Textarea
@@ -47,7 +47,7 @@ export default function DescriptionModal({ description, isOpen, onClose, onOpen 
 
         <ModalFooter>
           <Button size='sm' variant='outline' onClick={onClose}>
-            Close
+            Lukk
           </Button>
         </ModalFooter>
       </ModalContent>

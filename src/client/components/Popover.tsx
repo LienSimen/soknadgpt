@@ -48,6 +48,7 @@ export function EditPopover({ setTooltip, selectedText, user, ...props }: EditPo
         }
         return lnPayment;
       }
+      return null;
     } catch (error) {
       console.error('Error processing payment, please try again');
       return null;
@@ -106,7 +107,7 @@ export function EditPopover({ setTooltip, selectedText, user, ...props }: EditPo
       window.getSelection()?.removeAllRanges();
       return;
     }
-    let lnPayment: LnPayment | undefined;
+    let lnPayment: LnPayment | null = null;
     if (userInfo?.isUsingLn) {
       if (userInfo.credits > 0) {
         onPayOpen();
@@ -117,7 +118,7 @@ export function EditPopover({ setTooltip, selectedText, user, ...props }: EditPo
         console.error('error paying with ln: ', error);
       }
     }
-    replaceSelectedText({ improvement: value, lnPayment });
+    replaceSelectedText({ improvement: value, lnPayment: lnPayment as LnPayment });
     window.getSelection()?.removeAllRanges();
   };
 
@@ -125,24 +126,24 @@ export function EditPopover({ setTooltip, selectedText, user, ...props }: EditPo
     <>
       <VStack {...props} gap={1} bgColor='bg-modal' borderRadius='lg' boxShadow='2xl'>
         <Box layerStyle='cardLg' p={3}>
-          <Text fontSize='sm' textAlign='center'>
-            🤔 Ask GPT to make this part more..
-          </Text>
-          <ButtonGroup size='xs' p={1} variant='solid' colorScheme='purple' isAttached>
-            <Button size='xs' color='black' fontSize='xs' onClick={() => handleClick('concise')}>
-              Concise
+            <Text fontSize='sm' textAlign='center'>
+            🤔 Be GPT om å gjøre denne delen mer..
+            </Text>
+            <ButtonGroup size='xs' p={1} variant='solid' colorScheme='purple' isAttached>
+            <Button size='xs' color='black' fontSize='xs' onClick={() => handleClick('kortfattet')}>
+              Kortfattet
             </Button>
 
-            <Button size='xs' color='black' fontSize='xs' onClick={() => handleClick('detailed')}>
-              Detailed
+            <Button size='xs' color='black' fontSize='xs' onClick={() => handleClick('detaljert')}>
+              Detaljert
             </Button>
 
-            <Button size='xs' color='black' fontSize='xs' onClick={() => handleClick('Professional')}>
-              Professional
+            <Button size='xs' color='black' fontSize='xs' onClick={() => handleClick('profesjonell')}>
+              Profesjonell
             </Button>
 
-            <Button size='xs' color='black' fontSize='xs' onClick={() => handleClick('informal')}>
-              Informal
+            <Button size='xs' color='black' fontSize='xs' onClick={() => handleClick('uformell')}>
+              Uformell
             </Button>
           </ButtonGroup>
         </Box>

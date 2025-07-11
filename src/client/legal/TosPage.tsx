@@ -1,15 +1,15 @@
-import BorderBox from '../components/BorderBox';
-import { useEffect } from 'react';
-import LegalSection from './components/legalSection';
-import { 
-  Heading, 
-  Text, 
-  VStack, 
-  UnorderedList, 
-  ListItem, 
+import BorderBox from "../components/BorderBox";
+import { useEffect } from "react";
+import LegalSection from "./components/legalSection";
+import {
+  Heading,
+  Text,
+  VStack,
+  UnorderedList,
+  ListItem,
   Link,
-  Box
-} from '@chakra-ui/react';
+  Box,
+} from "@chakra-ui/react";
 
 const TermsOfService = () => {
   useEffect(() => {
@@ -18,274 +18,558 @@ const TermsOfService = () => {
 
   return (
     <BorderBox>
-      <VStack maxW='4xl' mx='auto' p={6} spacing={6} align='flex-start'>
-        <Heading as='h1' size='xl' mb={6}>Terms of Service</Heading>
-        <Text fontSize='sm' color='gray.600' mb={6}>Last updated: {new Date().toLocaleDateString()}</Text>
+      <VStack maxW="4xl" mx="auto" p={6} spacing={6} align="flex-start">
+        <Heading as="h1" size="xl" mb={6}>
+          Vilkår for bruk
+        </Heading>
+        <Text fontSize="sm" color="gray.600" mb={6}>
+          Sist oppdatert: {new Date().toLocaleDateString("nb-NO")}
+        </Text>
 
-        <LegalSection title='1. Company Information (Impressum)'>
+        <LegalSection title="1. Firmaopplysninger (Impressum)">
           <Text>
-            Canger & Shahab Crimpin GbR
+            <strong>Navn på organisasjon:</strong> Lien Tech
             <br />
-            Zum Steinberg 12, 69121 Heidelberg, Germany
+            <strong>Organisasjonsnummer:</strong> 935820057
             <br />
-            Email: info.crimpin@gmail@.com
+            <strong>Adresse:</strong> Kristofer Jansons Vei 63c
             <br />
-            Partners: Canger & Shahab Crimpin GbR
+            Bergen, Norge
+            <br />
+            <strong>Telefonnummer:</strong> NO(+47) 45200242
+            <br />
+            <strong>E-post:</strong> Simen@cvcv.no
           </Text>
         </LegalSection>
 
-        <LegalSection title='2. Description of Service'>
-          <Text>
-            CoverLetterGPT is a SaaS application that uses AI technology to assist users in creating personalized cover letter examples based on their curriculum vitae (CV) and job descriptions. The service is provided from
-            Germany and is subject to German law.
+        <LegalSection title="2. Tjenestebeskrivelse og produkter">
+          <Text mb={4}>
+            SøknadGPT er en SaaS-applikasjon som bruker AI-teknologi for å
+            hjelpe brukere med å lage personlige eksempler på søknadsbrev basert
+            på CV og stillingsbeskrivelser. Tjenesten tilbys fra Norge og er
+            underlagt norsk lov.
           </Text>
-        </LegalSection>
 
-        <LegalSection title='3. Contract Formation'>
-          <Text>By registering for our service, you enter into a legally binding contract with Canger & Shahab Crimpin GbR under German law. The contract is formed when we confirm your registration via email.</Text>
-        </LegalSection>
-
-        <LegalSection title='4. User Account and Data Protection'>
-          <Text>To use CoverLetterGPT, you must register for an account and provide accurate and complete information. You are responsible for maintaining the confidentiality of your account and password.</Text>
-        </LegalSection>
-
-        <LegalSection title='5. Prices and Payment Terms'>
-          <Text>
-            Prices are displayed in your local currency where available, with EUR being our base currency. 
-            All prices include applicable taxes (such as VAT for EU customers). Charges for our services 
-            are billed monthly. Your subscription will automatically renew each month unless cancelled 
-            at least one day before the renewal date.
+          <Text fontWeight="semibold" mb={2}>
+            Våre produkter og tjenester:
           </Text>
-          <UnorderedList mt={2} spacing={2} pl={5}>
+          <UnorderedList spacing={2} pl={5} mb={4}>
             <ListItem>
-              Prices shown are converted to your local currency based on current exchange rates
+              <Text fontWeight="semibold">
+                Månedlig abonnement (GPT-4o-mini):
+              </Text>
+              <Text>
+                29 kr per måned - Ubegrenset tilgang til AI-genererte
+                søknadsbrev med GPT-4o-mini
+              </Text>
             </ListItem>
             <ListItem>
-              The final charge may vary slightly due to exchange rate fluctuations and conversion fees
+              <Text fontWeight="semibold">Månedlig abonnement (GPT-4o):</Text>
+              <Text>
+                59 kr per måned - Ubegrenset tilgang til AI-genererte
+                søknadsbrev med GPT-4o
+              </Text>
             </ListItem>
             <ListItem>
-              For EU customers, prices include applicable Value Added Tax (VAT)
-            </ListItem>
-            <ListItem>
-              For non-EU customers, additional taxes may apply according to local regulations
+              <Text fontWeight="semibold">Engangsbetaling (Vipps):</Text>
+              <Text>Betaling per søknad via Vipps</Text>
             </ListItem>
           </UnorderedList>
+
+          <Text fontSize="sm" color="gray.600">
+            Alle priser er oppgitt i norske kroner (NOK) og inkluderer
+            merverdiavgift (MVA) der det er påkrevd.
+          </Text>
         </LegalSection>
 
-        <LegalSection title='6. Right of Withdrawal and Withdrawal Form'>
-          <VStack spacing={6} align='stretch'>
+        <LegalSection title="3. Parter og avtalens inngåelse">
+          <Text mb={4}>
+            <strong>Selger:</strong> Lien Tech, organisasjonsnummer 935820057,
+            Bergen, Norge
+          </Text>
+          <Text mb={4}>
+            <strong>Kjøper:</strong> Den person som registrerer seg og
+            aksepterer disse vilkårene
+          </Text>
+          <Text>
+            Ved å registrere deg for vår tjeneste inngår du en juridisk bindende
+            avtale med Lien Tech etter norsk lov. Avtalen anses inngått når vi
+            bekrefter din registrering via e-post eller når du gjennomfører en
+            betaling.
+          </Text>
+        </LegalSection>
+
+        <LegalSection title="4. Brukerkonto og personvern">
+          <Text>
+            For å bruke SøknadGPT må du registrere en konto og oppgi korrekt og
+            fullstendig informasjon. Du er selv ansvarlig for å holde
+            kontoinformasjon og passord konfidensielt.
+          </Text>
+        </LegalSection>
+
+        <LegalSection title="5. Betaling og betalingsvilkår">
+          <Text mb={4}>
+            Alle betalinger behandles sikkert gjennom Vipps, en godkjent norsk
+            betalingsløsning. Vi lagrer ikke betalingsopplysninger på våre
+            servere.
+          </Text>
+
+          <Text fontWeight="semibold" mb={2}>
+            Betalingsalternativer:
+          </Text>
+          <UnorderedList spacing={2} pl={5} mb={4}>
+            <ListItem>
+              Månedlig abonnement via Vipps (Vipps-app eller bankkort)
+            </ListItem>
+            <ListItem>
+              Engangsbetaling via Vipps (Vipps-app eller bankkort)
+            </ListItem>
+          </UnorderedList>
+
+          <Text fontWeight="semibold" mb={2}>
+            Betalingsbetingelser:
+          </Text>
+          <UnorderedList spacing={2} pl={5} mb={4}>
+            <ListItem>
+              Månedlige abonnementer faktureres månedlig på forhånd
+            </ListItem>
+            <ListItem>
+              Abonnementet fornyes automatisk hver måned med mindre det sies opp
+              minst én dag før fornyelsesdatoen
+            </ListItem>
+            <ListItem>
+              Priser inkluderer merverdiavgift (MVA) der det er påkrevd
+            </ListItem>
+            <ListItem>
+              Engangsbetalinger krever betaling før bruk av tjenesten
+            </ListItem>
+          </UnorderedList>
+
+          <Text fontSize="sm" color="gray.600">
+            Ved betalingsproblemer eller spørsmål om fakturering, kontakt oss på
+            Simen@cvcv.no
+          </Text>
+        </LegalSection>
+
+        <LegalSection title="6. Angrerett og forbruk av digitale tjenester">
+          <VStack spacing={6} align="stretch">
             <Box>
               <Text>
-                As a consumer within the EU, you have the right to withdraw from this contract 
-                within 14 days without giving any reason. The withdrawal period expires after 
-                14 days from the day of contract conclusion.
+                Som forbruker har du i utgangspunktet rett til å angre denne
+                avtalen innen 14 dager uten å oppgi noen grunn. Angrefristen
+                utløper 14 dager etter avtaleinngåelse.
               </Text>
-              
+
+              <Text mt={4} fontWeight="semibold" color="orange.600">
+                VIKTIG - Tap av angrerett for digitale tjenester:
+              </Text>
+
+              <Text mt={2}>
+                Ved å bruke SøknadGPT (f.eks. generere søknadsbrev, bruke
+                AI-funksjoner) samtykker du eksplisitt til at vi starter
+                leveringen av den digitale tjenesten før angrefristen på 14
+                dager er utløpt. Du erkjenner og aksepterer at du dermed mister
+                din angrerett i henhold til angrerettsloven § 18 bokstav m.
+              </Text>
+
+              <Text mt={4}>Dette gjelder for:</Text>
+              <UnorderedList mt={2} spacing={2} pl={5}>
+                <ListItem>
+                  Abonnementer hvor du starter å bruke tjenesten
+                </ListItem>
+                <ListItem>
+                  Engangsbetalinger hvor du umiddelbart genererer søknadsbrev
+                </ListItem>
+              </UnorderedList>
+
               <Text mt={4}>
-                To exercise your right of withdrawal, you must inform us of your decision to 
-                withdraw from this contract by an unequivocal statement (e.g., a letter sent 
-                by post or email). You may use the model withdrawal form provided below, 
-                but it is not obligatory.
+                <strong>Unntak:</strong> Hvis du ikke har brukt tjenesten i det
+                hele tatt innen 14 dager, kan du fortsatt benytte angreretten.
               </Text>
 
               <Text mt={4}>
-                To meet the withdrawal deadline, it is sufficient for you to send your 
-                communication concerning your exercise of the right of withdrawal before the 
-                withdrawal period has expired.
-              </Text>
-
-              <Text mt={4}>
-                Effects of withdrawal: If you withdraw from this contract, we shall reimburse 
-                to you all payments received from you, including the costs of delivery (with 
-                the exception of the supplementary costs resulting from your choice of a type 
-                of delivery other than the least expensive type of standard delivery offered 
-                by us), without undue delay and in any event not later than 14 days from the 
-                day on which we are informed about your decision to withdraw from this contract.
+                For å benytte angreretten (kun hvis du ikke har brukt tjenesten)
+                må du gi oss beskjed via e-post til Simen@cvcv.no før fristen
+                utløper.
               </Text>
             </Box>
 
-            <Box p={4} borderWidth={1} borderRadius='lg' bg='bg-contrast-sm'>
-              <Text fontWeight='semibold' mb={4}>
-                Model Withdrawal Form
+            <Box
+              p={4}
+              borderWidth={1}
+              borderRadius="lg"
+              bg="yellow.50"
+              borderColor="yellow.200"
+            >
+              <Text fontWeight="semibold" mb={2} color="yellow.800">
+                Refusjonspolicy for abonnementer
               </Text>
-              <Text mb={4}>
-                (Complete and return this form only if you wish to withdraw from the contract)
+              <Text color="yellow.700">
+                Selv om angreretten bortfaller ved bruk, kan vi i spesielle
+                tilfeller vurdere refusjon for abonnementer som kanselleres
+                tidlig. Kontakt oss på Simen@cvcv.no for å diskutere din
+                situasjon.
               </Text>
-              <VStack align='stretch' spacing={4} color='text-contrast-lg'>
-                <Box>
-                  <Text fontWeight='medium'>To:</Text>
-                  <Text>Canger & Shahab Crimpin GbR</Text>
-                  <Text>Zum Steinberg 12, 69121 Heidelberg, Germany</Text>
-                  <Text>Email: info.crimpin@gmail.com</Text>
-                </Box>
-
-                <Text>
-                  I/We (*) hereby give notice that I/We (*) withdraw from my/our (*) contract 
-                  for the provision of the following service: CoverLetterGPT subscription.
-                </Text>
-
-                <UnorderedList spacing={2} pl={4}>
-                  <ListItem>Ordered on (*)/received on (*)</ListItem>
-                  <ListItem>Name of consumer(s)</ListItem>
-                  <ListItem>Address of consumer(s)</ListItem>
-                  <ListItem>Signature of consumer(s) (only if this form is notified on paper)</ListItem>
-                  <ListItem>Date</ListItem>
-                </UnorderedList>
-
-                <Text fontSize='sm' fontStyle='italic'>
-                  (*) Delete as appropriate
-                </Text>
-              </VStack>
             </Box>
-
-            <Text fontSize='sm' color='gray.600'>
-              To exercise your right of withdrawal, you may use the above model form, but 
-              it is not obligatory. You may also submit any other clear statement of your 
-              decision to withdraw from the contract via email or our contact form.
-            </Text>
           </VStack>
         </LegalSection>
 
-        <LegalSection title='7. Dispute Resolution'>
+        <LegalSection title="7. Levering av tjenesten">
+          <Text mb={4}>
+            SøknadGPT er en digital tjeneste som leveres umiddelbart ved
+            registrering og betaling. Det er ingen fysisk levering.
+          </Text>
+
+          <Text fontWeight="semibold" mb={2}>
+            Leveringstidspunkt:
+          </Text>
+          <UnorderedList spacing={2} pl={5} mb={4}>
+            <ListItem>
+              Abonnementer: Tilgang aktiveres umiddelbart etter vellykket
+              betaling
+            </ListItem>
+            <ListItem>
+              Engangsbetalinger: Tilgang til å generere søknadsbrev aktiveres
+              umiddelbart
+            </ListItem>
+          </UnorderedList>
+
           <Text>
-            The European Commission provides a platform for online dispute resolution (OS) which is available at https://ec.europa.eu/consumers/odr/. We are neither obligated nor willing to participate in dispute
-            resolution proceedings before a consumer arbitration board.
+            Eventuelle tekniske problemer som hindrer tilgang til tjenesten vil
+            bli løst så raskt som mulig. Kontakt oss på Simen@cvcv.no hvis du
+            opplever problemer med tilgang.
           </Text>
         </LegalSection>
 
-        <LegalSection title='8. Governing Law'>
-          <Text>These Terms are governed by German law. The application of the UN Convention on Contracts for the International Sale of Goods is excluded.</Text>
+        <LegalSection title="8. Retur og refusjon">
+          <Text mb={4}>
+            Som en digital tjeneste har SøknadGPT ikke tradisjonell "retur" som
+            fysiske produkter. Refusjon håndteres som følger:
+          </Text>
+
+          <Text fontWeight="semibold" mb={2}>
+            Refusjonsbetingelser:
+          </Text>
+          <UnorderedList spacing={2} pl={5} mb={4}>
+            <ListItem>
+              <strong>Abonnementer:</strong> Ingen automatisk refusjon, men vi
+              kan vurdere refusjon ved spesielle omstendigheter
+            </ListItem>
+            <ListItem>
+              <strong>Engangsbetalinger:</strong> Ingen refusjon etter at
+              tjenesten er brukt (søknadsbrev generert)
+            </ListItem>
+            <ListItem>
+              <strong>Tekniske problemer:</strong> Full refusjon hvis vi ikke
+              kan levere tjenesten som avtalt
+            </ListItem>
+            <ListItem>
+              <strong>Ubrukt angrerett:</strong> Full refusjon hvis angreretten
+              utøves før tjenesten brukes
+            </ListItem>
+          </UnorderedList>
+
+          <Text>
+            Refusjoner behandles innen 14 dager og returneres via samme
+            betalingsmåte som ble brukt ved kjøp.
+          </Text>
         </LegalSection>
 
-        <LegalSection title='9. Service Usage and Limitations'>
-          <Text>
-            CoverLetterGPT provides AI-assisted cover letter generation services. Users 
-            acknowledge and agree to the following terms of use:
+        <LegalSection title="9. Reklamasjonshåndtering og kundeservice">
+          <Text mb={4}>
+            Vi tar kundetilfredshet på alvor og håndterer alle henvendelser
+            profesjonelt og raskt.
           </Text>
-          <UnorderedList spacing={2} pl={5}>
+
+          <Text fontWeight="semibold" mb={2}>
+            Reklamasjonsprosess:
+          </Text>
+          <UnorderedList spacing={2} pl={5} mb={4}>
             <ListItem>
-              The service is provided for example and learning purposes only. Cover letters 
-              generated through our service are meant to serve as templates and examples.
+              <strong>Kontakt:</strong> Send reklamasjon til Simen@cvcv.no med
+              detaljert beskrivelse av problemet
             </ListItem>
             <ListItem>
-              Users are strongly advised NOT to use AI-generated cover letters directly 
-              for job applications without substantial personal modification and review.
+              <strong>Responstid:</strong> Vi svarer innen 48 timer på hverdager
             </ListItem>
             <ListItem>
-              We reserve the right to limit, suspend, or terminate access to the service 
-              at our discretion if we detect abuse or violation of these terms.
+              <strong>Undersøkelse:</strong> Vi undersøker saken og kommer
+              tilbake med forslag til løsning
             </ListItem>
             <ListItem>
-              Users are responsible for maintaining the confidentiality of their account 
-              credentials and may not share their account with others.
+              <strong>Oppfølging:</strong> Vi følger opp til problemet er løst
+            </ListItem>
+          </UnorderedList>
+
+          <Text fontWeight="semibold" mb={2}>
+            Vanlige reklamasjonsgrunner:
+          </Text>
+          <UnorderedList spacing={2} pl={5} mb={4}>
+            <ListItem>Tekniske problemer med tjenesten</ListItem>
+            <ListItem>Faktureringsfeil</ListItem>
+            <ListItem>Problemer med konto eller tilgang</ListItem>
+          </UnorderedList>
+
+          <Text fontSize="sm" color="gray.600">
+            Du har rett til å klage til Forbrukertilsynet hvis du ikke er
+            fornøyd med vår håndtering av reklamasjonen.
+          </Text>
+        </LegalSection>
+
+        <LegalSection title="10. Abonnement - bindingstid, oppsigelse og endring">
+          <Text mb={4}>
+            Informasjon om ditt abonnement og hvordan du administrerer det:
+          </Text>
+
+          <Text fontWeight="semibold" mb={2}>
+            Bindingstid:
+          </Text>
+          <UnorderedList spacing={2} pl={5} mb={4}>
+            <ListItem>
+              <strong>Månedlige abonnementer:</strong> Ingen bindingstid - kan
+              sies opp når som helst
+            </ListItem>
+            <ListItem>
+              <strong>Engangsbetalinger:</strong> Ingen abonnement - betaling
+              gjelder kun for den ene bruken
+            </ListItem>
+          </UnorderedList>
+
+          <Text fontWeight="semibold" mb={2}>
+            Oppsigelse av abonnement:
+          </Text>
+          <UnorderedList spacing={2} pl={5} mb={4}>
+            <ListItem>
+              Du kan si opp abonnementet når som helst via din brukerkonto eller
+              ved å kontakte oss på Simen@cvcv.no
+            </ListItem>
+            <ListItem>
+              Oppsigelse må skje minst én dag før neste faktureringsdato for å
+              unngå ny belastning
+            </ListItem>
+            <ListItem>
+              Ved oppsigelse har du tilgang til tjenesten frem til utløpet av
+              gjeldende betalingsperiode
+            </ListItem>
+          </UnorderedList>
+
+          <Text fontWeight="semibold" mb={2}>
+            Endring av abonnement:
+          </Text>
+          <UnorderedList spacing={2} pl={5} mb={4}>
+            <ListItem>
+              Du kan oppgradere fra GPT-4o-mini til GPT-4o når som helst
+            </ListItem>
+            <ListItem>
+              Nedgradering trer i kraft ved neste faktureringsperiode
+            </ListItem>
+            <ListItem>
+              Kontakt oss på Simen@cvcv.no for hjelp med endringer
             </ListItem>
           </UnorderedList>
         </LegalSection>
 
-        <LegalSection title='10. Disclaimer of Liability'>
+        <LegalSection title="11. Konfliktløsning">
+          <Text mb={4}>
+            Vi streber etter å løse alle konflikter på en vennskapelig måte
+            gjennom direkte kommunikasjon.
+          </Text>
+
+          <Text fontWeight="semibold" mb={2}>
+            Trinn for konfliktløsning:
+          </Text>
+          <UnorderedList spacing={2} pl={5} mb={4}>
+            <ListItem>
+              <strong>Direkte kontakt:</strong> Kontakt oss først på
+              Simen@cvcv.no for å diskutere problemet
+            </ListItem>
+            <ListItem>
+              <strong>Forbrukertilsynet:</strong> Du kan kontakte
+              Forbrukertilsynet for rådgivning og bistand
+            </ListItem>
+            <ListItem>
+              <strong>Forbrukerrådet:</strong> Gratis rådgivning tilgjengelig på
+              forbrukerradet.no
+            </ListItem>
+            <ListItem>
+              <strong>Tvisteløsning:</strong> For EU-borgere er EU-kommisjonens
+              online tvisteløsningsplattform tilgjengelig på
+              https://ec.europa.eu/consumers/odr/
+            </ListItem>
+          </UnorderedList>
+
+          <Text fontWeight="semibold" mb={2}>
+            Lovvalg og verneting:
+          </Text>
           <Text>
-            To the maximum extent permitted by applicable law:
+            Denne avtalen er underlagt norsk lov. Tvister løses ved norske
+            domstoler, med Bergen tingrett som verneting.
+          </Text>
+        </LegalSection>
+
+        <LegalSection title="12. Bruk av tjenesten og begrensninger">
+          <Text>
+            SøknadGPT tilbyr AI-genererte søknadsbrev. Brukere erkjenner og
+            godtar følgende vilkår:
           </Text>
           <UnorderedList spacing={2} pl={5}>
             <ListItem>
-              The cover letters generated through our service are provided "AS IS" and 
-              "AS AVAILABLE" without any warranties, express or implied.
+              Tjenesten er kun ment for eksempler og læring. Søknadsbrev
+              generert via tjenesten er ment som maler og eksempler.
             </ListItem>
             <ListItem>
-              We explicitly disclaim any liability for the content, accuracy, or 
-              appropriateness of the generated cover letters for any specific purpose, 
-              including but not limited to job applications.
+              Brukere anbefales STERKT å ikke bruke AI-genererte søknadsbrev
+              direkte i jobbsøknader uten betydelig personlig tilpasning og
+              gjennomgang.
             </ListItem>
             <ListItem>
-              Users assume full responsibility for any use, modification, or submission 
-              of the generated cover letters in job applications or other professional 
-              contexts.
+              Vi forbeholder oss retten til å begrense, suspendere eller
+              avslutte tilgangen til tjenesten ved misbruk eller brudd på
+              vilkårene.
             </ListItem>
             <ListItem>
-              We are not liable for any consequences, direct or indirect, arising from 
-              the use of our service, including but not limited to:
+              Brukere er ansvarlige for å holde kontoinformasjon konfidensiell
+              og kan ikke dele kontoen med andre.
+            </ListItem>
+          </UnorderedList>
+        </LegalSection>
+
+        <LegalSection title="13. Ansvarsfraskrivelse">
+          <Text>I den grad loven tillater det:</Text>
+          <UnorderedList spacing={2} pl={5}>
+            <ListItem>
+              Søknadsbrev generert via tjenesten leveres "SOM DE ER" og "SOM
+              TILGJENGELIG" uten noen garantier, verken uttrykte eller
+              underforståtte.
+            </ListItem>
+            <ListItem>
+              Vi fraskriver oss ethvert ansvar for innhold, nøyaktighet eller
+              egnethet av genererte søknadsbrev til noe bestemt formål,
+              inkludert jobbsøknader.
+            </ListItem>
+            <ListItem>
+              Brukeren har fullt ansvar for bruk, endring eller innsending av
+              genererte søknadsbrev i jobbsøknader eller andre profesjonelle
+              sammenhenger.
+            </ListItem>
+            <ListItem>
+              Vi er ikke ansvarlige for noen konsekvenser, direkte eller
+              indirekte, som følge av bruk av tjenesten, inkludert men ikke
+              begrenset til:
               <UnorderedList mt={2} pl={5}>
-                <ListItem>Missed job opportunities</ListItem>
-                <ListItem>Rejected applications</ListItem>
-                <ListItem>Professional reputation impact</ListItem>
-                <ListItem>Loss of potential income</ListItem>
-                <ListItem>Any misrepresentation in generated content</ListItem>
-                <ListItem>Technical errors or service interruptions</ListItem>
-                <ListItem>Data loss or security breaches</ListItem>
+                <ListItem>Tapte jobbmuligheter</ListItem>
+                <ListItem>Avslåtte søknader</ListItem>
+                <ListItem>Innvirkning på profesjonelt omdømme</ListItem>
+                <ListItem>Tap av potensiell inntekt</ListItem>
+                <ListItem>
+                  Feil eller misvisende innhold i genererte brev
+                </ListItem>
+                <ListItem>Tekniske feil eller tjenesteavbrudd</ListItem>
+                <ListItem>Tap av data eller sikkerhetsbrudd</ListItem>
               </UnorderedList>
             </ListItem>
             <ListItem>
-              While we strive to maintain high accuracy and quality, AI-generated content may 
-              contain errors, inconsistencies, or inappropriate content. Users are strongly 
-              advised to thoroughly review and modify all generated content before use.
+              Selv om vi tilstreber høy kvalitet, kan AI-generert innhold
+              inneholde feil, inkonsekvenser eller upassende innhold. Brukere
+              anbefales å grundig gjennomgå og tilpasse alt generert innhold før
+              bruk.
             </ListItem>
             <ListItem>
-              We do not guarantee that our service will meet your specific requirements or 
-              expectations, or that it will be compatible with your particular job application 
-              needs.
+              Vi garanterer ikke at tjenesten vil oppfylle dine spesifikke krav
+              eller forventninger, eller at den er kompatibel med dine behov for
+              jobbsøknader.
             </ListItem>
             <ListItem>
-              Our total liability, if any, shall not exceed the amount paid by you 
-              for the service in the month preceding the incident.
+              Vårt totale ansvar, hvis noe, skal ikke overstige det beløpet du
+              har betalt for tjenesten måneden før hendelsen.
             </ListItem>
             <ListItem>
-              Some jurisdictions do not allow the exclusion of certain warranties or 
-              limitations on applicable statutory rights of a consumer, so some or all 
-              of the above exclusions and limitations may not apply to you.
+              Enkelte jurisdiksjoner tillater ikke utelukkelse av visse
+              garantier eller begrensninger på lovfestede rettigheter, så noen
+              av de ovennevnte begrensningene kan ikke gjelde for deg.
             </ListItem>
           </UnorderedList>
-          <Text mt={4} fontWeight='semibold'>
-            By using our service, you explicitly acknowledge and accept these limitations 
-            and disclaimers.
+          <Text mt={4} fontWeight="semibold">
+            Ved å bruke tjenesten erkjenner og aksepterer du eksplisitt disse
+            begrensningene og ansvarsfraskrivelsene.
           </Text>
         </LegalSection>
 
-        <LegalSection title='11. Intellectual Property'>
+        <LegalSection title='16. Ansvarsfraskrivelse og selv beskyttelse"'>
+          <Text mb={4}>
+            Denne tjenesten tilbys av en privatperson og er open source. Ved å
+            bruke tjenesten aksepterer du at du ikke vil saksøke meg for
+            småfeil, tekniske problemer eller andre bagateller. Tjenesten
+            leveres uten garanti, og bruk skjer på eget ansvar. Eventuelle krav
+            om erstatning utover det som følger av ufravikelig norsk lov
+            frafalles. Jeg er selvfølgelig lett å snakke med om det er noe som
+            du føler var feil, da er det bare å sende mail! Dette er bare for å
+            beskytte meg selv mot internett haier.
+          </Text>
+        </LegalSection>
+
+        <LegalSection title="17. Immaterielle rettigheter">
           <UnorderedList spacing={2} pl={5}>
             <ListItem>
-              The service, including all software, algorithms, and interface designs, 
-              remains the exclusive property of Canger & Shahab Crimpin GbR.
+              Kildekoden og programvaren er åpen kildekode (GPLv3). Du kan
+              bruke, endre og distribuere koden så lenge du følger
+              lisensvilkårene.
             </ListItem>
             <ListItem>
-              While users retain rights to their personal information and modified cover 
-              letters, the AI-generated content templates are provided under a limited, 
-              non-exclusive license for personal use only.
+              Du beholder rettighetene til din egen informasjon og dine
+              redigerte søknadsbrev.
             </ListItem>
             <ListItem>
-              Users may not reproduce, distribute, or commercialize the service or its 
-              outputs without explicit written permission.
+              Tjenesten og dens innhold kan ikke kommersialiseres uten
+              eksplisitt skriftlig tillatelse.
             </ListItem>
           </UnorderedList>
         </LegalSection>
 
-        <LegalSection title="12. Security">
+        <LegalSection title="18. Sikkerhet">
           <Text>
-            CoverLetterGPT does not process any order payments directly through the website. 
-            All payments are processed securely through Stripe, a third party online 
-            payment provider. When processing payments:
+            SøknadGPT behandler ikke betalinger direkte på nettsiden. Alle
+            betalinger behandles sikkert gjennom Vipps eller Stripe, en godkjent norsk
+            betalingsleverandør. Ved betaling:
           </Text>
           <UnorderedList spacing={2} pl={5}>
             <ListItem>
-              Your payment information is never stored on our servers
+              Dine betalingsopplysninger lagres aldri på våre servere
             </ListItem>
             <ListItem>
-              All payment transactions are encrypted and processed securely by Stripe
+              Alle betalingstransaksjoner er kryptert og behandles sikkert av
+              Vipps eller Stripe
             </ListItem>
             <ListItem>
-              Stripe is a PCI Service Provider Level 1, which is the highest grade of 
-              payment processing security
+              Vipps er regulert av Finanstilsynet og følger strenge
+              sikkerhetsstandarder for betalingsbehandling.
+              Stripe er en PCI Service Provider Level 1, som er det høyeste nivået for
+              sikkerhet ved betalingsbehandling.
             </ListItem>
             <ListItem>
-              For more information about Stripe's security measures, please visit 
-              <Link 
-                href="https://stripe.com/docs/security" 
-                target="_blank" 
+              For mer informasjon om Vipps' sikkerhet, se
+              <Link
+                href="https://vipps.no/sikkerhet/"
+                target="_blank"
                 rel="noopener noreferrer"
                 color="purple.600"
-                _hover={{ color: 'purple.800' }}
+                _hover={{ color: "purple.800" }}
                 ml={1}
               >
-                Stripe's Security Documentation
+                Vipps' sikkerhetsdokumentasjon
+              </Link>
+            </ListItem>
+            <ListItem>
+              For mer informasjon om Stripes sikkerhet, se
+              <Link
+              href="https://stripe.com/docs/security"
+              target="_blank"
+              rel="noopener noreferrer"
+              color="purple.600"
+              _hover={{ color: "purple.800" }}
+              ml={1}
+              >
+              Stripes sikkerhetsdokumentasjon
               </Link>
             </ListItem>
           </UnorderedList>

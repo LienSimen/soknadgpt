@@ -77,11 +77,10 @@ export default function Login() {
         ) : (
           <VStack>
             <a href={signInUrl}>
-              <Button leftIcon={<AiOutlineGoogle />}>Google Sign In</Button>
+              <Button leftIcon={<AiOutlineGoogle />}>Logg inn med Google</Button>
             </a>
             <Button isLoading={lnIsLoading} onClick={handleWalletClick} leftIcon={<BsCurrencyBitcoin />}>
-              {' '}
-              Lightning Sign In
+              Logg inn med Lightning
             </Button>
           </VStack>
         )}

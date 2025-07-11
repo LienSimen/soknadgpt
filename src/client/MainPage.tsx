@@ -189,7 +189,7 @@ function MainPage() {
         } else {
           throw new Error('fetching lightning invoice failed');
         }
-  
+
         let status = invoice.status;
         while (status === 'pending') {
           lnPayment = await updateLnPayment(invoice);
@@ -200,7 +200,7 @@ function MainPage() {
           throw new Error('payment failed');
         }
         return lnPayment;
-      } 
+      }
     } catch (error) {
       console.error('Error processing payment, please try again');
     }
@@ -365,7 +365,7 @@ function MainPage() {
         _hover={{ bgColor: 'bg-contrast-xs' }}
         transition='0.1s ease-in-out'
       >
-        <Text fontSize='md'>{coverLetterCount?.toLocaleString()} Cover Letters Generated! 🎉</Text>
+        <Text fontSize='md'>{coverLetterCount?.toLocaleString()} Søknadsbrev opprettet! 🎉</Text>
       </Box>
       <BorderBox>
         <form
@@ -374,9 +374,8 @@ function MainPage() {
         >
 
             <Heading size={'md'} alignSelf={'start'} mb={3} w='full'>
-              Job Info {isCoverLetterUpdate && <Code ml={1}>Editing...</Code>}
+              Jobbinformasjon {isCoverLetterUpdate && <Code ml={1}>Redigerer...</Code>}
             </Heading>
-
           {showSpinner && <Spinner />}
           {showForm && (
             <>
@@ -385,12 +384,12 @@ function MainPage() {
                   id='title'
                   borderRadius={0}
                   borderTopRadius={7}
-                  placeholder='job title'
+                  placeholder='stillingstittel'
                   {...register('title', {
-                    required: 'This is required',
+                    required: 'Dette er påkrevd',
                     minLength: {
                       value: 2,
-                      message: 'Minimum length should be 2',
+                      message: 'Minimum lengde er 2',
                     },
                   })}
                   onFocus={(e: any) => {
@@ -407,12 +406,12 @@ function MainPage() {
                 <Input
                   id='company'
                   borderRadius={0}
-                  placeholder='company'
+                  placeholder='firma'
                   {...register('company', {
-                    required: 'This is required',
+                    required: 'Dette er påkrevd',
                     minLength: {
                       value: 1,
-                      message: 'Minimum length should be 1',
+                      message: 'Minimum lengde er 1',
                     },
                   })}
                   disabled={isCoverLetterUpdate}
@@ -423,12 +422,12 @@ function MainPage() {
                 <Input
                   id='location'
                   borderRadius={0}
-                  placeholder='location'
+                  placeholder='sted'
                   {...register('location', {
-                    required: 'This is required',
+                    required: 'Dette er påkrevd',
                     minLength: {
                       value: 2,
-                      message: 'Minimum length should be 2',
+                      message: 'Minimum lengde er 2',
                     },
                   })}
                   disabled={isCoverLetterUpdate}
@@ -439,9 +438,9 @@ function MainPage() {
                 <Textarea
                   id='description'
                   borderRadius={0}
-                  placeholder='copy & paste the job description in any language'
+                  placeholder='kopier og lim inn stillingsbeskrivelsen på hvilket som helst språk'
                   {...register('description', {
-                    required: 'This is required',
+                    required: 'Dette er påkrevd',
                   })}
                 />
                 <FormErrorMessage>
@@ -455,7 +454,7 @@ function MainPage() {
                   accept='application/pdf'
                   placeholder='pdf'
                   {...register('pdf', {
-                    required: 'Please upload a CV/Resume',
+                    required: 'Vennligst last opp CV/Resumé',
                   })}
                   onChange={(e) => {
                     onFileUpload(e);
@@ -480,14 +479,14 @@ function MainPage() {
                   <HStack>
                     <FormLabel textAlign='center' htmlFor='pdf'>
                       <Button size='sm' colorScheme='contrast' onClick={handleFileButtonClick}>
-                        Upload CV
+                        Last opp CV
                       </Button>
                     </FormLabel>
-                    {isPdfReady && <Text fontSize={'sm'}>👍 uploaded</Text>}
+                    {isPdfReady && <Text fontSize={'sm'}>👍 lastet opp</Text>}
                     <FormErrorMessage>{!!formErrors.pdf && formErrors.pdf.message?.toString()}</FormErrorMessage>
                   </HStack>
                   <FormHelperText mt={0.5} fontSize={'xs'}>
-                    Upload a PDF only of Your CV/Resumé
+                    Last opp kun PDF av din CV/Resumé
                   </FormHelperText>
                 </VStack>
               </FormControl>
@@ -571,7 +570,7 @@ function MainPage() {
                       color: 'text-contrast-lg',
                     }}
                   >
-                    cover letter creativity level
+                    kreativitet på søknadsbrevet
                   </FormLabel>
                 </FormControl>
               </VStack>
@@ -602,7 +601,7 @@ function MainPage() {
                       color: 'text-contrast-lg',
                     }}
                   >
-                    include a witty remark at the end of the letter
+                    inkluder en vittig kommentar på slutten av brevet
                   </FormLabel>
                 </FormControl>
               </VStack>
@@ -615,7 +614,7 @@ function MainPage() {
                   disabled={user === null}
                   type='submit'
                 >
-                  {!isCoverLetterUpdate ? 'Generate Cover Letter' : 'Create New Cover Letter'}
+                  {!isCoverLetterUpdate ? 'Generer søknadsbrev' : 'Opprett nytt søknadsbrev'}
                 </Button>
                 <Text ref={loadingTextRef} fontSize='sm' fontStyle='italic' color='text-contrast-md'>
                   {' '}
@@ -626,7 +625,7 @@ function MainPage() {
           {showJobNotFound && (
             <>
               <Text fontSize='sm' color='text-contrast-md'>
-                Can't find that job...
+                Finner ikke den jobben...
               </Text>
             </>
           )}

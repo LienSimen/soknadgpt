@@ -1,25 +1,28 @@
 app CoverLetterGPT {
   wasp: {
-    version: "^0.15.0"
+    version: "^0.16.0"
   },
-  title: "CoverLetterGPT",
+  title: "SøknadGPT",
   head: [
-        "<meta charset=\"UTF-8\" />",
-        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />",
-        "<meta name=\"description\" content=\"Create Unique Cover Letters Based on Your Skills using GPT. Supercharge Your Job Search with Cover Letter GPT.\" />",
-        "<meta name=\"keywords\" content=\"cover letter, gpt, ai, job search, resume\" />",
-        "<meta name=\"author\" content=\"CoverLetterGPT\" />",
-        "<meta property=\"og:type\" content=\"website\" />",
-        "<meta property=\"og:url\" content=\"https://CoverLetterGPT.xyz\" />",
-        "<meta property=\"og:title\" content=\"CoverLetterGPT\" />",
-        "<meta property=\"og:description\" content=\"Create Unique Cover Letters Based on Your Skills using GPT. Supercharge Your Job Search with Cover Letter GPT.\" />",
-        "<meta property=\"og:image\" content=\"https://CoverLetterGPT.xyz/homepage.png\" />",
-        "<meta name=\"twitter:image\" content=\"https://CoverLetterGPT.xyz/homepage.png\" />",
-        "<meta name=\"twitter:image:width\" content=\"800\" />",
-        "<meta name=\"twitter:image:height\" content=\"400\" />",
-        "<meta name=\"twitter:card\" content=\"summary_large_image\" />",
-  ],
-  // 🔐 Auth out of the box! https://wasp.sh/docs/language/features#authentication--authorization
+  "<meta charset=\"UTF-8\" />",
+  "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />",
+  "<meta name=\"description\" content=\"Lag profesjonelle søknadsbrev med AI. Prøv SøknadGPT gratis og styrk jobbsøking i Norge!\" />",
+  "<meta name=\"author\" content=\"SøknadGPT\" />",
+  "<meta property=\"og:type\" content=\"website\" />",
+  "<meta property=\"og:url\" content=\"https://home.cvcv.no\" />",
+  "<meta property=\"og:title\" content=\"SøknadGPT: AI-drevne Søknadsbrev for Jobbsøking i Norge\" />",
+  "<meta property=\"og:description\" content=\"Lag unike søknadsbrev med SøknadGPT. Bruk AI til å skreddersy din jobbsøknad og CV for stillinger i Norge.\" />",
+  "<meta property=\"og:image\" content=\"https://cvcv.no/og-image.png\" />",
+  "<meta name=\"twitter:card\" content=\"summary_large_image\" />",
+  "<meta name=\"twitter:title\" content=\"SøknadGPT: AI-drevne Søknadsbrev for Jobbsøking\" />",
+  "<meta name=\"twitter:description\" content=\"Lag unike søknadsbrev med SøknadGPT. Bruk AI til å skreddersy din jobbsøknad og CV for stillinger i Norge.\" />",
+  "<meta name=\"twitter:image\" content=\"https://cvcv.no/twitter-image.png\" />",
+  "<link rel=\"icon\" type=\"image/x-icon\" href=\"/favicon.ico\" />",
+  "<link rel=\"canonical\" href=\"https://home.cvcv.no\" />",
+  "<title>SøknadGPT: Lag Profesjonelle Søknadsbrev med AI</title>",
+  "<script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"Service\",\"name\":\"SøknadGPT\",\"description\":\"AI-drevet tjeneste for å lage profesjonelle søknadsbrev og CV-er i Norge.\",\"provider\":{\"@type\":\"Organization\",\"name\":\"SøknadGPT\",\"url\":\"https://home.cvcv.no\"}}</script>"
+],
+  // 🔐 Auth out of the box! https://wasp-lang.dev/docs/language/features#authentication--authorization
   auth: {
     userEntity: User,
     methods: {
@@ -37,14 +40,14 @@ app CoverLetterGPT {
   emailSender: {
     provider: SendGrid,
     defaultFrom: {
-      name: "CoverLetterGPT",
-      email: "vince@wasp.sh",
+      name: "CVCV",
+      email: "mail@cvcv.no",
     },
   },
 }
 
 /* 📡 These are the Wasp Routes (You can protect them easily w/ 'authRequired: true');
- * https://wasp.sh/docs/language/features#route
+ * https://wasp-lang.dev/docs/language/features#route
  */
 
 route RootRoute { path: "/", to: MainPage }
@@ -92,7 +95,7 @@ page PrivacyPage {
 }
 
 /* ⛑ These are the Wasp Operations, which allow the client and server to interact:
- * https://wasp.sh/docs/language/features#queries-and-actions-aka-operations
+ * https://wasp-lang.dev/docs/language/features#queries-and-actions-aka-operations
  */
 
 // 📝 Actions aka Mutations
@@ -208,7 +211,7 @@ query getCoverLetterCount {
 }
 
 /* 📡 These are custom Wasp API Endpoints. Use them for callbacks, webhooks, etc.
- * https://wasp.sh/docs/language/features#apis
+ * https://wasp-lang.dev/docs/language/features#apis
  */
 
 api stripeWebhook {
@@ -224,7 +227,7 @@ api lnLogin {
 }
 
 /* 🕵️‍♂️ These are the Wasp Cron Jobs. Use them to set up recurring tasks or queues:
- * https://wasp.sh/docs/language/features#jobs
+ * https://wasp-lang.dev/docs/language/features#jobs
  */
 
 job checkUserSubscription {

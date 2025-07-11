@@ -49,20 +49,20 @@ export function LeaveATip({
         <AlertDialogOverlay backdropFilter='auto' backdropInvert='15%' backdropBlur='2px'>
           <AlertDialogContent bgColor='bg-modal'>
             <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-              👋 Thanks for trying CoverLetterGPT.
+              👋 Takk for at du prøver SøknadGPT.
             </AlertDialogHeader>
 
             <AlertDialogBody textAlign='center'>
-              <Text>
-                You have <Code>{credits}</Code> free cover letter {credits === 1 ? 'credit' : 'credits'} left.
-              </Text>
+                <Text>
+                Du har <Code>{credits}</Code> gratis søknadsbrev igjen.
+                </Text>
               <Text mt={4}>
                 {!isUsingLn ? (
-                  <>
-                    Purchase unlimited access for only <Code>$2.95</Code> per month!
-                  </>
+                    <>
+                    Kjøp ubegrenset tilgang for kun <Code>59 kr</Code> per måned!
+                    </>
                 ) : (
-                  <>After, just pay a small fee per cover letter with your lightning ⚡️ wallet. </>
+                    <>Etterpå kan du betale en liten avgift per søknadsbrev med din lightning ⚡️-lommebok.</>
                 )}
               </Text>
             </AlertDialogBody>
@@ -71,14 +71,14 @@ export function LeaveATip({
               {!isUsingLn ? (
                 <>
                   <Button isLoading={isLoading} ref={tipRef} colorScheme='purple' onClick={handleClick}>
-                    💰 Buy More
+                  💰 Kjøp mer
                   </Button>
                   <Spacer />
                   <Button alignSelf='flex-end' fontSize='sm' variant='solid' size='sm' onClick={onClose}>
-                    No, Thanks
+                  Nei, takk
                   </Button>
                 </>
-              ) : (
+                ) : (
                 <Button alignSelf='flex-end' fontSize='sm' variant='solid' size='sm' onClick={onClose}>
                   OK
                 </Button>
@@ -108,11 +108,11 @@ export function LoginToBegin({ isOpen, onClose }: { isOpen: boolean; onOpen: () 
             ✋
           </AlertDialogHeader>
 
-          <AlertDialogBody textAlign='center'>Please Login to Begin!</AlertDialogBody>
+            <AlertDialogBody textAlign='center'>Vennligst logg inn for å begynne!</AlertDialogBody>
 
           <AlertDialogFooter justifyContent='center'>
             <Button ref={loginRef} leftIcon={<AiOutlineLogin />} colorScheme='purple' onClick={handleClick}>
-              Login
+              Logg inn
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -138,15 +138,15 @@ export function DeleteJob({
     <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
       <AlertDialogOverlay backdropFilter='auto' backdropInvert='15%' backdropBlur='2px'>
         <AlertDialogContent bgColor='bg-modal'>
-          <AlertDialogHeader fontSize='md' mt={3} fontWeight='bold'>
-            ⛔️ Delete Job
-          </AlertDialogHeader>
+            <AlertDialogHeader fontSize='md' mt={3} fontWeight='bold'>
+            ⛔️ Slett stilling
+            </AlertDialogHeader>
 
-          <AlertDialogBody>
-            Delete the job and all its cover letters?
+            <AlertDialogBody>
+            Slett denne stillingen og alle tilhørende søknadsbrev?
             <br />
-            This action cannot be undone.
-          </AlertDialogBody>
+            Denne handlingen kan ikke angres.
+            </AlertDialogBody>
 
           <AlertDialogFooter display='grid' gridTemplateColumns='1fr 1fr 1fr'>
             <Button
@@ -161,11 +161,11 @@ export function DeleteJob({
                 onClose();
               }}
             >
-              Delete
+              Slett
             </Button>
             <Spacer />
             <Button ref={cancelRef} size='sm' colorScheme='purple' onClick={onClose}>
-              Cancel
+              Avbryt
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -196,35 +196,35 @@ export function EditAlert({ coverLetter }: { coverLetter: boolean }) {
     <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
       <AlertDialogOverlay backdropFilter='auto' backdropInvert='15%' backdropBlur='2px'>
         <AlertDialogContent bgColor='bg-modal'>
-          <AlertDialogHeader fontSize='md' mt={3} fontWeight='bold'>
-            📝 Your cover letter is ready!
-          </AlertDialogHeader>
+            <AlertDialogHeader fontSize='md' mt={3} fontWeight='bold'>
+            📝 Søknadsbrevet ditt er klart!
+            </AlertDialogHeader>
 
-          <AlertDialogBody gap={5} pointerEvents='none'>
+            <AlertDialogBody gap={5} pointerEvents='none'>
             <Text pb={3}>
-              If you want to make finer edits, highlight the text you'd like to change to access the pop-up below:
+              Hvis du vil gjøre finere endringer, marker teksten du ønsker å endre for å få opp popupen under:
             </Text>
             <VStack m={3} gap={1} borderRadius='lg'>
               <Box layerStyle='cardLg' p={3}>
-                <Text fontSize='sm' textAlign='center'>
-                  🤔 Ask GPT to make this part more..
-                </Text>
-                <ButtonGroup size='xs' p={1} variant='solid' colorScheme='purple' isAttached>
-                  <Button size='xs' color='black' fontSize='xs'>
-                    Concise
-                  </Button>
+              <Text fontSize='sm' textAlign='center'>
+                🤔 Be GPT om å gjøre denne delen mer..
+              </Text>
+              <ButtonGroup size='xs' p={1} variant='solid' colorScheme='purple' isAttached>
+                <Button size='xs' color='black' fontSize='xs'>
+                Kortfattet
+                </Button>
 
-                  <Button size='xs' color='black' fontSize='xs'>
-                    Detailed
-                  </Button>
+                <Button size='xs' color='black' fontSize='xs'>
+                Detaljert
+                </Button>
 
-                  <Button size='xs' color='black' fontSize='xs'>
-                    Professional
-                  </Button>
+                <Button size='xs' color='black' fontSize='xs'>
+                Profesjonell
+                </Button>
 
-                  <Button size='xs' color='black' fontSize='xs'>
-                    Informal
-                  </Button>
+                <Button size='xs' color='black' fontSize='xs'>
+                Uformell
+                </Button>
                 </ButtonGroup>
               </Box>
             </VStack>
@@ -232,7 +232,7 @@ export function EditAlert({ coverLetter }: { coverLetter: boolean }) {
 
           <AlertDialogFooter justifyContent='space-between'>
             <Checkbox onChange={handleCheckboxChange} size='sm' color='text-contrast-md'>
-              Don't show me this again
+              Ikke vis meg dette igjen
             </Checkbox>
             <Button ref={cancelRef} size='sm' colorScheme='purple' onClick={onClose}>
               OK

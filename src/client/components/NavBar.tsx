@@ -47,7 +47,7 @@ export default function NavBar() {
         <Link as={RouterLink} to='/'>
           <HStack gap={0}>
             <Heading size='md' color={'text-contrast-md'}>
-              CoverLetter
+              Søknad
             </Heading>
             <Heading size='md' color={gptTextColor}>
               GPT
@@ -60,23 +60,23 @@ export default function NavBar() {
         {user ? (
           <>
             <NavButton icon={<MdWorkOutline />} to='/jobs'>
-              Jobs Dashboard
+              Jobboversikt
             </NavButton>
             <Spacer maxW='3px' />
             <NavButton icon={<CgProfile />} to='/profile'>
-              Account
+              Konto
             </NavButton>
             <MobileButton icon={<AiOutlineMenu />} isUser={true}>
-              Menu
+              Meny
             </MobileButton>
           </>
         ) : (
           <>
             <NavButton icon={<CgProfile />} to='/login'>
-              Login
+              Logg inn
             </NavButton>
             <MobileButton icon={<AiOutlineMenu />} isUser={false}>
-              Menu
+              Meny
             </MobileButton>
           </>
         )}
@@ -140,16 +140,16 @@ function MobileButton({
         {isUser ? (
           <>
             <Link as={RouterLink} to={`/jobs`}>
-              <MenuItem>Jobs Dashboard</MenuItem>
+                <MenuItem>Stillingsoversikt</MenuItem>
             </Link>
             <Link as={RouterLink} to={`/profile`}>
-              <MenuItem>Account</MenuItem>
+              <MenuItem>Konto</MenuItem>
             </Link>
           </>
         ) : (
           <>
             <Link as={RouterLink} to='/login'>
-              <MenuItem>Login</MenuItem>
+              <MenuItem>Logg inn</MenuItem>
             </Link>
           </>
         )}

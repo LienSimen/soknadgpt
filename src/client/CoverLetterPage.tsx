@@ -15,7 +15,7 @@ export default function CoverLetterPage() {
 
   const { id } = useParams();
   if (!id) {
-    return <BorderBox>Error: Cover letter ID is required</BorderBox>;
+    return <BorderBox>Feil: Søknadsbrev-ID mangler</BorderBox>;
   }
 
   const {
@@ -90,7 +90,7 @@ export default function CoverLetterPage() {
               closeOnClick={true}
             >
               <Button size='sm' mr={3} onClick={handleClick} isDisabled={false} isLoading={editIsLoading}>
-                Save Changes
+                Lagre endring
               </Button>
             </Tooltip>
             <Tooltip
@@ -100,7 +100,7 @@ export default function CoverLetterPage() {
               closeOnClick={false}
             >
               <Button colorScheme='purple' size='sm' mr={3} onClick={onCopy}>
-                Copy
+                Kopier
               </Button>
             </Tooltip>
           </HStack>

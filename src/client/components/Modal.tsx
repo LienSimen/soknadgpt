@@ -50,12 +50,12 @@ export default function ModalElement({ coverLetterData, isOpen, onOpen, onClose 
     <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={copyButtonRef}>
       <ModalOverlay backdropFilter='auto' backdropInvert='15%' backdropBlur='2px' />
       <ModalContent maxH='2xl' maxW='2xl' bgColor='bg-modal'>
-        <ModalHeader>Your Cover Letter{coverLetterData.length > 1 && 's'}</ModalHeader>
+        <ModalHeader>Ditt Søknad{coverLetterData.length > 1 && 's'}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           {coverLetterData.length > 1 && (
             <Select
-              placeholder='Select Cover Letter'
+              placeholder='Velg Søknad'
               defaultValue={selectedCoverLetter.id}
               onChange={handleSelectChange}
             >
@@ -89,7 +89,7 @@ export default function ModalElement({ coverLetterData, isOpen, onOpen, onClose 
             closeOnClick={false}
           >
             <Button ref={copyButtonRef} colorScheme='purple' size='sm' mr={3} onClick={onCopy}>
-              Copy
+              Kopier
             </Button>
           </Tooltip>
           <Button
@@ -100,7 +100,7 @@ export default function ModalElement({ coverLetterData, isOpen, onOpen, onClose 
             mr={3}
             onClick={() => navigate(`/cover-letter/${selectedCoverLetter.id}`)}
           >
-            Edit
+            Rediger
           </Button>
         </ModalFooter>
       </ModalContent>
