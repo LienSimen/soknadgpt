@@ -9,18 +9,18 @@ app CoverLetterGPT {
   "<meta name=\"description\" content=\"Lag profesjonelle søknadsbrev med AI. Prøv SøknadGPT gratis og styrk jobbsøking i Norge!\" />",
   "<meta name=\"author\" content=\"SøknadGPT\" />",
   "<meta property=\"og:type\" content=\"website\" />",
-  "<meta property=\"og:url\" content=\"https://home.cvcv.no\" />",
+  "<meta property=\"og:url\" content=\"https://www.cvcv.no\" />",
   "<meta property=\"og:title\" content=\"SøknadGPT: AI-drevne Søknadsbrev for Jobbsøking i Norge\" />",
   "<meta property=\"og:description\" content=\"Lag unike søknadsbrev med SøknadGPT. Bruk AI til å skreddersy din jobbsøknad og CV for stillinger i Norge.\" />",
-  "<meta property=\"og:image\" content=\"https://cvcv.no/og-image.png\" />",
+  "<meta property=\"og:image\" content=\"https://www.cvcv.no/og-image.png\" />",
   "<meta name=\"twitter:card\" content=\"summary_large_image\" />",
   "<meta name=\"twitter:title\" content=\"SøknadGPT: AI-drevne Søknadsbrev for Jobbsøking\" />",
   "<meta name=\"twitter:description\" content=\"Lag unike søknadsbrev med SøknadGPT. Bruk AI til å skreddersy din jobbsøknad og CV for stillinger i Norge.\" />",
-  "<meta name=\"twitter:image\" content=\"https://cvcv.no/twitter-image.png\" />",
+  "<meta name=\"twitter:image\" content=\"https://www.cvcv.no/twitter-image.png\" />",
   "<link rel=\"icon\" type=\"image/x-icon\" href=\"/favicon.ico\" />",
-  "<link rel=\"canonical\" href=\"https://home.cvcv.no\" />",
+  "<link rel=\"canonical\" href=\"https://www.cvcv.no\" />",
   "<title>SøknadGPT: Lag Profesjonelle Søknadsbrev med AI</title>",
-  "<script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"Service\",\"name\":\"SøknadGPT\",\"description\":\"AI-drevet tjeneste for å lage profesjonelle søknadsbrev og CV-er i Norge.\",\"provider\":{\"@type\":\"Organization\",\"name\":\"SøknadGPT\",\"url\":\"https://home.cvcv.no\"}}</script>"
+  "<script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"Service\",\"name\":\"SøknadGPT\",\"description\":\"AI-drevet tjeneste for å lage profesjonelle søknadsbrev og CV-er i Norge.\",\"provider\":{\"@type\":\"Organization\",\"name\":\"SøknadGPT\",\"url\":\"https://www.cvcv.no\"}}</script>"
 ],
   // 🔐 Auth out of the box! https://wasp-lang.dev/docs/language/features#authentication--authorization
   auth: {
