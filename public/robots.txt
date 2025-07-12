@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.cvcv.no/sitemap.xml

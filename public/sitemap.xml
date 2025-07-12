@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Gemini -->
+<url>
+  <loc>https://www.cvcv.no/</loc>
+  <lastmod>2025-07-12</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://www.cvcv.no/login</loc>
+  <lastmod>2025-07-12</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.cvcv.no/jobs</loc>
+  <lastmod>2025-07-12</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.cvcv.no/profile</loc>
+  <lastmod>2025-07-12</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.cvcv.no/checkout</loc>
+  <lastmod>2025-07-12</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.cvcv.no/tos</loc>
+  <lastmod>2025-07-12</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.cvcv.no/privacy</loc>
+  <lastmod>2025-07-12</lastmod>
+  <priority>0.80</priority>
+</url>
+</urlset>
