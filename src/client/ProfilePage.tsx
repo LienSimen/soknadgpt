@@ -126,31 +126,32 @@ export default function ProfilePage({ user }: { user: User }) {
                   <VStack layerStyle='cardMd' borderColor={'purple.200'} borderWidth={3} py={5} px={7} gap={3} height='100%' width='100%' justifyContent='space-between' alignItems='center'>
                   {/*<VStack layerStyle='card' py={5} px={7} gap={3} height='100%' width='100%' justifyContent='space-between' alignItems='center'>*/}
                     <VStack gap={3} alignItems='start'>
-                      <Heading size='xl'>NOK 69</Heading>
+                        <Heading size='md'>SøknadGPT Standard</Heading>
+                      <Heading size='xl'>NOK 39</Heading>
                       <Text textAlign='start' fontSize='md'>
                         Ubegrenset
                         <br />
                         månedlig abonnement
                       </Text>
-                      {/*<Heading size='md'>Bruker GPT-4o-mini 🚀</Heading>*/}
+                      <Heading size='md'>Bruker GPT-4o-mini 🚀</Heading>
                     </VStack>
                     <Button mr={3} isLoading={isLoading} onClick={handleBuy4oMini}>
                       Kjøp nå!
                     </Button>
                   </VStack>
-                {/*  <VStack layerStyle='cardMd' borderColor={'purple.200'} borderWidth={3} py={5} px={7} gap={3} height='100%' width='100%' justifyContent='space-between' alignItems='center'>
+                 <VStack layerStyle='cardMd' borderColor={'purple.200'} borderWidth={3} py={5} px={7} gap={3} height='100%' width='100%' justifyContent='space-between' alignItems='center'>
                     <VStack gap={3} alignItems='start'>
-                      <Heading size='xl'>$5.95</Heading>
-
+                      <Heading size='md'>SøknadGPT Premium</Heading>
+                      <Heading size='xl'>69 kr</Heading>
                       <Text textAlign='start' fontSize='md'>
-                        Unlimited <br /> monthly subscription
+                        Ubegrenset <br />  månedlig abonnement
                       </Text>
-                      <Heading size='md'>Using GPT-4o 🤖</Heading>
+                      <Heading size='md'>Bruker GPT-4o 🤖</Heading>
                     </VStack>
                     <Button colorScheme='purple' mr={3} isLoading={isGpt4loading} onClick={handleBuy4o}>
-                      💰 Buy Now!
+                      💰Kjøp nå!
                     </Button>
-                  </VStack>*/}
+                  </VStack>
                 </HStack>
               </VStack>
             </VStack>
@@ -163,7 +164,7 @@ export default function ProfilePage({ user }: { user: User }) {
                     <VStack gap={3} alignItems='center'>
                       <Heading size='xl'>⚡️</Heading>
                       <Text textAlign='start' fontSize='md'>
-                        Du har rimelig, bruk-betalt tilgang til CoverLetterGPT med GPT-4o via Lightning Network
+                        Du har rimelig, bruk-betalt tilgang til SøknadGPT med GPT-4o via Lightning Network
                       </Text>
                       <Text textAlign='start' fontSize='sm'>
                         Merk: hvis du foretrekker et månedlig abonnement, vennligst logg ut og logg inn med Google.

@@ -1,5 +1,6 @@
 import { type Job, type CoverLetter, type User, type LnPayment } from "wasp/entities";
 import { HttpError } from "wasp/server";
+import axios from 'axios';
 import {
   type GenerateCoverLetter,
   type CreateJob,
@@ -12,9 +13,11 @@ import {
   type StripePayment,
   type StripeGpt4Payment,
   type StripeCreditsPayment,
+  type ScrapeJob,
 } from "wasp/server/operations";
 import fetch from 'node-fetch';
 import Stripe from 'stripe';
+import * as cheerio from 'cheerio'; // Added cheerio import
 
 const stripe = new Stripe(process.env.STRIPE_KEY!, {
   apiVersion: '2023-08-16',
@@ -423,7 +426,7 @@ export const updateUser: UpdateUser<UpdateUserArgs, UserWithoutPassword> = async
       credits: true,
       gptModel: true,
       isUsingLn: true,
-      subscriptionStatus: true,
+      subscriptionStatus: true
     },
   });
 };
@@ -609,4 +612,175 @@ export const stripeCreditsPayment: StripeCreditsPayment<void, StripePaymentResul
       });
     }
   });
+};
+
+type ScrapedJob = {
+  title: string;
+  company: string;
+  location: string;
+  description: string;
+};
+
+export const scrapeJob = async (url: string): Promise<ScrapedJob> => {
+  try {
+    // 1. Fetch the webpage content with appropriate headers
+    console.log("Fetching URL:", url);
+    const { data } = await axios.get(url, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      },
+    });
+
+    // 2. Load HTML into cheerio for parsing
+    const $ = cheerio.load(data);
+    console.log("HTML loaded successfully.");
+
+    // 3. Extract structured data from the page
+    const title = $("h1").first().text().trim();
+    const descriptionParts: string[] = [];
+
+    // Extract Company: Find the first paragraph in the main article that isn't the title
+    let company = "";
+    $("article p").each((i, el) => {
+      const text = $(el).text().trim();
+      if (text && text !== title && !company) {
+        company = text;
+      }
+    });
+
+    // Extract Location: Look for a specific label or fallback to a list item
+    let location = "Not specified";
+    const locationLabel = $('span:contains("Sted")');
+    if (locationLabel.length) {
+      location = locationLabel.next().text().trim();
+    } else {
+      $("li").each((i, el) => {
+        const label = $(el).find("span").first().text().trim();
+        if (label.startsWith("Sted")) {
+          const textNodes = $(el)
+            .contents()
+            .filter((_, node) => node.type === "text");
+          const locText = textNodes
+            .map((_, node) => $(node).text().trim())
+            .get()
+            .join(" ")
+            .replace(/^:/, "")
+            .trim();
+          if (locText) {
+            location = locText;
+            return false; // Exit loop once found
+          }
+        }
+      });
+    }
+
+    // --- Assemble Job Description ---
+
+    // Extract main description text from the first few paragraphs
+    const mainDesc: string[] = [];
+    $("article p").each((i, el) => {
+      if (mainDesc.length < 5) {
+        const text = $(el).text().trim();
+        if (text && text !== "Ønskede kvalifikasjoner:") {
+          mainDesc.push(text);
+        }
+      }
+    });
+    if (mainDesc.length) {
+      descriptionParts.push(mainDesc.join("\n"));
+    }
+
+    // Extract "Om arbeidsgiveren" (About the employer) section
+    const aboutHeader = $('h2.t3:contains("Om arbeidsgiveren")');
+    if (aboutHeader.length) {
+      const aboutText = aboutHeader.next(".import-decoration").text().trim();
+      if (aboutText) {
+        descriptionParts.push("Om arbeidsgiveren:\n" + aboutText);
+      }
+    }
+
+    // Extract "Ønskede kvalifikasjoner" (Desired qualifications) section
+    const kvalStrong = $("strong:contains('Ønskede kvalifikasjoner')");
+    if (kvalStrong.length) {
+      const kvalifikasjoner: string[] = [];
+      let nextEl = kvalStrong.parent().next();
+      while (nextEl.length && !nextEl.is("strong, h1, h2, h3, h4, h5, h6")) {
+        if (nextEl.is("p")) {
+          const txt = nextEl.text().trim();
+          if (txt) kvalifikasjoner.push(txt);
+        }
+        nextEl = nextEl.next();
+      }
+      if (kvalifikasjoner.length) {
+        descriptionParts.push(
+          "Ønskede kvalifikasjoner:\n" + kvalifikasjoner.join("\n")
+        );
+      }
+    }
+
+    // Extract "Ferdigheter" (Skills) from a list
+    const ferdHeader = $("h2.t3").filter((_, el) =>
+      $(el).find("div").first().text().trim().includes("Ferdigheter")
+    );
+    if (ferdHeader.length) {
+      const skills: string[] = [];
+      ferdHeader
+        .next("ul")
+        .find("span")
+        .each((_, el) => {
+          const skill = $(el).text().trim();
+          if (skill) skills.push(skill);
+        });
+      if (skills.length) {
+        descriptionParts.push("Ferdigheter:\n" + skills.join(", "));
+      }
+    }
+
+    // Extract key-value job info list
+    const jobInfoList = $("ul.space-y-6");
+    if (jobInfoList.length) {
+      const items: string[] = [];
+      jobInfoList.find("li").each((i, el) => {
+        const label = $(el)
+          .find("span.font-bold")
+          .text()
+          .trim()
+          .replace(/[:：]+$/, "");
+        const value = $(el)
+          .clone()
+          .children("span.font-bold")
+          .remove()
+          .end()
+          .text()
+          .trim();
+        if (label && value) {
+          items.push(`${label}: ${value}`);
+        }
+      });
+      if (items.length) {
+        descriptionParts.push("Jobbinfo:\n" + items.join(" | "));
+      }
+    }
+
+    // 4. Finalize and return structured data
+    console.log("Data extraction complete.");
+    const jobDescription = descriptionParts
+      .join("\n\n")
+      .replace(/(\n\s*){3,}/g, "\n\n")
+      .trim();
+
+    return {
+      title: title || "Title not found",
+      company: company || "Company not found",
+      location: location,
+      description: jobDescription || "No description available",
+    };
+  } catch (error: any) {
+    console.error(`Error scraping ${url}:`, error.message);
+    if (error.response) {
+      console.error(`Status: ${error.response.status}`);
+    }
+    throw new Error(`Failed to scrape ${url}. ${error.message}`);
+  }
 };

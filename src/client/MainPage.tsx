@@ -10,6 +10,7 @@ import {
   getJob,
   getCoverLetterCount,
 } from "wasp/client/operations";
+import { scrapeJob } from './scrapeJob';
 
 import {
   Box,
@@ -56,6 +57,7 @@ function MainPage() {
   const [sliderValue, setSliderValue] = useState(30);
   const [showTooltip, setShowTooltip] = useState(false);
   const [lightningInvoice, setLightningInvoice] = useState<LightningInvoice | null>(null);
+  const [isScraping, setIsScraping] = useState<boolean>(false);
 
   const { data: user } = useAuth();
 
@@ -77,6 +79,7 @@ function MainPage() {
     setValue,
     reset,
     clearErrors,
+    getValues,
     formState: { errors: formErrors, isSubmitting },
   } = useForm();
 
@@ -314,6 +317,28 @@ function MainPage() {
     }
   }
 
+  async function handleScrapeJob() {
+    const url = getValues('applicant_job_advertisement_url');
+    if (!url) {
+      alert('Please enter a job advertisement URL.');
+      return;
+    }
+
+    setIsScraping(true);
+    try {
+      const scrapedData = await scrapeJob(url);
+      setValue('title', scrapedData.title);
+      setValue('company', scrapedData.company);
+      setValue('location', scrapedData.location);
+      setValue('description', scrapedData.description);
+    } catch (error) {
+      console.error('Error scraping job:', error);
+      alert('Failed to scrape job information. Please try again or enter details manually.');
+    } finally {
+      setIsScraping(false);
+    }
+  }
+
   function setLoadingText() {
     setLoadingTextTimeout = setTimeout(() => {
       loadingTextRef.current && (loadingTextRef.current.innerText = ' patience, my friend 🧘...');
@@ -379,6 +404,37 @@ function MainPage() {
           {showSpinner && <Spinner />}
           {showForm && (
             <>
+                          <FormControl isInvalid={!!formErrors.applicant_job_advertisement_url}>
+                <HStack>
+                  <Input
+                    id="applicant_job_advertisement_url"
+                    autoComplete="on"
+                    placeholder="https://www.finn.no/job/fulltime/ad.html?finnkode=255413380"
+                    pattern="^https:\/\/www\.finn\.no\/(?:\d+|.*\?finnkode=\d+)$"
+                    
+                    className="block mt-2 w-full px-5 py-2.5 bg-white rounded-md ring-1 ring-inset ring-gray-300 placeholder:text-indigo-600/40 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    type="text"
+                    {...register('applicant_job_advertisement_url', {
+                      required: 'Dette er påkrevd',
+                      pattern: {
+                        value: /^https:\/\/www\.finn\.no\/(?:\d+|.*\?finnkode=\d+)$/,
+                        message: 'Vennligst oppgi en gyldig Finn.no jobbannonse URL',
+                      },
+                    })}
+                  />
+                  <Button
+                    colorScheme='purple'
+                    mt={2}
+                    size='sm'
+                    onClick={handleScrapeJob}
+                    isLoading={isScraping}
+                    disabled={isScraping || isCoverLetterUpdate}
+                  >
+                    Hent info
+                  </Button>
+                </HStack>
+                <FormErrorMessage>{!!formErrors.applicant_job_advertisement_url && formErrors.applicant_job_advertisement_url.message?.toString()}</FormErrorMessage>
+              </FormControl>
               <FormControl isInvalid={!!formErrors.title}>
                 <Input
                   id='title'
@@ -434,6 +490,7 @@ function MainPage() {
                 />
                 <FormErrorMessage>{!!formErrors.location && formErrors.location.message?.toString()}</FormErrorMessage>
               </FormControl>
+
               <FormControl isInvalid={!!formErrors.description}>
                 <Textarea
                   id='description'
