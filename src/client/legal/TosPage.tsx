@@ -53,28 +53,25 @@ const TermsOfService = () => {
           <Text fontWeight="semibold" mb={2}>
             Våre produkter og tjenester:
           </Text>
-          <UnorderedList spacing={2} pl={5} mb={4}>
+            <UnorderedList spacing={2} pl={5} mb={4}>
             <ListItem>
               <Text fontWeight="semibold">
-                Månedlig abonnement (GPT-4o-mini):
+              Månedlig abonnement:
               </Text>
               <Text>
-                29 kr per måned - Ubegrenset tilgang til AI-genererte
-                søknadsbrev med GPT-4o-mini
+              Ubegrenset bruk* av AI-genererte søknadsbrev.
               </Text>
             </ListItem>
             <ListItem>
-              <Text fontWeight="semibold">Månedlig abonnement (GPT-4o):</Text>
+              <Text fontWeight="semibold">Kredittbasert engangsbruk:</Text>
               <Text>
-                59 kr per måned - Ubegrenset tilgang til AI-genererte
-                søknadsbrev med GPT-4o
+              Kjøp kreditter og bruk dem til å generere søknadsbrev etter behov.
               </Text>
             </ListItem>
-            <ListItem>
-              <Text fontWeight="semibold">Engangsbetaling (Vipps):</Text>
-              <Text>Betaling per søknad via Vipps</Text>
-            </ListItem>
-          </UnorderedList>
+            </UnorderedList>
+            <Text fontSize="xs" color="gray.500" mb={2}>
+            *Ubegrenset bruk gjelder for normal, rimelig og personlig bruk. Vi forbeholder oss retten til å begrense, suspendere eller avslutte tilgangen til tjenesten ved unormalt høy bruk, automatisert bruk, misbruk eller annen aktivitet som anses som urimelig eller i strid med tjenestens formål.
+            </Text>
 
           <Text fontSize="sm" color="gray.600">
             Alle priser er oppgitt i norske kroner (NOK) og inkluderer
@@ -122,7 +119,16 @@ const TermsOfService = () => {
               Månedlig abonnement via Vipps (Vipps-app eller bankkort)
             </ListItem>
             <ListItem>
+              Månedlig abonnement via Stripe (bankkort, Apple Pay, Google Pay)
+            </ListItem>
+            <ListItem>
               Engangsbetaling via Vipps (Vipps-app eller bankkort)
+            </ListItem>
+            <ListItem>
+              Engangsbetaling via Stripe (bankkort, Apple Pay, Google Pay)
+            </ListItem>
+            <ListItem>
+              Engangsbetaling via Lightning (Bitcoin)
             </ListItem>
           </UnorderedList>
 
