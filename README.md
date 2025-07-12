@@ -1,6 +1,9 @@
 # SøknadGPT
 
-Norwegian dub. Note for Windows users:
+Få hjelp til å skrive profesjonelle og skreddersydde CV-er på et blunk. Bygg selv, eller bruk nettsiden min [cvcv.no](https://www.cvcv.no).
+Hvis du skal bygge selv må du ha en OPENAI API-nøkkel. Du kan kjøpe en nøkkel på [OpenAI sin API-side](https://platform.openai.com/account/api-keys).
+
+Norwegian dub. Install instructions in English. Note for Windows users:
 Make sure you are running commands inside a real WSL (Windows Subsystem for Linux) terminal (like Ubuntu from the Start menu), not just using /wsl or a Windows path in your terminal. Running commands from a Windows terminal with /wsl is not the same as being inside the actual Linux environment, and can cause many issues. If you use VSC, you install "Remote - WSL" and connect via that.
 
 <img src='public/homepage.png' width='600px'/>
@@ -212,6 +215,17 @@ railway link
 ```shell
 railway up
 ```
+
+### To use your own Domain
+
+In railway: Server->Settings->Custom Domain, just use the recommended port, 8043 works for me. Call it www.yourdomain.com
+IMPORTANT NOTE that you want to use www first, then we just redirect if they dont have it. Just try going to any webpage and you will see you get redirected to www yourself.
+Copy the address u got like "kdzdst0.up.railway.app" and go to your domain portal webpage -> zone editor -> new record - call it www, type CNAME with value kdzdst0.up.railway.app replace with your address instead.
+
+You do exactly the same with server (use recommended port mines 8080) but you call that one api.website.com instead of www.website.com. Then its as simple as following above instructions but adding your new addresses instead and wait for DNS to propagate. If you get errors at this point its most likely because of trailing slashes / in your env variables. You can see this by looking for 401 errors. That means unauthorized (your backend works but its refusing communication). Leading to CORS errors.
+
+
+
 
 #### Conclusion
 
