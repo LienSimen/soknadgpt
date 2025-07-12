@@ -224,7 +224,7 @@ Copy the address u got like "kdzdst0.up.railway.app" and go to your domain porta
 
 You do exactly the same with server (use recommended port mines 8080) but you call that one api.website.com instead of www.website.com. Then its as simple as following above instructions but adding your new addresses instead and wait for DNS to propagate. If you get errors at this point its most likely because of trailing slashes / in your env variables. You can see this by looking for 401 errors. That means unauthorized (your backend works but its refusing communication). Leading to CORS errors.
 
-
+You can keep A records towards your main domain and add a permanent redirect to website.com to www.website.com. There should be a redirect area at your domain portal.
 
 
 #### Conclusion
