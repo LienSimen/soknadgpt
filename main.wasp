@@ -9,6 +9,7 @@ app CoverLetterGPT {
   "<meta name=\"description\" content=\"Få hjelp til å skrive profesjonelle og skreddersydde CV-er på et blunk.\" />",
   "<meta name=\"author\" content=\"SøknadGPT\" />",
   "<meta property=\"og:type\" content=\"website\" />",
+  "<meta name=\"google-site-verification\" content=\"DXY1MXPsdD0bwttb10x5zps-rktKOnxkZ2yUi5PQrW8\" />",
   "<meta property=\"og:url\" content=\"https://www.cvcv.no\" />",
   "<meta property=\"og:title\" content=\"SøknadGPT: Hjelp til søknad\" />",
   "<meta property=\"og:description\" content=\"Få hjelp til å skrive profesjonelle og skreddersydde CV-er på et blunk.\" />",
