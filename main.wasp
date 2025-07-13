@@ -2,26 +2,26 @@ app CoverLetterGPT {
   wasp: {
     version: "^0.16.0"
   },
-  title: "SøknadGPT",
+  title: "Søknad GPT",
   head: [
   "<meta charset=\"UTF-8\" />",
   "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />",
-  "<meta name=\"description\" content=\"Få hjelp til å skrive profesjonelle og skreddersydde CV-er på et blunk.\" />",
-  "<meta name=\"author\" content=\"SøknadGPT\" />",
+  "<meta name=\"description\" content=\"Få hjelp til å skrive profesjonelle og skreddersydde søknader på et blunk. Prøv helt gratis!\" />",
+  "<meta name=\"author\" content=\"Søknad GPT\" />",
   "<meta property=\"og:type\" content=\"website\" />",
   "<meta name=\"google-site-verification\" content=\"DXY1MXPsdD0bwttb10x5zps-rktKOnxkZ2yUi5PQrW8\" />",
   "<meta property=\"og:url\" content=\"https://www.cvcv.no\" />",
   "<meta property=\"og:title\" content=\"SøknadGPT: Hjelp til søknad\" />",
-  "<meta property=\"og:description\" content=\"Få hjelp til å skrive profesjonelle og skreddersydde CV-er på et blunk.\" />",
+  "<meta property=\"og:description\" content=\"Få hjelp til å skrive profesjonelle og skreddersydde søknader på et blunk. Prøv helt gratis!\" />",
   "<meta property=\"og:image\" content=\"https://www.cvcv.no/og-image.png\" />",
   "<meta name=\"twitter:card\" content=\"summary_large_image\" />",
-  "<meta name=\"twitter:title\" content=\"SøknadGPT: Hjelp til søknad\" />",
-  "<meta name=\"twitter:description\" content=\"Få hjelp til å skrive profesjonelle og skreddersydde CV-er på et blunk.\" />",
+  "<meta name=\"twitter:title\" content=\"Søknad GPT: Hjelp til søknad\" />",
+  "<meta name=\"twitter:description\" content=\"Få hjelp til å skrive profesjonelle og skreddersydde søknaderpå et blunk. Prøv helt gratis!\" />",
   "<meta name=\"twitter:image\" content=\"https://www.cvcv.no/twitter-image.png\" />",
   "<link rel=\"icon\" type=\"image/x-icon\" href=\"/favicon.ico\" />",
   "<link rel=\"canonical\" href=\"https://www.cvcv.no\" />",
-  "<title>SøknadGPT: Lag Profesjonelle Søknadsbrev med AI</title>",
-  "<script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"Service\",\"name\":\"SøknadGPT\",\"description\":\"Hjelp til søknad.\",\"provider\":{\"@type\":\"Organization\",\"name\":\"SøknadGPT\",\"url\":\"https://www.cvcv.no\"}}</script>"
+  "<title>Søknad GPT: Lag Profesjonelle Søknadsbrev med AI</title>",
+  "<script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"Service\",\"name\":\"SøknadGPT\",\"description\":\"Hjelp til søknad.\",\"provider\":{\"@type\":\"Organization\",\"name\":\"Søknad GPT\",\"url\":\"https://www.cvcv.no\"}}</script>"
 ],
   // 🔐 Auth out of the box! https://wasp-lang.dev/docs/language/features#authentication--authorization
   auth: {
@@ -173,8 +173,6 @@ action updateLnPayment {
 action milliSatsToCents {
   fn: import { milliSatsToCents } from "@src/server/ln.js",
 }
-
-
 
 action scrapeJob {
   fn: import { scrapeJob } from "@src/server/actions.js",
