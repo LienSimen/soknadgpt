@@ -248,7 +248,7 @@ function MainPage() {
         isCompleteCoverLetter,
         includeWittyRemark: values.includeWittyRemark,
         temperature: creativityValue,
-        gptModel: values.gptModel || 'gpt-4o-mini',
+        gptModel: values.gptModel || 'gpt-4o',
         lnPayment: lnPayment || undefined,
       };
 
@@ -562,22 +562,7 @@ function MainPage() {
                       'transform 0.05s ease-in, transform 0.05s ease-out, background 0.3s, opacity 0.3s, border 0.3s'
                     }
                   >
-                    <RadioGroup
-                      id='gptModel'
-                      defaultValue='gpt-4o'
-                      color='text-contrast-lg'
-                      fontWeight='semibold'
-                      size='md'
-                    >
-                      <HStack spacing={5}>
-                        <Radio {...register('gptModel')} value='gpt-4o-mini'>
-                          GPT 4o mini
-                        </Radio>
-                        <Radio {...register('gptModel')} value='gpt-4o'>
-                          GPT 4o
-                        </Radio>
-                      </HStack>
-                    </RadioGroup>
+
                   </VStack>
                 </FormControl>
               )}

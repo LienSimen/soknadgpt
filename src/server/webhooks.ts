@@ -60,9 +60,9 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
           },
           data: {
             credits: {
-              increment: 20,
+              increment: 150,
             },
-            gptModel: 'gpt-4o-mini',
+            gptModel: 'gpt-4o',
           },
         });
       }
