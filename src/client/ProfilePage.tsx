@@ -66,7 +66,7 @@ export default function ProfilePage({ user }: { user: User }) {
               </Box>
               <Text textAlign='center' fontSize='sm' textColor='text-contrast-lg'>
                 Abonnementet ditt er utløpt. <br /> Vennligst oppdater betalingsmetoden din{' '}
-                <Link textColor='purple.400' href='https://billing.stripe.com/p/login/test_6oU6oJ9il3Aderv6P65AQ00'>
+                <Link textColor='purple.400' href='https://billing.stripe.com/p/login/00w00j1sLcqp4ZDaKX0Ny00'>
                   ved å klikke her
                 </Link>
               </Text>
@@ -84,7 +84,7 @@ export default function ProfilePage({ user }: { user: User }) {
               )}
               <Text alignSelf='initial' fontSize='sm' fontStyle='italic' textColor='text-contrast-sm'>
                 For å administrere abonnementet ditt, vennligst{' '}
-                <Link textColor='purple.600' href='https://billing.stripe.com/p/login/test_6oU6oJ9il3Aderv6P65AQ00'>
+                <Link textColor='purple.600' href='https://billing.stripe.com/p/login/00w00j1sLcqp4ZDaKX0Ny00'>
                   klikk her.
                 </Link>
               </Text>
@@ -113,43 +113,14 @@ export default function ProfilePage({ user }: { user: User }) {
                     alignItems='center'
                   >
                     <VStack gap={3} alignItems='start'>
-                      <Heading size='xl'>NOK 39</Heading>
-                      <Text textAlign='start' fontSize='md'>
-                        20 kreditter<br />
-                        (20 søknadsbrev)
-                      </Text>
+                      <Heading size='xl'>NOK 49</Heading>
+                        <Text textAlign='start' fontSize='md'>
+                        150 kreditter<br />
+                        (150 søknadsbrev ) 😎
+                        </Text>
                     </VStack>
                     <Button mr={3} isLoading={isCreditsLoading} onClick={handleCreditsClick}>
                       Kjøp nå
-                    </Button>
-                  </VStack>
-                  <VStack layerStyle='cardMd' borderColor={'purple.200'} borderWidth={3} py={5} px={7} gap={3} height='100%' width='100%' justifyContent='space-between' alignItems='center'>
-                  {/*<VStack layerStyle='card' py={5} px={7} gap={3} height='100%' width='100%' justifyContent='space-between' alignItems='center'>*/}
-                    <VStack gap={3} alignItems='start'>
-                        <Heading size='md'>SøknadGPT Standard</Heading>
-                      <Heading size='xl'>NOK 39</Heading>
-                      <Text textAlign='start' fontSize='md'>
-                        Ubegrenset
-                        <br />
-                        månedlig abonnement
-                      </Text>
-                      <Heading size='md'>Bruker GPT-4o-mini 🚀</Heading>
-                    </VStack>
-                    <Button mr={3} isLoading={isLoading} onClick={handleBuy4oMini}>
-                      Kjøp nå!
-                    </Button>
-                  </VStack>
-                 <VStack layerStyle='cardMd' borderColor={'purple.200'} borderWidth={3} py={5} px={7} gap={3} height='100%' width='100%' justifyContent='space-between' alignItems='center'>
-                    <VStack gap={3} alignItems='start'>
-                      <Heading size='md'>SøknadGPT Premium</Heading>
-                      <Heading size='xl'>69 kr</Heading>
-                      <Text textAlign='start' fontSize='md'>
-                        Ubegrenset <br />  månedlig abonnement
-                      </Text>
-                      <Heading size='md'>Bruker GPT-4o 🤖</Heading>
-                    </VStack>
-                    <Button colorScheme='purple' mr={3} isLoading={isGpt4loading} onClick={handleBuy4o}>
-                      💰Kjøp nå!
                     </Button>
                   </VStack>
                 </HStack>
