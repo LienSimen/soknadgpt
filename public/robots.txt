@@ -1,3 +1,4 @@
 User-agent: *
+Disallow: /api/
 Allow: /
 Sitemap: https://www.cvcv.no/sitemap.xml
