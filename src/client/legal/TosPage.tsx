@@ -359,20 +359,6 @@ const TermsOfService = () => {
             </ListItem>
           </UnorderedList>
 
-          <Text fontWeight="semibold" mb={2}>
-            Endring av abonnement:
-          </Text>
-          <UnorderedList spacing={2} pl={5} mb={4}>
-            <ListItem>
-              Du kan oppgradere fra GPT-4o-mini til GPT-4o når som helst
-            </ListItem>
-            <ListItem>
-              Nedgradering trer i kraft ved neste faktureringsperiode
-            </ListItem>
-            <ListItem>
-              Kontakt oss på Simen@cvcv.no for hjelp med endringer
-            </ListItem>
-          </UnorderedList>
         </LegalSection>
 
         <LegalSection title="11. Konfliktløsning">

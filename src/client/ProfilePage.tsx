@@ -101,20 +101,20 @@ export default function ProfilePage({ user }: { user: User }) {
           {!userInfo.hasPaid && !userInfo.isUsingLn && (
             <VStack py={3} gap={5}>
               <VStack py={3} gap={2}>
-                <HStack gap={5} display='grid' gridTemplateColumns='1fr 1fr'>
+                <HStack gap={5} w='full' justifyContent='center'>
                    <VStack
                     layerStyle='card'
                     py={5}
                     px={7}
                     gap={3}
                     height='100%'
-                    width='100%'
                     justifyContent='space-between'
                     alignItems='center'
+                    borderColor='purple.500'
                   >
-                    <VStack gap={3} alignItems='start'>
+                    <VStack gap={3} alignItems='center'>
                       <Heading size='xl'>NOK 49</Heading>
-                        <Text textAlign='start' fontSize='md'>
+                        <Text textAlign='center' fontSize='md'>
                         150 kreditter<br />
                         (150 søknadsbrev ) 😎
                         </Text>

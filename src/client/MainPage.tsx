@@ -36,7 +36,24 @@ import {
   Radio,
   Tooltip,
   useDisclosure,
+  SimpleGrid,
+  Badge,
+  Icon,
+  Flex,
+  Divider,
+  Container,
+  Stack,
 } from '@chakra-ui/react';
+import { CheckCircleIcon, TimeIcon, StarIcon } from '@chakra-ui/icons';
+// Custom LightningIcon since @chakra-ui/icons does not export one
+const LightningIcon = (props: any) => (
+  <Icon viewBox="0 0 24 24" {...props}>
+    <path
+      fill="currentColor"
+      d="M7 2v13h3v7l7-12h-4l4-8z"
+    />
+  </Icon>
+);
 import BorderBox from './components/BorderBox';
 import { LeaveATip, LoginToBegin } from './components/AlertDialog';
 import { convertToSliderValue, convertToSliderLabel } from './components/CreativitySlider';
@@ -122,60 +139,68 @@ function MainPage() {
     }
   }
 
-  // pdf to text parser
+  // file to text parser
   async function onFileUpload(event: ChangeEvent<HTMLInputElement>) {
     if (event.target.files == null) return;
     if (event.target.files.length == 0) return;
 
     setValue('pdf', null);
     setIsPdfReady(false);
-    const pdfFile = event.target.files[0];
-
-    // Read the file using file reader
+    const file = event.target.files[0];
     const fileReader = new FileReader();
 
-    fileReader.onload = function () {
-      // turn array buffer into typed array
-      if (this.result == null || !(this.result instanceof ArrayBuffer)) {
-        return;
-      }
-      const typedarray = new Uint8Array(this.result);
+    fileReader.onload = async function () {
+      if (this.result == null) return;
 
-      // pdfjs should be able to read this
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
-      const loadingTask = pdfjsLib.getDocument(typedarray);
-      let textBuilder: string = '';
-      loadingTask.promise
-        .then(async (pdf) => {
-          // Loop through each page in the PDF file
+      let textBuilder = '';
+      try {
+        if (file.type === 'application/pdf') {
+          const typedarray = new Uint8Array(this.result as ArrayBuffer);
+          pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
+          const loadingTask = pdfjsLib.getDocument(typedarray);
+          const pdf = await loadingTask.promise;
           for (let i = 1; i <= pdf.numPages; i++) {
-            // Get the text content for the page
             const page = await pdf.getPage(i);
             const content = await page.getTextContent();
-            const text = content.items
-              .map((item: any) => {
-                if (item.str) {
-                  return item.str;
-                }
-                return '';
-              })
-              .join(' ');
+            const text = content.items.map((item: any) => item.str || '').join(' ');
             textBuilder += text;
           }
-          setIsPdfReady(true);
-          setValue('pdf', textBuilder);
-          clearErrors('pdf');
-        })
-        .catch((err) => {
-          alert('An Error occured uploading your PDF. Please try again.');
-          console.error(err);
-        });
+        } else if (file.type === 'text/plain') {
+          textBuilder = this.result as string;
+        } else if (
+          file.type === 'application/msword' ||
+          file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ) {
+          const mammoth = await import('mammoth');
+          const result = await mammoth.extractRawText({ arrayBuffer: this.result as ArrayBuffer });
+          textBuilder = result.value;
+        } else {
+          alert('Unsupported file type. Please upload a PDF, TXT, DOC, or DOCX file.');
+          return;
+        }
+        setIsPdfReady(true);
+        setValue('pdf', textBuilder);
+        clearErrors('pdf');
+      } catch (err) {
+        alert('An Error occured uploading your file. Please try again.');
+        console.error(err);
+      }
     };
-    // Read the file as ArrayBuffer
-    try {
-      fileReader.readAsArrayBuffer(pdfFile);
-    } catch (error) {
-      alert('An Error occured uploading your PDF. Please try again.');
+
+    fileReader.onerror = function () {
+      alert('An Error occured reading the file. Please try again.');
+    };
+
+    if (
+      file.type === 'application/pdf' ||
+      file.type === 'application/msword' ||
+      file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ) {
+      fileReader.readAsArrayBuffer(file);
+    } else if (file.type === 'text/plain') {
+      fileReader.readAsText(file);
+    } else {
+      alert('Unsupported file type. Please upload a PDF, TXT, DOC, or DOCX file.');
     }
   }
 
@@ -293,7 +318,7 @@ function MainPage() {
         isCompleteCoverLetter,
         temperature: creativityValue,
         includeWittyRemark: values.includeWittyRemark,
-        gptModel: values.gptModel || 'gpt-4o-mini',
+        gptModel: values.gptModel || 'gpt-4o',
         lnPayment: lnPayment || undefined,
       };
 
@@ -341,7 +366,7 @@ function MainPage() {
 
   function setLoadingText() {
     setLoadingTextTimeout = setTimeout(() => {
-      loadingTextRef.current && (loadingTextRef.current.innerText = ' patience, my friend 🧘...');
+      loadingTextRef.current && (loadingTextRef.current.innerText = ' Skriver søknaden din!🧘...');
     }, 2000);
   }
 
@@ -508,7 +533,7 @@ function MainPage() {
                 <Input
                   id='pdf'
                   type='file'
-                  accept='application/pdf'
+                  accept='application/pdf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'
                   placeholder='pdf'
                   {...register('pdf', {
                     required: 'Vennligst last opp CV/Resumé',
@@ -543,7 +568,7 @@ function MainPage() {
                     <FormErrorMessage>{!!formErrors.pdf && formErrors.pdf.message?.toString()}</FormErrorMessage>
                   </HStack>
                   <FormHelperText mt={0.5} fontSize={'xs'}>
-                    Last opp kun PDF av din CV/Resumé
+                    Last opp kun PDF, TXT, DOC eller DOCX av din CV/Resumé
                   </FormHelperText>
                 </VStack>
               </FormControl>
@@ -673,17 +698,192 @@ function MainPage() {
           )}
         </form>
       </BorderBox>
-      <LeaveATip
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onClose={onClose}
-        credits={user?.credits || 0}
-        isUsingLn={user?.isUsingLn || false}
-      />
-      <LoginToBegin isOpen={loginIsOpen} onOpen={loginOnOpen} onClose={loginOnClose} />
-      <LnPaymentModal isOpen={lnPaymentIsOpen} onClose={lnPaymentOnClose} lightningInvoice={lightningInvoice} />
-    </>
-  );
+
+      {/* Value Proposition Section */}
+      <Container maxW="container.lg" mt={12} px={0}>
+        <VStack spacing={8}>
+          
+          {/* Main Value Proposition */}
+          <Box textAlign="center" maxW="800px">
+            <Heading size="lg" mb={4} color="purple.600">
+              Prøv 3 helt gratis
+            </Heading>
+
+            <Heading size="lg" mb={4} color="purple.600">
+              Det beste pengene kan kjøpe - til en billig pris
+            </Heading>
+            <Text fontSize="lg" color="text-contrast-md" lineHeight={1.8}>
+              Bruker GPT-4o, den beste modellen, for kun 49kr for 150 søknadsbrev, og leverer på sekunder i stedet for dager.
+            </Text>
+          </Box>
+
+          {/* Key Benefits Grid */}
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6} w="full">
+            <VStack 
+              p={6} 
+              bg="bg-contrast-xs" 
+              borderRadius="lg" 
+              border="1px solid" 
+              borderColor="border-contrast-sm"
+              _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
+              transition="all 0.3s"
+            >
+              <Icon as={LightningIcon} w={8} h={8} color="purple.500" />
+              <Text fontWeight="bold" fontSize="md">Sekunder</Text>
+              <Text fontSize="sm" color="text-contrast-md" textAlign="center">
+              Levering av søknadsbrev på sekunder – ikke dager
+              </Text>
+            </VStack>
+
+            <VStack 
+              p={6} 
+              bg="bg-contrast-xs" 
+              borderRadius="lg" 
+              border="1px solid" 
+              borderColor="border-contrast-sm"
+              _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
+              transition="all 0.3s"
+            >
+              <Icon as={StarIcon} w={8} h={8} color="purple.500" />
+              <Text fontWeight="bold" fontSize="md">Premium</Text>
+              <Text fontSize="sm" color="text-contrast-md" textAlign="center">
+                Beste AI-modell GPT-4o for alle
+              </Text>
+            </VStack>
+
+            <VStack 
+              p={6} 
+              bg="bg-contrast-xs" 
+              borderRadius="lg" 
+              border="1px solid" 
+              borderColor="border-contrast-sm"
+              _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
+              transition="all 0.3s"
+            >
+              <Icon as={CheckCircleIcon} w={8} h={8} color="purple.500" />
+              <Text fontWeight="bold" fontSize="md">0,33 kr per brev</Text>
+              <Text fontSize="sm" color="text-contrast-md" textAlign="center">
+                Ingen skjulte kostnader
+              </Text>
+            </VStack>
+
+            <VStack 
+              p={6} 
+              bg="bg-contrast-xs" 
+              borderRadius="lg" 
+              border="1px solid" 
+              borderColor="border-contrast-sm"
+              _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
+              transition="all 0.3s"
+            >
+              <Icon as={TimeIcon} w={8} h={8} color="purple.500" />
+              <Text fontWeight="bold" fontSize="md">Finn.no integrasjon</Text>
+              <Text fontSize="sm" color="text-contrast-md" textAlign="center">
+                Automatisk utfylling av jobbinfo
+              </Text>
+            </VStack>
+          </SimpleGrid>
+
+          <Divider />
+
+          {/* Best Practices Section */}
+          <Box maxW="800px" textAlign="left">
+            <Heading size="md" mb={4} color="purple.600">
+              Slik får du det beste resultat
+            </Heading>
+            <VStack spacing={3} alignItems="flex-start">
+              <HStack>
+                <Icon as={CheckCircleIcon} color="green.500" />
+                <Text fontSize="sm">
+                  <strong>Kjør 3-5 ganger:</strong> Hver generering er unik - velg den beste varianten
+                </Text>
+              </HStack>
+              <HStack>
+                <Icon as={CheckCircleIcon} color="green.500" />
+                <Text fontSize="sm">
+                  <strong>Juster kreativitet:</strong> Prøv forskjellige nivåer for å finne din stil
+                </Text>
+              </HStack>
+              <HStack>
+                <Icon as={CheckCircleIcon} color="green.500" />
+                <Text fontSize="sm">
+                  <strong>Legg til din touch:</strong> Personaliser med egne detaljer og erfaringer
+                </Text>
+              </HStack>
+              <HStack>
+                <Icon as={CheckCircleIcon} color="green.500" />
+                <Text fontSize="sm">
+                  <strong>Bruk som base:</strong> La AI gjøre grunnarbeidet, så finjuster selv
+                </Text>
+              </HStack>
+            </VStack>
+          </Box>
+
+          <Divider />
+
+          {/* Pricing Comparison */}
+          <Box maxW="100vw" mx="auto" my={8}>
+            <Heading size="md" mb={4} color="purple.600" textAlign="center">
+              Pris
+            </Heading>
+            <Flex justifyContent="center" alignItems="center" w="100%">
+              <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6} maxW="800px" width="100%" p={{ base: 2, md: 6 }} alignItems="stretch">
+                {/* Empty column for centering */}
+                <Box display={{ base: 'none', md: 'block' }} />
+                {/* Column for "Our Service" */}
+                <VStack 
+                  p={6} 
+                  borderRadius="xl" 
+                  border="2px solid" 
+                  borderColor="purple.400" 
+                  shadow="xl" 
+                  spacing={4}
+                  transform="scale(1.05)"
+                >
+                    <Heading size="md" color="purple.600">Én betaling</Heading>
+                  <Divider />
+                  <VStack>
+                    <Text fontWeight="bold" fontSize="lg">49 kr</Text>
+                    <Text fontSize="sm" color="text-contrast-md" textAlign="center">for 150 søknadsbrev</Text>
+                  </VStack>
+                  <VStack>
+                    <Text fontWeight="bold" fontSize="lg">2-4 sekunder</Text>
+                    <Text fontSize="sm" color="text-contrast-md" textAlign="center">Leveringstid</Text>
+                  </VStack>
+                  <VStack>
+                    <Text fontWeight="bold" fontSize="lg">GPT-4o</Text>
+                    <Text fontSize="sm" color="text-contrast-md" textAlign="center">Høyeste AI-kvalitet</Text>
+                  </VStack>
+                </VStack>
+
+              </SimpleGrid>
+            </Flex>
+          </Box>
+
+        <Divider />
+
+        {/* Closing statement and future promise */}
+        <Box textAlign="center" maxW="800px">
+          <Heading size="md" mb={3} color="purple.600">Vår filosofi: Rettferdig og transparent</Heading>
+          <Text color="text-contrast-md" fontSize="md">
+            Ingen skjulte kostnader, ingen kompliserte abonnementer. Bare et kraftig verktøy til en rettferdig pris. Vi jobber kontinuerlig med å forbedre tjenesten, og nye funksjoner for å gjøre teksten enda mer 'menneskelig' er rett rundt hjørnet.
+          </Text>
+        </Box>
+
+      </VStack>
+    </Container>
+    
+    <LeaveATip
+      isOpen={isOpen}
+      onOpen={onOpen}
+      onClose={onClose}
+      credits={user?.credits || 0}
+      isUsingLn={user?.isUsingLn || false}
+    />
+    <LoginToBegin isOpen={loginIsOpen} onOpen={loginOnOpen} onClose={loginOnClose} />
+    <LnPaymentModal isOpen={lnPaymentIsOpen} onClose={lnPaymentOnClose} lightningInvoice={lightningInvoice} />
+  </>
+);
 }
 
 export default MainPage;
