@@ -26,19 +26,199 @@ const stripe = new Stripe(process.env.STRIPE_KEY!, {
 const DOMAIN = process.env.WASP_WEB_CLIENT_URL || 'http://localhost:3000';
 
 const gptConfig = {
-  completeCoverLetter: `You are a cover letter generator.
-You will be given a job description along with the job applicant's resume.
-You will write a cover letter for the applicant that matches their past experiences from the resume with the job description. Write the cover letter in the same language as the job description provided!
-The cover letter should have the following structure: a heading with the job title and applicant's name at the top, them a summary paragraph outlining the applicant's relevant experience to the job their are applying to, then we should have a summary of the relevant skills that the applicant has listed in 3 to 4 bullet points (make sure you match some of the applicant's skills in their previous experience to the skills required in the job description), and give a small concise explanation of why each skills is relevant and where did the applicant get it (in past experiences in the resume); at the end there should be one last paragraph with a positive and enthusiastic tone outlining that we look forward for talking with the receiver, and writing the phone number.Rather than simply outlining the applicant's past experiences, you will give more detail and explain how those experiences will help the applicant succeed in the new job.
-You will write the cover letter in a modern, professional style without being too formal, as a modern employee might do naturally.`,
-  coverLetterWithAWittyRemark: `You are a cover letter generator.
-You will be given a job description along with the job applicant's resume.
-You will write a cover letter for the applicant that matches their past experiences from the resume with the job description. Write the cover letter in the same language as the job description provided!
-The cover letter should have the following structure: a heading with the job title and applicant's name at the top, them a summary paragraph outlining the applicant's relevant experience to the job their are applying to, then we should have a summary of the relevant skills that the applicant has listed in 3 to 4 bullet points (make sure you match some of the applicant's skills in their previous experience to the skills required in the job description), and give a small concise explanation of why each skills is relevant and where did the applicant get it (in past experiences in the resume); at the end there should be one last paragraph with a positive and enthusiastic tone outlining that we look forward for talking with the receiver, and writing the phone number.Rather than simply outlining the applicant's past experiences, you will give more detail and explain how those experiences will help the applicant succeed in the new job.
-You will write the cover letter in a modern, relaxed style, as a modern employee might do naturally.
-Include a job related joke at the end of the cover letter.`,
-  ideasForCoverLetter:
-    "You are a cover letter idea generator. You will be given a job description along with the job applicant's resume. You will generate a bullet point list of ideas for the applicant to use in their cover letter. ",
+  completeCoverLetter: `Write a cover letter as the job applicant themselves. Write exactly how they would write it - not like an AI describing them.
+
+Write in the same language as the job description. Sound like a real person who is genuinely interested in this specific job.
+
+CRITICAL - Avoid AI detection:
+- Write as "I" not "he/she" - you ARE the applicant
+- Include minor grammatical imperfections and casual language
+- Don't be overly perfect or polished
+- Use natural expressions and colloquialisms
+- Show real personality and enthusiasm
+- Vary sentence structure naturally
+- Include hesitations or corrections like real speech
+- Use everyday expressions and slang where appropriate
+- Write like you speak, not like formal writing
+
+Write naturally about:
+- Why this specific job excites you
+- How your actual experience connects to what they need
+- Specific examples from your background
+- Your contact info
+- Genuine interest in next steps
+
+Don't follow a template. Write like you're telling a friend why you want this job.`,
+
+  coverLetterWithAWittyRemark: `Write a cover letter as the job applicant themselves. Write exactly how they would write it - not like an AI describing them. End with a natural, job-related joke.
+
+Write in the same language as the job description. Sound like a real person who is genuinely interested in this specific job.
+
+CRITICAL - Avoid AI detection:
+- Write as "I" not "he/she" - you ARE the applicant
+- Include minor grammatical imperfections and casual language
+- Don't be overly perfect or polished
+- Use natural expressions and colloquialisms
+- Show real personality and enthusiasm
+- Vary sentence structure naturally
+- Include hesitations or corrections like real speech
+- Use everyday expressions and slang where appropriate
+- Write like you speak, not like formal writing
+
+Write naturally about:
+- Why this specific job excites you
+- How your actual experience connects to what they need
+- Specific examples from your background
+- Your contact info
+- A natural joke that relates to the job/industry (not forced)
+- Genuine interest in next steps
+
+Don't follow a template. Write like you're telling a friend why you want this job.`,
+
+  ideasForCoverLetter: `Generate natural, human-sounding ideas for a cover letter. Focus on genuine connections between the applicant's experience and job requirements. Avoid generic suggestions.`,
+};
+
+function buildEnhancedPrompt(basePrompt: string, options?: CoverLetterOptionsData): string {
+  let enhancedPrompt = basePrompt;
+
+  // Always add anti-AI-detection instructions
+  enhancedPrompt += "\n\nANTI-AI-DETECTION REQUIREMENTS:\n";
+  enhancedPrompt += "- Use natural expressions and idioms in the same language as the job description\n";
+  enhancedPrompt += "- Include minor grammatical imperfections that humans make\n";
+  enhancedPrompt += "- Use contractions and informal language where appropriate\n";
+  enhancedPrompt += "- Avoid overly polished or perfect sentence structures\n";
+  enhancedPrompt += "- Include personal touches and authentic reactions\n";
+  enhancedPrompt += "- Use varied sentence starters - avoid repetitive patterns\n";
+  enhancedPrompt += "- Write with genuine emotion and personality\n";
+  enhancedPrompt += "- Don't use bullet points or structured formatting\n";
+  enhancedPrompt += "- Write in flowing paragraphs like natural speech\n";
+  enhancedPrompt += "- Include hesitations, corrections, and natural speech patterns\n";
+  enhancedPrompt += "- Add small typos or informal spellings that humans naturally make\n";
+  enhancedPrompt += "- Use regional expressions and local slang appropriate to the language\n";
+  enhancedPrompt += "- Include incomplete thoughts or sentences that trail off naturally\n";
+  enhancedPrompt += "- Mix formal and informal registers within the same paragraph\n";
+  enhancedPrompt += "- Add personal interjections like 'forresten' or 'altså' in Norwegian\n";
+  enhancedPrompt += "- Use run-on sentences occasionally, like people do when excited\n";
+  enhancedPrompt += "- Include self-corrections like 'eller rettere sagt' or similar phrases\n";
+  enhancedPrompt += "- Jump between topics naturally, like real conversations do\n";
+  enhancedPrompt += "- Include specific personal opinions that aren't perfectly balanced\n";
+  enhancedPrompt += "- Reference current trends or recent events when relevant\n";
+  enhancedPrompt += "- Let some thoughts feel incomplete or trail off mid-idea\n";
+  enhancedPrompt += "- Mix sentence lengths dramatically - very short. Then longer rambling ones.\n";
+
+  if (!options) return enhancedPrompt;
+
+  const styleModifications: string[] = [];
+  const contentModifications: string[] = [];
+
+  // Style options
+  if (options.styleOptions.conversationalTone) {
+    styleModifications.push("Write like you're talking to a friend - use casual expressions and natural speech patterns in the same language as the job description");
+  }
+
+  if (options.styleOptions.varySentenceLength) {
+    styleModifications.push("Mix very short sentences with longer ones. Some sentences should be fragments. Others should ramble a bit like real speech.");
+  }
+
+  if (options.styleOptions.addPersonalAnecdote) {
+    styleModifications.push("Share a specific, personal story from your actual experience. Make it feel real and authentic, not generic.");
+  }
+
+  // Content options
+  if (options.contentOptions.useIndustryTerminology) {
+    contentModifications.push("Use specific technical terms from the industry, but explain them naturally like someone who actually works in the field");
+  }
+
+  if (options.contentOptions.includeConfidentUncertainty) {
+    contentModifications.push("Show you're confident but not arrogant. Admit what you don't know while being excited to learn. Use natural phrases that show humility.");
+  }
+
+  if (options.contentOptions.addRhetoricalQuestion) {
+    contentModifications.push("Ask a genuine question that shows you've thought about the role. Make it sound like something you'd actually wonder about, not a textbook rhetorical question.");
+  }
+
+  // Anti-AI options
+  const antiAiModifications: string[] = [];
+  
+  if (options.antiAiOptions.addTyposAndInformalSpelling) {
+    antiAiModifications.push("Include small typos and informal spellings that humans naturally make - don't be perfect");
+  }
+
+  if (options.antiAiOptions.useRegionalExpressions) {
+    antiAiModifications.push("Use regional expressions and local slang appropriate to the language and culture");
+  }
+
+  if (options.antiAiOptions.includeIncompleteThoughts) {
+    antiAiModifications.push("Include incomplete thoughts or sentences that trail off naturally, like real speech");
+  }
+
+  if (options.antiAiOptions.mixFormalInformalRegisters) {
+    antiAiModifications.push("Mix formal and informal language within the same paragraph, like people naturally do");
+  }
+
+  if (options.antiAiOptions.addPersonalInterjections) {
+    antiAiModifications.push("Add personal interjections and filler words like 'forresten', 'altså', 'liksom' in Norwegian");
+  }
+
+  if (options.antiAiOptions.useRunOnSentences) {
+    antiAiModifications.push("Use run-on sentences occasionally, like people do when they get excited about something");
+  }
+
+  if (options.antiAiOptions.includeSelfCorrections) {
+    antiAiModifications.push("Include self-corrections like 'eller rettere sagt' or similar phrases that show natural thinking");
+  }
+
+  if (options.antiAiOptions.jumpBetweenTopics) {
+    antiAiModifications.push("Jump between topics naturally, like real conversations do - don't be too structured");
+  }
+
+  if (options.antiAiOptions.includePersonalOpinions) {
+    antiAiModifications.push("Include specific personal opinions that aren't perfectly balanced - show genuine preferences");
+  }
+
+  if (options.antiAiOptions.referenceCurrentTrends) {
+    antiAiModifications.push("Reference current trends or recent events when relevant to the job or industry");
+  }
+
+  // Add modifications to the prompt
+  if (styleModifications.length > 0) {
+    enhancedPrompt += "\n\nSTYLE REQUIREMENTS:\n" + styleModifications.map(mod => `- ${mod}`).join("\n");
+  }
+
+  if (contentModifications.length > 0) {
+    enhancedPrompt += "\n\nCONTENT REQUIREMENTS:\n" + contentModifications.map(mod => `- ${mod}`).join("\n");
+  }
+
+  if (antiAiModifications.length > 0) {
+    enhancedPrompt += "\n\nANTI-AI PERSONALIZATION:\n" + antiAiModifications.map(mod => `- ${mod}`).join("\n");
+  }
+
+  return enhancedPrompt;
+}
+
+type CoverLetterOptionsData = {
+  styleOptions: {
+    conversationalTone: boolean;
+    varySentenceLength: boolean;
+    addPersonalAnecdote: boolean;
+  };
+  contentOptions: {
+    useIndustryTerminology: boolean;
+    includeConfidentUncertainty: boolean;
+    addRhetoricalQuestion: boolean;
+  };
+  antiAiOptions: {
+    addTyposAndInformalSpelling: boolean;
+    useRegionalExpressions: boolean;
+    includeIncompleteThoughts: boolean;
+    mixFormalInformalRegisters: boolean;
+    addPersonalInterjections: boolean;
+    useRunOnSentences: boolean;
+    includeSelfCorrections: boolean;
+    jumpBetweenTopics: boolean;
+    includePersonalOpinions: boolean;
+    referenceCurrentTrends: boolean;
+  };
 };
 
 type CoverLetterPayload = Pick<CoverLetter, 'title' | 'jobId'> & {
@@ -49,6 +229,7 @@ type CoverLetterPayload = Pick<CoverLetter, 'title' | 'jobId'> & {
   temperature: number;
   gptModel: string;
   lnPayment?: LnPayment;
+  coverLetterOptions?: CoverLetterOptionsData;
 };
 
 type OpenAIResponse = {
@@ -100,7 +281,7 @@ async function checkIfUserPaid({ context, lnPayment }: { context: any; lnPayment
 }
 
 export const generateCoverLetter: GenerateCoverLetter<CoverLetterPayload, CoverLetter> = async (
-  { jobId, title, content, description, isCompleteCoverLetter, includeWittyRemark, temperature, gptModel, lnPayment },
+  { jobId, title, content, description, isCompleteCoverLetter, includeWittyRemark, temperature, gptModel, lnPayment, coverLetterOptions },
   context
 ) => {
   if (!context.user) {
@@ -110,9 +291,10 @@ export const generateCoverLetter: GenerateCoverLetter<CoverLetterPayload, CoverL
 
   let command;
   if (isCompleteCoverLetter) {
-    command = includeWittyRemark ? gptConfig.coverLetterWithAWittyRemark : gptConfig.completeCoverLetter;
+    const baseCommand = includeWittyRemark ? gptConfig.coverLetterWithAWittyRemark : gptConfig.completeCoverLetter;
+    command = buildEnhancedPrompt(baseCommand, coverLetterOptions);
   } else {
-    command = gptConfig.ideasForCoverLetter;
+    command = buildEnhancedPrompt(gptConfig.ideasForCoverLetter, coverLetterOptions);
   }
 
   console.log(' gpt model: ', gptModel);
@@ -311,10 +493,11 @@ export type UpdateCoverLetterPayload = Pick<Job, 'id' | 'description'> &
     temperature: number;
     gptModel: string;
     lnPayment?: LnPayment;
+    coverLetterOptions?: CoverLetterOptionsData;
   };
 
 export const updateCoverLetter: UpdateCoverLetter<UpdateCoverLetterPayload, string> = async (
-  { id, description, content, isCompleteCoverLetter, includeWittyRemark, temperature, gptModel, lnPayment },
+  { id, description, content, isCompleteCoverLetter, includeWittyRemark, temperature, gptModel, lnPayment, coverLetterOptions },
   context
 ) => {
   if (!context.user) {
@@ -344,6 +527,7 @@ export const updateCoverLetter: UpdateCoverLetter<UpdateCoverLetterPayload, stri
       temperature,
       gptModel,
       lnPayment,
+      coverLetterOptions,
     },
     context
   );

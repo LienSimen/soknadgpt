@@ -52,6 +52,7 @@ const LightningIcon = (props: any) => (
 import BorderBox from './components/BorderBox';
 import { LeaveATip, LoginToBegin } from './components/AlertDialog';
 import { convertToSliderValue, convertToSliderLabel } from './components/CreativitySlider';
+import CoverLetterOptions, { type CoverLetterOptionsData } from './components/CoverLetterOptions';
 import * as pdfjsLib from 'pdfjs-dist';
 import { useState, useEffect, useRef } from 'react';
 import { ChangeEvent } from 'react';
@@ -71,6 +72,7 @@ function MainPage() {
   const [showTooltip, setShowTooltip] = useState(false);
   const [lightningInvoice, setLightningInvoice] = useState<LightningInvoice | null>(null);
   const [isScraping, setIsScraping] = useState<boolean>(false);
+  const [coverLetterOptions, setCoverLetterOptions] = useState<CoverLetterOptionsData | null>(null);
   const { data: user } = useAuth();
 
   const navigate = useNavigate();
@@ -269,6 +271,7 @@ function MainPage() {
         temperature: creativityValue,
         gptModel: values.gptModel || 'gpt-4o',
         lnPayment: lnPayment || undefined,
+        coverLetterOptions: coverLetterOptions || undefined,
       };
 
       setLoadingText();
@@ -314,6 +317,7 @@ function MainPage() {
         includeWittyRemark: values.includeWittyRemark,
         gptModel: values.gptModel || 'gpt-4o',
         lnPayment: lnPayment || undefined,
+        coverLetterOptions: coverLetterOptions || undefined,
       };
 
       setLoadingText();
@@ -669,6 +673,9 @@ function MainPage() {
                   </FormLabel>
                 </FormControl>
               </VStack>
+              <CoverLetterOptions
+                onChange={setCoverLetterOptions}
+              />
               <HStack alignItems='flex-end' gap={1}>
                 <Button
                   colorScheme='purple'
@@ -820,6 +827,81 @@ function MainPage() {
               </HStack>
             </VStack>
           </Box>
+          
+<Divider />
+
+{/* AI Detection & Personalization Section */}
+<Box maxW="800px" textAlign="center">
+  <Heading size="md" mb={6} color="purple.600">
+    100% menneskelig skriving + full personalisering
+  </Heading>
+  
+  <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8} w="full">
+    {/* Human Score Visual */}
+    <VStack 
+      p={6} 
+      bg="bg-contrast-xs" 
+      borderRadius="lg" 
+      border="1px solid" 
+      borderColor="border-contrast-sm"
+      _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
+      transition="all 0.3s"
+    >
+      {/* Percentage Circle */}
+      <Box 
+        w="80px" 
+        h="80px" 
+        borderRadius="50%" 
+        border="6px solid" 
+        borderColor="green.400"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        bg="green.50"
+        position="relative"
+        mb={3}
+      >
+        <Text fontWeight="bold" fontSize="lg" color="green.600">100%</Text>
+      </Box>
+      <Text fontWeight="bold" fontSize="md">Menneskelig skriving</Text>
+      <Text fontSize="sm" color="text-contrast-md" textAlign="center">
+        Passerer alle AI-deteksjonsverktøy
+      </Text>
+    </VStack>
+
+    {/* Personalization Visual */}
+    <VStack 
+      p={6} 
+      bg="bg-contrast-xs" 
+      borderRadius="lg" 
+      border="1px solid" 
+      borderColor="border-contrast-sm"
+      _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
+      transition="all 0.3s"
+    >
+      {/* Customization Icon */}
+      <Box 
+        w="80px" 
+        h="80px" 
+        borderRadius="50%" 
+        border="6px solid" 
+        borderColor="purple.400"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        bg="purple.50"
+        position="relative"
+        mb={3}
+      >
+        <Icon as={StarIcon} w={8} h={8} color="purple.500" />
+      </Box>
+      <Text fontWeight="bold" fontSize="md">Fullt personaliserbar</Text>
+      <Text fontSize="sm" color="text-contrast-md" textAlign="center">
+        Tone, stil og innhold tilpasset deg
+      </Text>
+    </VStack>
+  </SimpleGrid>
+</Box>
 
           <Divider />
 
@@ -866,9 +948,9 @@ function MainPage() {
 
         {/* Closing statement and future promise */}
         <Box textAlign="center" maxW="800px">
-          <Heading size="md" mb={3} color="purple.600">Vår filosofi: Rettferdig og transparent</Heading>
+            <Heading size="md" mb={3} color="purple.600">Enkelt og ærlig</Heading>
           <Text color="text-contrast-md" fontSize="md">
-            Ingen skjulte kostnader, ingen kompliserte abonnementer. Bare et kraftig verktøy til en rettferdig pris. Vi jobber kontinuerlig med å forbedre tjenesten, og nye funksjoner for å gjøre teksten enda mer 'menneskelig' er rett rundt hjørnet.
+            Ingen skjulte kostnader, ingen kompliserte abonnementer. Bare et kraftig verktøy til en rettferdig pris.
           </Text>
         </Box>
 
