@@ -8,7 +8,6 @@ import {
   updateLnPayment,
   useQuery,
   getJob,
-  getCoverLetterCount,
 } from "wasp/client/operations";
 import { scrapeJob } from './scrapeJob';
 
@@ -32,17 +31,13 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-  RadioGroup,
-  Radio,
   Tooltip,
   useDisclosure,
   SimpleGrid,
-  Badge,
   Icon,
   Flex,
   Divider,
   Container,
-  Stack,
 } from '@chakra-ui/react';
 import { CheckCircleIcon, TimeIcon, StarIcon } from '@chakra-ui/icons';
 // Custom LightningIcon since @chakra-ui/icons does not export one
@@ -62,7 +57,8 @@ import { useState, useEffect, useRef } from 'react';
 import { ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import LnPaymentModal from './components/LnPaymentModal';
+import React, { lazy, Suspense } from 'react';
+const LnPaymentModal = lazy(() => import('./components/LnPaymentModal'));
 import { fetchLightningInvoice } from './lightningUtils';
 import type { LightningInvoice } from './lightningUtils';
 
@@ -75,7 +71,6 @@ function MainPage() {
   const [showTooltip, setShowTooltip] = useState(false);
   const [lightningInvoice, setLightningInvoice] = useState<LightningInvoice | null>(null);
   const [isScraping, setIsScraping] = useState<boolean>(false);
-
   const { data: user } = useAuth();
 
   const navigate = useNavigate();
@@ -88,7 +83,6 @@ function MainPage() {
     error: getJobError,
   } = useQuery(getJob, { id: jobToFetch }, { enabled: jobToFetch.length > 0 });
 
-  const { data: coverLetterCount } = useQuery(getCoverLetterCount);
 
   const {
     handleSubmit,
@@ -404,19 +398,7 @@ function MainPage() {
 
   return (
     <>
-      <Box
-        layerStyle='card'
-        px={4}
-        py={2}
-        mt={3}
-        mb={-3}
-        bgColor='bg-overlay'
-        visibility={coverLetterCount && coverLetterCount >= 500 ? 'visible' : 'hidden'}
-        _hover={{ bgColor: 'bg-contrast-xs' }}
-        transition='0.1s ease-in-out'
-      >
-        <Text fontSize='md'>{coverLetterCount?.toLocaleString()} Søknadsbrev opprettet! 🎉</Text>
-      </Box>
+      {/* Cover letter count display removed */}
       <BorderBox>
         <form
           onSubmit={!isCoverLetterUpdate ? handleSubmit(onSubmit) : handleSubmit(onUpdate)}
@@ -447,16 +429,23 @@ function MainPage() {
                       },
                     })}
                   />
-                  <Button
+                    <Button
                     colorScheme='purple'
                     mt={2}
                     size='sm'
                     onClick={handleScrapeJob}
                     isLoading={isScraping}
                     disabled={isScraping || isCoverLetterUpdate}
-                  >
+                    aria-label="Hent jobbinformasjon fra Finn.no URL"
+                    title="Hent jobbinformasjon fra Finn.no URL"
+                    color="white"
+                    bg="purple.500"
+                    _hover={{ bg: "purple.600" }}
+                    _active={{ bg: "purple.600" }}
+                    _disabled={{ bg: "gray.500", color: "gray.100" }}
+                    >
                     Hent info
-                  </Button>
+                    </Button>
                 </HStack>
                 <FormErrorMessage>{!!formErrors.applicant_job_advertisement_url && formErrors.applicant_job_advertisement_url.message?.toString()}</FormErrorMessage>
               </FormControl>
@@ -560,7 +549,14 @@ function MainPage() {
                 >
                   <HStack>
                     <FormLabel textAlign='center' htmlFor='pdf'>
-                      <Button size='sm' colorScheme='contrast' onClick={handleFileButtonClick}>
+                      <Button 
+                        size='sm' 
+                        colorScheme='purple' 
+                        onClick={handleFileButtonClick}
+                        color="white"
+                        bg="purple.500"
+                        _hover={{ bg: "purple.600" }}
+                      >
                         Last opp CV
                       </Button>
                     </FormLabel>
@@ -607,6 +603,7 @@ function MainPage() {
                 <FormControl my={2}>
                   <Slider
                     id='temperature'
+                    aria-label='slider-ex-1'
                     defaultValue={30}
                     min={0}
                     max={68}
@@ -680,6 +677,11 @@ function MainPage() {
                   isLoading={isSubmitting}
                   disabled={user === null}
                   type='submit'
+                  color="white"
+                  bg="purple.500"
+                  _hover={{ bg: "purple.600" }}
+                  _active={{ bg: "purple.600" }}
+                  _disabled={{ bg: "gray.500", color: "gray.100" }}
                 >
                   {!isCoverLetterUpdate ? 'Generer søknadsbrev' : 'Opprett nytt søknadsbrev'}
                 </Button>
@@ -881,7 +883,9 @@ function MainPage() {
       isUsingLn={user?.isUsingLn || false}
     />
     <LoginToBegin isOpen={loginIsOpen} onOpen={loginOnOpen} onClose={loginOnClose} />
-    <LnPaymentModal isOpen={lnPaymentIsOpen} onClose={lnPaymentOnClose} lightningInvoice={lightningInvoice} />
+    <Suspense fallback={<Spinner />}>
+      <LnPaymentModal isOpen={lnPaymentIsOpen} onClose={lnPaymentOnClose} lightningInvoice={lightningInvoice} />
+    </Suspense>
   </>
 );
 }

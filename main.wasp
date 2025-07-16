@@ -4,26 +4,32 @@ app CoverLetterGPT {
   },
   title: "Søknad GPT",
   head: [
-  "<meta charset=\"UTF-8\" />",
-  "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />",
-  "<meta name=\"description\" content=\"Få hjelp til å skrive profesjonelle og skreddersydde søknader på et blunk. Prøv helt gratis!\" />",
-  "<meta name=\"author\" content=\"Søknad GPT\" />",
-  "<meta property=\"og:type\" content=\"website\" />",
-  "<meta name=\"google-site-verification\" content=\"DXY1MXPsdD0bwttb10x5zps-rktKOnxkZ2yUi5PQrW8\" />",
-  "<meta property=\"og:url\" content=\"https://www.cvcv.no\" />",
-  "<meta property=\"og:title\" content=\"SøknadGPT: Hjelp til søknad\" />",
-  "<meta property=\"og:description\" content=\"Få hjelp til å skrive profesjonelle og skreddersydde søknader på et blunk. Prøv helt gratis!\" />",
-  "<meta property=\"og:image\" content=\"https://www.cvcv.no/og-image.png\" />",
-  "<meta name=\"twitter:card\" content=\"summary_large_image\" />",
-  "<meta name=\"twitter:title\" content=\"Søknad GPT: Hjelp til søknad\" />",
-  "<meta name=\"twitter:description\" content=\"Få hjelp til å skrive profesjonelle og skreddersydde søknaderpå et blunk. Prøv helt gratis!\" />",
-  "<meta name=\"twitter:image\" content=\"https://www.cvcv.no/twitter-image.png\" />",
-  "<link rel=\"icon\" type=\"image/x-icon\" href=\"/favicon.ico\" />",
-  "<link rel=\"canonical\" href=\"https://www.cvcv.no\" />",
-  "<title>Søknad GPT: Lag Profesjonelle Søknadsbrev med AI</title>",
-  "<script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"Service\",\"name\":\"SøknadGPT\",\"description\":\"Hjelp til søknad.\",\"provider\":{\"@type\":\"Organization\",\"name\":\"Søknad GPT\",\"url\":\"https://www.cvcv.no\"}}</script>"
-],
-  // 🔐 Auth out of the box! https://wasp-lang.dev/docs/language/features#authentication--authorization
+    "<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">",
+    "<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>",
+    "<link rel=\"preconnect\" href=\"https://api.cartadeapresentacao.pt\">",
+    "<link rel=\"dns-prefetch\" href=\"https://js.stripe.com\">",
+    "<link rel=\"preload\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap\" as=\"style\" onload=\"this.onload=null;this.rel='stylesheet'\">",
+    "<noscript><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap\"></noscript>",
+    "<style>body{font-family:system-ui,-apple-system,sans-serif}h1,h2,h3{font-weight:600}.loading{opacity:0.7;pointer-events:none}</style>",
+    "<meta charset=\"UTF-8\" />",
+    "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />",
+    "<title>Søknad GPT: Lag Profesjonelle Søknadsbrev med AI</title>",
+    "<meta name=\"description\" content=\"Få hjelp til å skrive profesjonelle og skreddersydde søknader på et blunk. Prøv helt gratis!\" />",
+    "<link rel=\"canonical\" href=\"https://www.cvcv.no\" />",
+    "<meta property=\"og:type\" content=\"website\" />",
+    "<meta property=\"og:url\" content=\"https://www.cvcv.no\" />",
+    "<meta property=\"og:title\" content=\"SøknadGPT: Hjelp til søknad\" />",
+    "<meta property=\"og:description\" content=\"Få hjelp til å skrive profesjonelle og skreddersydde søknader på et blunk. Prøv helt gratis!\" />",
+    "<meta property=\"og:image\" content=\"https://www.cvcv.no/og-image.png\" />",
+    "<meta name=\"twitter:card\" content=\"summary_large_image\" />",
+    "<meta name=\"twitter:title\" content=\"Søknad GPT: Hjelp til søknad\" />",
+    "<meta name=\"twitter:description\" content=\"Få hjelp til å skrive profesjonelle og skreddersydde søknaderpå et blunk. Prøv helt gratis!\" />",
+    "<meta name=\"twitter:image\" content=\"https://www.cvcv.no/twitter-image.png\" />",
+    "<meta name=\"author\" content=\"Søknad GPT\" />",
+    "<meta name=\"google-site-verification\" content=\"DXY1MXPsdD0bwttb10x5zps-rktKOnxkZ2yUi5PQrW8\" />",
+    "<link rel=\"icon\" type=\"image/x-icon\" href=\"/favicon.ico\" />",
+    "<script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"Service\",\"name\":\"SøknadGPT\",\"description\":\"Hjelp til søknad.\",\"provider\":{\"@type\":\"Organization\",\"name\":\"Søknad GPT\",\"url\":\"https://www.cvcv.no\"}}</script>"
+  ],
   auth: {
     userEntity: User,
     methods: {
@@ -38,6 +44,9 @@ app CoverLetterGPT {
     rootComponent: import App from "@src/client/App",
     setupFn: import clientSetup from "@src/client/clientSetup"
   },
+  server: {
+    setupFn: import serverSetup from "@src/server/serverSetup"
+  },
   emailSender: {
     provider: SendGrid,
     defaultFrom: {
@@ -46,10 +55,6 @@ app CoverLetterGPT {
     },
   },
 }
-
-/* 📡 These are the Wasp Routes (You can protect them easily w/ 'authRequired: true');
- * https://wasp-lang.dev/docs/language/features#route
- */
 
 route RootRoute { path: "/", to: MainPage }
 page MainPage {
@@ -94,12 +99,6 @@ route PrivacyRoute { path: "/privacy", to: PrivacyPage }
 page PrivacyPage {
   component: import Privacy from "@src/client/legal/PrivacyPolicyPage"
 }
-
-/* ⛑ These are the Wasp Operations, which allow the client and server to interact:
- * https://wasp-lang.dev/docs/language/features#queries-and-actions-aka-operations
- */
-
-// 📝 Actions aka Mutations
 
 action generateCoverLetter {
   fn: import { generateCoverLetter } from "@src/server/actions.js",
@@ -178,8 +177,6 @@ action scrapeJob {
   fn: import { scrapeJob } from "@src/server/actions.js",
 }
 
-// 📚 Queries
-
 query getJobs {
   fn: import { getJobs } from "@src/server/queries.js",
   entities: [Job]
@@ -210,14 +207,6 @@ query getLnUserInfo {
   entities: [User, LnData]
 }
 
-query getCoverLetterCount {
-  fn: import { getCoverLetterCount } from "@src/server/queries.js",
-  entities: [CoverLetter]
-}
-
-/* 📡 These are custom Wasp API Endpoints. Use them for callbacks, webhooks, etc.
- * https://wasp-lang.dev/docs/language/features#apis
- */
 
 api stripeWebhook {
   fn: import { stripeWebhook } from "@src/server/webhooks.js",
@@ -230,10 +219,6 @@ api lnLogin {
   entities: [User, LnData],
   httpRoute: (GET, "/ln-login")
 }
-
-/* 🕵️‍♂️ These are the Wasp Cron Jobs. Use them to set up recurring tasks or queues:
- * https://wasp-lang.dev/docs/language/features#jobs
- */
 
 job checkUserSubscription {
   executor: PgBoss,

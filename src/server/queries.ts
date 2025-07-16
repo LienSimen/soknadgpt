@@ -5,7 +5,6 @@ import {
   type GetJobs,
   type GetJob,
   type GetUserInfo,
-  type GetCoverLetterCount,
 } from "wasp/server/operations";
 
 export const getCoverLetter: GetCoverLetter<Pick<CoverLetter, 'id'> , CoverLetter> = async ({ id }, context) => {
@@ -98,7 +97,3 @@ export const getUserInfo: GetUserInfo<Pick<User, 'id'> | null, Pick<User, 'id' |
   });
 };
 
-
-export const getCoverLetterCount: GetCoverLetterCount<void, number> = async (_args, context) => {
-  return context.entities.CoverLetter.count();
-}

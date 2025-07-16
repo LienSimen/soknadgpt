@@ -1,11 +1,14 @@
 import { useAuth } from 'wasp/client/auth';
 import { ChakraProvider, VStack, Box, Spacer } from '@chakra-ui/react';
 import { theme } from './theme';
-import { useState, useEffect, createContext } from 'react';
+import { useState, useEffect, createContext, useCallback, useMemo, Suspense, lazy } from 'react';
 import NavBar from './components/NavBar';
 import { Footer } from './components/CallToAction';
-import { EditPopover } from './components/Popover';
 import { useLocation, Outlet } from 'react-router-dom';
+import { usePerformanceOptimizer } from './components/PerformanceOptimizer';
+
+// Lazy load heavy components
+const EditPopover = lazy(() => import('./components/Popover').then(module => ({ default: module.EditPopover })));
 
 export const TextareaContext = createContext({
   textareaState: '',
@@ -21,8 +24,44 @@ export default function App() {
   const [isLnPayPending, setIsLnPayPending] = useState<boolean>(false);
 
   const location = useLocation();
-
   const { data: user } = useAuth();
+  const { throttle } = usePerformanceOptimizer();
+
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo(() => ({
+    textareaState,
+    setTextareaState,
+    isLnPayPending,
+    setIsLnPayPending,
+  }), [textareaState, isLnPayPending]);
+
+  // Optimize mouse event handlers with throttling
+  const handleMouseUp = useCallback(throttle((event: MouseEvent) => {
+    const selection = window.getSelection();
+
+    if (selection?.toString() && location.pathname.includes('cover-letter')) {
+      // closes the tooltip when the user clicks a tooltip button
+      if (selection.toString() === currentText) {
+        setTooltip(null);
+        return;
+      }
+      setCurrentText(selection.toString());
+      // get the x and y coordinates of the mouse position
+      const x = event.clientX;
+      const y = event.clientY;
+      const text = selection.toString();
+
+      setTooltip({ x: x.toString() + 'px', y: y.toString() + 'px', text });
+    } else {
+      setTooltip(null);
+    }
+  }, 16), [location.pathname, currentText, throttle]); // 60fps throttling
+
+  const handleMouseDown = useCallback(() => {
+    if (location.pathname.includes('cover-letter')) {
+      setCurrentText(null);
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     if (isLnPayPending) {
@@ -32,51 +71,19 @@ export default function App() {
       setTooltip(null);
     }
 
-    function handleMouseUp(event: any) {
-      const selection = window.getSelection();
-
-      if (selection?.toString() && location.pathname.includes('cover-letter')) {
-        // closes the tooltip when the user clicks a tooltip button
-        if (selection.toString() === currentText) {
-          setTooltip(null);
-          return;
-        }
-        setCurrentText(selection.toString());
-        // get the x and y coordinates of the mouse position
-        const x = event.clientX;
-        const y = event.clientY;
-
-        const text = selection.toString();
-
-        setTooltip({ x, y, text });
-      } else {
-        setTooltip(null);
-      }
-    }
-    function handleMouseDown() {
-      if (location.pathname.includes('cover-letter')) {
-        setCurrentText(null);
-      }
-    }
-
-    document.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('mousedown', handleMouseDown);
+    // Use passive listeners for better performance
+    document.addEventListener('mouseup', handleMouseUp, { passive: true });
+    document.addEventListener('mousedown', handleMouseDown, { passive: true });
+    
     return () => {
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('mousedown', handleMouseDown);
     };
-  }, [tooltip, location, isLnPayPending]);
+  }, [handleMouseUp, handleMouseDown, location.pathname, isLnPayPending]);
 
   return (
     <ChakraProvider theme={theme}>
-      <TextareaContext.Provider
-        value={{
-          textareaState,
-          setTextareaState,
-          isLnPayPending,
-          setIsLnPayPending,
-        }}
-      >
+      <TextareaContext.Provider value={contextValue}>
         <Box
           top={tooltip?.y}
           left={tooltip?.x}
@@ -84,7 +91,11 @@ export default function App() {
           position='absolute'
           zIndex={100}
         >
-          {!!user && <EditPopover setTooltip={setTooltip} user={user} />}
+          {!!user && (
+            <Suspense fallback={<div style={{ width: '20px', height: '20px' }} />}>
+              <EditPopover setTooltip={setTooltip} user={user} />
+            </Suspense>
+          )}
         </Box>
         <VStack gap={5} minHeight='100vh'>
           <NavBar />

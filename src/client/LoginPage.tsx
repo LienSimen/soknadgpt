@@ -6,7 +6,8 @@ import { VStack, Button, Spinner, Text, useDisclosure } from '@chakra-ui/react';
 import BorderBox from './components/BorderBox';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LnLoginModal from './components/LnLoginModal';
+import React, { lazy, Suspense } from 'react';
+const LnLoginModal = lazy(() => import('./components/LnLoginModal'));
 
 export default function Login() {
   const [encodedUrl, setEncodedUrl] = useState<string | null>(null);
@@ -85,13 +86,15 @@ export default function Login() {
           </VStack>
         )}
       </BorderBox>
-      <LnLoginModal
-        handleWalletClick={handleWalletClick}
-        status={lnLoginStatus}
-        encodedUrl={encodedUrl}
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+      <Suspense fallback={<Spinner />}>
+        <LnLoginModal
+          handleWalletClick={handleWalletClick}
+          status={lnLoginStatus}
+          encodedUrl={encodedUrl}
+          isOpen={isOpen}
+          onClose={onClose}
+        />
+      </Suspense>
     </>
   );
 }

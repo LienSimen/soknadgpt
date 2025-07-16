@@ -9,12 +9,12 @@ export function Footer() {
       <VStack gap={3}>
         <Link
           href="https://github.com/LienSimen/soknadgpt"
-          color="purple.300"
+          color="text-contrast-md"
           target="_blank"
         >
           <HStack justify="center">
             <FaGithub />
-            <Text fontSize="sm" color="purple.300">
+            <Text fontSize="sm" color="text-contrast-md">
               Bygget med Wasp & 100% åpen kildekode, forket av vincanger{" "}
               <span style={{ display: "inline-flex", verticalAlign: "middle" }}>
                 <svg
@@ -30,16 +30,16 @@ export function Footer() {
             </Text>
           </HStack>
         </Link>
-        <Text fontSize="sm" color="purple.300">
+        <Text fontSize="sm" color="text-contrast-md">
           Lien Tech - Orgnr. 935820057, Bergen, Norge - Alle priser inkl. mva
         </Text>
         <WaspLink to="/tos">
-          <Text fontSize="sm" color="purple.300">
+          <Text fontSize="sm" color="text-contrast-md" _hover={{ color: "purple.500" }}>
             Brukerbetingelser
           </Text>
         </WaspLink>
         <WaspLink to="/privacy">
-          <Text fontSize="sm" color="purple.300">
+          <Text fontSize="sm" color="text-contrast-md" _hover={{ color: "purple.500" }}>
             Personvern
           </Text>
         </WaspLink>

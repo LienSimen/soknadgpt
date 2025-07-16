@@ -1,7 +1,7 @@
 export const semanticTokens = {
   colors: {
     'bg-body': {
-      default: 'gray.100',
+      default: 'white',
       _dark: 'rgba(0, 0, 0, 0.50)', //'#0d0f10',
     },
     'bg-body-inverse': {
@@ -9,23 +9,23 @@ export const semanticTokens = {
       _dark: 'gray.50',
     },
     'bg-contrast-xs': {
-      default: 'rgba(0, 30, 50, 0.0125)',
+      default: 'rgba(0, 30, 50, 0.025)',
       _dark: 'rgba(255, 255, 255, 0.0125)',
     },
     'bg-contrast-sm': {
-      default: 'rgba(0, 30, 50, 0.025)',
+      default: 'rgba(0, 30, 50, 0.05)',
       _dark: 'rgba(255, 255, 255, 0.025)',
     },
     'bg-contrast-md': {
-      default: 'rgba(0, 30, 50, 0.05)',
+      default: 'rgba(0, 30, 50, 0.075)',
       _dark: 'rgba(255, 255, 255, 0.05)',
     },
     'bg-contrast-lg': {
-      default: 'rgba(0, 30, 50, 0.075)',
+      default: 'rgba(0, 30, 50, 0.1)',
       _dark: 'rgba(255, 255, 255, 0.075)',
     },
     'bg-contrast-xl': {
-      default: 'rgba(0, 30, 50, 0.1)',
+      default: 'rgba(0, 30, 50, 0.125)',
       _dark: 'rgba(255, 255, 255, 0.1)',
     },
     'bg-contrast-overlay': {
@@ -41,43 +41,43 @@ export const semanticTokens = {
       _dark: '#1f1f1f',
     },
     'text-contrast-xs': {
-      default: 'blackAlpha.500',
+      default: 'blackAlpha.600',
       _dark: 'whiteAlpha.500',
     },
     'text-contrast-sm': {
-      default: 'blackAlpha.600',
+      default: 'blackAlpha.700',
       _dark: 'whiteAlpha.600',
     },
     'text-contrast-md': {
-      default: 'blackAlpha.700',
+      default: 'blackAlpha.800',
       _dark: 'whiteAlpha.700',
     },
     'text-contrast-lg': {
-      default: 'blackAlpha.800',
+      default: 'blackAlpha.900',
       _dark: 'whiteAlpha.800',
     },
     'text-contrast-xl': {
-      default: 'blackAlpha.900',
-      _dark: 'whiteAlpha.900',
+      default: 'black',
+      _dark: 'white',
     },
     'border-contrast-xs': {
-      default: 'rgba(0, 0, 0, 0.1)',
+      default: 'rgba(0, 0, 0, 0.2)',
       _dark: 'rgba(255, 255, 255, 0.1)',
     },
     'border-contrast-sm': {
-      default: 'rgba(0, 0, 0, 0.2)',
+      default: 'rgba(0, 0, 0, 0.3)',
       _dark: 'rgba(255, 255, 255, 0.2)',
     },
     'border-contrast-md': {
-      default: 'rgba(0, 0, 0, 0.3)',
+      default: 'rgba(0, 0, 0, 0.4)',
       _dark: 'rgba(255, 255, 255, 0.3)',
     },
     'border-contrast-lg': {
-      default: 'rgba(0, 0, 0, 0.4)',
+      default: 'rgba(0, 0, 0, 0.5)',
       _dark: 'rgba(255, 255, 255, 0.4)',
     },
     'border-contrast-xl': {
-      default: 'rgba(0, 0, 0, 0.5)',
+      default: 'rgba(0, 0, 0, 0.6)',
       _dark: 'rgba(255, 255, 255, 0.5)',
     },
     active: {
