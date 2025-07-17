@@ -225,6 +225,16 @@ api lnLogin {
   httpRoute: (GET, "/ln-login")
 }
 
+api cspReport {
+  fn: import { handleCspReport } from "@src/server/cspReport.js",
+  httpRoute: (POST, "/csp-report")
+}
+
+api cspStats {
+  fn: import { getCspStatsHandler } from "@src/server/cspReport.js",
+  httpRoute: (GET, "/csp-stats")
+}
+
 job checkUserSubscription {
   executor: PgBoss,
   perform: {

@@ -1,19 +1,16 @@
 // Selective Chakra UI imports for better tree shaking
 import { ChakraProvider, VStack, Box, Spacer } from '@chakra-ui/react';
 import { theme } from './theme';
-import { useState, useEffect, createContext, useCallback, useMemo, Suspense } from 'react';
+import { useState, useEffect, createContext, useCallback, useMemo } from 'react';
 import NavBar from './components/NavBar';
 import { Footer } from './components/CallToAction';
 import { useLocation, Outlet } from 'react-router-dom';
 import { usePerformanceOptimizer } from './components/PerformanceOptimizer';
-import { LazyEditPopover, EditPopoverLoader, LazyLoadErrorBoundary } from './components/LazyComponents';
-import { useConditionalAuth, authPerformanceMonitor } from './utils/conditionalAuth';
-
 export const TextareaContext = createContext({
   textareaState: '',
-  setTextareaState: (value: string) => {},
+  setTextareaState: (value: string) => { },
   isLnPayPending: false,
-  setIsLnPayPending: (value: boolean) => {},
+  setIsLnPayPending: (value: boolean) => { },
 });
 
 export default function App() {
@@ -23,18 +20,7 @@ export default function App() {
   const [isLnPayPending, setIsLnPayPending] = useState<boolean>(false);
 
   const location = useLocation();
-  const { data: user, shouldCheckAuth, requiresAuth } = useConditionalAuth();
   const { throttle } = usePerformanceOptimizer();
-
-  // Track authentication performance
-  useEffect(() => {
-    if (shouldCheckAuth) {
-      authPerformanceMonitor.recordAuthCheck();
-      if (user) {
-        authPerformanceMonitor.recordAuthSuccess();
-      }
-    }
-  }, [shouldCheckAuth, user]);
 
   // Memoize context value to prevent unnecessary re-renders
   const contextValue = useMemo(() => ({
@@ -83,7 +69,7 @@ export default function App() {
     // Use passive listeners for better performance
     document.addEventListener('mouseup', handleMouseUp, { passive: true });
     document.addEventListener('mousedown', handleMouseDown, { passive: true });
-    
+
     return () => {
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('mousedown', handleMouseDown);
@@ -100,13 +86,7 @@ export default function App() {
           position='absolute'
           zIndex={100}
         >
-          {!!user && (
-            <LazyLoadErrorBoundary>
-              <Suspense fallback={<EditPopoverLoader />}>
-                <LazyEditPopover setTooltip={setTooltip} user={user} />
-              </Suspense>
-            </LazyLoadErrorBoundary>
-          )}
+          {/* Edit popover will be handled by individual pages that need it */}
         </Box>
         <VStack gap={5} minHeight='100vh'>
           <NavBar />

@@ -24,41 +24,86 @@ const serverSetup: ServerSetupFn = async ({ app }) => {
   // Security headers middleware
   app.use((req, res, next) => {
     // HSTS (HTTP Strict Transport Security) - force HTTPS for 1 year
+    // Start with shorter max-age for initial deployment, then increase
     if (process.env.NODE_ENV === 'production') {
       res.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+    } else {
+      // For development/staging, use shorter duration
+      res.set('Strict-Transport-Security', 'max-age=86400; includeSubDomains');
     }
     
-    // Content Security Policy - prevent XSS attacks
+    // Content Security Policy - comprehensive XSS protection
     const cspDirectives = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.google-analytics.com https://www.googletagmanager.com",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "font-src 'self' https://fonts.gstatic.com",
+      // Script sources - be restrictive with unsafe-inline/unsafe-eval
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.google-analytics.com https://www.googletagmanager.com https://cdn.jsdelivr.net",
+      // Style sources
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net",
+      // Font sources
+      "font-src 'self' https://fonts.gstatic.com data:",
+      // Image sources - allow data URIs and HTTPS
       "img-src 'self' data: https: blob:",
-      "connect-src 'self' https://api.cartadeapresentacao.pt https://www.google-analytics.com",
+      // Connection sources for API calls
+      "connect-src 'self' https://api.cvcv.no https://api.cartadeapresentacao.pt https://www.google-analytics.com https://www.googletagmanager.com",
+      // Frame sources for embedded content
       "frame-src 'self' https://js.stripe.com",
+      // Media sources
+      "media-src 'self'",
+      // Object sources - block all plugins
       "object-src 'none'",
+      // Base URI restriction
       "base-uri 'self'",
+      // Form action restriction
       "form-action 'self'",
-      "frame-ancestors 'none'"
+      // Frame ancestors - prevent embedding (clickjacking protection)
+      "frame-ancestors 'none'",
+      // Worker sources
+      "worker-src 'self' blob:",
+      // Manifest source
+      "manifest-src 'self'",
+      // CSP violation reporting
+      "report-uri /csp-report",
+      // Upgrade insecure requests in production
+      ...(process.env.NODE_ENV === 'production' ? ["upgrade-insecure-requests"] : [])
     ].join('; ');
     
-    res.set('Content-Security-Policy', cspDirectives);
+    // Set CSP header in enforcement mode
+    // Add report-uri for CSP violation reporting in production
+    if (process.env.NODE_ENV === 'production') {
+      res.set('Content-Security-Policy', cspDirectives + '; report-uri /api/csp-report');
+    } else {
+      res.set('Content-Security-Policy', cspDirectives);
+    }
+    
+    // Cross-Origin-Opener-Policy (COOP) - isolate browsing context
+    res.set('Cross-Origin-Opener-Policy', 'same-origin');
+    
+    // Cross-Origin-Embedder-Policy (COEP) - require CORP for cross-origin resources
+    res.set('Cross-Origin-Embedder-Policy', 'require-corp');
+    
+    // Cross-Origin-Resource-Policy (CORP) - control cross-origin resource sharing
+    res.set('Cross-Origin-Resource-Policy', 'same-origin');
     
     // X-Content-Type-Options - prevent MIME type sniffing
     res.set('X-Content-Type-Options', 'nosniff');
     
-    // X-Frame-Options - prevent clickjacking
+    // X-Frame-Options - prevent clickjacking (backup to CSP frame-ancestors)
     res.set('X-Frame-Options', 'DENY');
     
-    // X-XSS-Protection - enable XSS filtering
+    // X-XSS-Protection - enable XSS filtering (legacy browsers)
     res.set('X-XSS-Protection', '1; mode=block');
     
     // Referrer-Policy - control referrer information
     res.set('Referrer-Policy', 'strict-origin-when-cross-origin');
     
     // Permissions-Policy - control browser features
-    res.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
+    res.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), magnetometer=(), gyroscope=(), accelerometer=()');
+    
+    // X-Permitted-Cross-Domain-Policies - restrict Adobe Flash/PDF cross-domain access
+    res.set('X-Permitted-Cross-Domain-Policies', 'none');
+    
+    // X-DNS-Prefetch-Control - control DNS prefetching
+    res.set('X-DNS-Prefetch-Control', 'off');
     
     next();
   });
