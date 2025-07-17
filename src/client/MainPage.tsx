@@ -11,7 +11,6 @@ import {
 } from "wasp/client/operations";
 import { scrapeJob } from './scrapeJob';
 
-// Selective Chakra UI imports for better tree shaking
 import {
   Box,
   HStack,
@@ -390,6 +389,7 @@ function MainPage() {
                     className="block w-full px-5 py-2.5 bg-white rounded-md ring-1 ring-inset ring-gray-300 placeholder:text-indigo-600/40 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     type="text"
                     {...register('applicant_job_advertisement_url', {
+                      required: 'Dette er påkrevd',
                       pattern: {
                         value: /^https:\/\/www\.finn\.no\/(?:\d+|.*\?finnkode=\d+)$/,
                         message: 'Vennligst oppgi en gyldig Finn.no jobbannonse URL',

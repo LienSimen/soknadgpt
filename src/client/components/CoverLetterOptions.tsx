@@ -159,9 +159,10 @@ export const CoverLetterOptions: React.FC<CoverLetterOptionsProps> = ({
         fontWeight="normal"
         fontSize="sm"
         color="text-contrast-md"
+        bg="bg-contrast-xs"
         _hover={{
           color: 'text-contrast-lg',
-          bg: 'transparent',
+          bg: 'bg-contrast-md',
         }}
         aria-expanded={isOpen}
         aria-controls="cover-letter-options-content"
