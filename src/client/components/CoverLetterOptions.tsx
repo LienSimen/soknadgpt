@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   VStack,
-  HStack,
   Checkbox,
   Text,
   Box,
@@ -39,7 +38,7 @@ export interface CoverLetterOptionsData {
   };
 }
 
-interface CoverLetterOptionsProps {
+export interface CoverLetterOptionsProps {
   onChange: (options: CoverLetterOptionsData) => void;
   initialOptions?: CoverLetterOptionsData;
 }
@@ -164,13 +163,15 @@ export const CoverLetterOptions: React.FC<CoverLetterOptionsProps> = ({
           color: 'text-contrast-lg',
           bg: 'transparent',
         }}
+        aria-expanded={isOpen}
+        aria-controls="cover-letter-options-content"
       >
-        <Text>Tilpasningsalternativer</Text>
+        <Text color="text-contrast-md">Tilpasningsalternativer</Text>
         <Icon as={isOpen ? ChevronUpIcon : ChevronDownIcon} />
       </Button>
 
       <Collapse in={isOpen} style={{ width: '100%' }}>
-        <VStack px={3} pb={3} spacing={3} alignItems="flex-start" w="full">
+        <VStack px={3} pb={3} spacing={3} alignItems="flex-start" w="full" id="cover-letter-options-content">
           <Box w="full">
             <Text fontSize="sm" fontWeight="medium" color="text-contrast-lg" mb={2}>
               Stilalternativer:
