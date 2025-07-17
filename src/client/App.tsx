@@ -6,6 +6,9 @@ import NavBar from './components/NavBar';
 import { Footer } from './components/CallToAction';
 import { useLocation, Outlet } from 'react-router-dom';
 import { usePerformanceOptimizer } from './components/PerformanceOptimizer';
+import { useAuth } from 'wasp/client/auth';
+import { Suspense } from 'react';
+import { LazyEditPopover, EditPopoverLoader } from './components/LazyComponents';
 export const TextareaContext = createContext({
   textareaState: '',
   setTextareaState: (value: string) => { },
@@ -18,9 +21,11 @@ export default function App() {
   const [currentText, setCurrentText] = useState<string | null>(null);
   const [textareaState, setTextareaState] = useState<string>('');
   const [isLnPayPending, setIsLnPayPending] = useState<boolean>(false);
+  const [editCount, setEditCount] = useState<number>(0);
 
   const location = useLocation();
   const { throttle } = usePerformanceOptimizer();
+  const { data: user } = useAuth();
 
   // Memoize context value to prevent unnecessary re-renders
   const contextValue = useMemo(() => ({
@@ -32,29 +37,48 @@ export default function App() {
 
   // Optimize mouse event handlers with throttling
   const handleMouseUp = useCallback(throttle((event: MouseEvent) => {
-    const selection = window.getSelection();
+    // Add a small delay to ensure selection is complete in Firefox
+    setTimeout(() => {
+      const selection = window.getSelection();
+      const selectedText = selection?.toString().trim();
 
-    if (selection?.toString() && location.pathname.includes('cover-letter')) {
-      // closes the tooltip when the user clicks a tooltip button
-      if (selection.toString() === currentText) {
+      if (selectedText && selectedText.length > 0 && location.pathname.includes('cover-letter')) {
+        // closes the tooltip when the user clicks a tooltip button
+        if (selectedText === currentText) {
+          setTooltip(null);
+          return;
+        }
+        setCurrentText(selectedText);
+
+        // Get coordinates - Firefox compatible
+        const x = event.clientX || event.pageX;
+        const y = event.clientY || event.pageY;
+
+        setTooltip({
+          x: x.toString() + 'px',
+          y: (y + 10).toString() + 'px', // Add small offset to avoid covering selection
+          text: selectedText
+        });
+      } else {
         setTooltip(null);
-        return;
       }
-      setCurrentText(selection.toString());
-      // get the x and y coordinates of the mouse position
-      const x = event.clientX;
-      const y = event.clientY;
-      const text = selection.toString();
-
-      setTooltip({ x: x.toString() + 'px', y: y.toString() + 'px', text });
-    } else {
-      setTooltip(null);
-    }
+    }, 10); // Small delay for Firefox
   }, 16), [location.pathname, currentText, throttle]); // 60fps throttling
 
   const handleMouseDown = useCallback(() => {
     if (location.pathname.includes('cover-letter')) {
       setCurrentText(null);
+    }
+  }, [location.pathname]);
+
+  const handleEditUsed = useCallback(() => {
+    setEditCount(prev => prev + 1);
+  }, []);
+
+  // Reset edit count when navigating away from cover letter pages
+  useEffect(() => {
+    if (!location.pathname.includes('cover-letter')) {
+      setEditCount(0);
     }
   }, [location.pathname]);
 
@@ -79,15 +103,25 @@ export default function App() {
   return (
     <ChakraProvider theme={theme}>
       <TextareaContext.Provider value={contextValue}>
-        <Box
-          top={tooltip?.y}
-          left={tooltip?.x}
-          display={tooltip?.text ? 'block' : 'none'}
-          position='absolute'
-          zIndex={100}
-        >
-          {/* Edit popover will be handled by individual pages that need it */}
-        </Box>
+        {tooltip?.text && user && (
+          <Box
+            position='fixed'
+            top={tooltip.y}
+            left={tooltip.x}
+            zIndex={1000}
+            pointerEvents='auto'
+          >
+            <Suspense fallback={<EditPopoverLoader />}>
+              <LazyEditPopover
+                setTooltip={setTooltip}
+                selectedText={tooltip.text}
+                user={user}
+                editCount={editCount}
+                onEditUsed={handleEditUsed}
+              />
+            </Suspense>
+          </Box>
+        )}
         <VStack gap={5} minHeight='100vh'>
           <NavBar />
           <Outlet />

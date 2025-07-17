@@ -12,9 +12,11 @@ interface EditPopoverProps extends ButtonGroupProps {
   selectedText?: string;
   setTooltip: any;
   user: Omit<User, 'password'>;
+  editCount: number;
+  onEditUsed: () => void;
 }
 
-export function EditPopover({ setTooltip, selectedText, user, ...props }: EditPopoverProps) {
+export function EditPopover({ setTooltip, selectedText, user, editCount, onEditUsed, ...props }: EditPopoverProps) {
   const [lightningInvoice, setLightningInvoice] = useState<LightningInvoice | null>(null);
   const { textareaState, setTextareaState, setIsLnPayPending } = useContext(TextareaContext);
 
@@ -101,6 +103,14 @@ export function EditPopover({ setTooltip, selectedText, user, ...props }: EditPo
   };
 
   const handleClick = async (value: string) => {
+    // Check if edit limit is reached
+    if (editCount >= 5) {
+      alert('Du har brukt opp dine 5 gratis redigeringer for denne økten. Last inn siden på nytt for å få 5 nye redigeringer.');
+      setTooltip(null);
+      window.getSelection()?.removeAllRanges();
+      return;
+    }
+
     if (!userInfo?.credits && !userInfo?.hasPaid && !user.isUsingLn) {
       onPayOpen();
       setTooltip(null);
@@ -118,7 +128,9 @@ export function EditPopover({ setTooltip, selectedText, user, ...props }: EditPo
         console.error('error paying with ln: ', error);
       }
     }
-    replaceSelectedText({ improvement: value, lnPayment: lnPayment as LnPayment });
+    
+    await replaceSelectedText({ improvement: value, lnPayment: lnPayment as LnPayment });
+    onEditUsed(); // Increment the edit counter
     window.getSelection()?.removeAllRanges();
   };
 

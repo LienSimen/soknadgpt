@@ -56,15 +56,6 @@ export function LeaveATip({
                 <Text>
                 Du har <Code>{credits}</Code> gratis søknadsbrev igjen.
                 </Text>
-              <Text mt={4}>
-                {!isUsingLn ? (
-                    <>
-                    Kjøp ubegrenset tilgang for kun <Code>59 kr</Code> per måned!
-                    </>
-                ) : (
-                    <>Etterpå kan du betale en liten avgift per søknadsbrev med din lightning ⚡️-lommebok.</>
-                )}
-              </Text>
             </AlertDialogBody>
 
             <AlertDialogFooter>
@@ -203,6 +194,9 @@ export function EditAlert({ coverLetter }: { coverLetter: boolean }) {
             <AlertDialogBody gap={5} pointerEvents='none'>
             <Text pb={3}>
               Hvis du vil gjøre finere endringer, marker teksten du ønsker å endre for å få opp popupen under:
+            </Text>
+            <Text fontSize='sm' color='text-contrast-md' pb={2}>
+              💡 Du har 5 gratis redigeringer per økt. Last inn siden på nytt for å få 5 nye.
             </Text>
             <VStack m={3} gap={1} borderRadius='lg'>
               <Box layerStyle='cardLg' p={3}>
