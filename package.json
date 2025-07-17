@@ -3,6 +3,11 @@
   "type": "module",
   "scripts": {
     "build": "wasp build",
+    "build:analyze": "ANALYZE_BUNDLE=true wasp build && npm run bundle:analyze",
+    "bundle:analyze": "node scripts/bundle-analysis.js analyze",
+    "bundle:compare": "node scripts/bundle-analysis.js compare",
+    "bundle:full": "node scripts/bundle-analysis.js full",
+    "bundle:report": "ANALYZE_BUNDLE=true wasp build && npm run bundle:full",
     "deploy": "npm run build && npm run deploy-server && npm run deploy-client",
     "deploy-server": "cd .wasp/build && railway up --service server && cd ../..",
     "deploy-client": "REACT_APP_API_URL=https://api.cartadeapresentacao.pt/ ./deploy_client.sh"
@@ -38,6 +43,8 @@
     "rollup-plugin-visualizer": "^6.0.3",
     "typescript": "^5.1.0",
     "vite": "^4.3.9",
-    "wasp-config": "file:../../.local/share/wasp-lang/0.16.7/data/packages/wasp-config"
+    "vite-bundle-visualizer": "^1.2.1",
+    "wasp-config": "file:../../.local/share/wasp-lang/0.16.7/data/packages/wasp-config",
+    "web-vitals": "^5.0.3"
   }
 }

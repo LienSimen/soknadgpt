@@ -14,3 +14,12 @@ node_modules/
 # Local Netlify folder
 .netlify
 .vscode/
+
+# Bundle analysis outputs
+bundle-stats.html
+bundle-analyzer-detailed.html
+bundle-report.json
+bundle-analysis-summary.json
+bundle-analysis-previous.json
+
+.kiro/
