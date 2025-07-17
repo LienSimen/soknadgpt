@@ -1,11 +1,13 @@
 const FONT_SCALE_BASE = 1;
 const FONT_SCALE_MULTIPLIER = 1.25;
 
+// Optimized font stack with local fallbacks to reduce layout shift
 export const fonts = {
-  heading: `'Inter', sans-serif`,
-  body: `'Inter', sans-serif`,
+  heading: `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif`,
+  body: `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif`,
 };
 
+// Optimized text styles - only include frequently used sizes for better tree shaking
 export const textStyles = {
   xs: {
     fontSize: FONT_SCALE_BASE * FONT_SCALE_MULTIPLIER ** -1 + 'rem',
@@ -31,40 +33,6 @@ export const textStyles = {
     lineHeight: '150%',
     letterSpacing: '0',
   },
-  xl: {
-    fontSize: FONT_SCALE_BASE * FONT_SCALE_MULTIPLIER ** 3 + 'rem',
-    fontWeight: 600,
-    lineHeight: '120%',
-    letterSpacing: '0',
-  },
-  '2xl': {
-    fontSize: FONT_SCALE_BASE * FONT_SCALE_MULTIPLIER ** 4 + 'rem',
-    fontWeight: 600,
-    lineHeight: '120%',
-    letterSpacing: '0',
-  },
-  '3xl': {
-    fontSize: FONT_SCALE_BASE * FONT_SCALE_MULTIPLIER ** 5 + 'rem',
-    fontWeight: 600,
-    lineHeight: '110%',
-    letterSpacing: '0',
-  },
-  '4xl': {
-    fontSize: FONT_SCALE_BASE * FONT_SCALE_MULTIPLIER ** 6 + 'rem',
-    fontWeight: 600,
-    lineHeight: '110%',
-    letterSpacing: '0',
-  },
-  '5xl': {
-    fontSize: FONT_SCALE_BASE * FONT_SCALE_MULTIPLIER ** 7 + 'rem',
-    fontWeight: 600,
-    lineHeight: '100%',
-    letterSpacing: '0',
-  },
-  '6xl': {
-    fontSize: FONT_SCALE_BASE * FONT_SCALE_MULTIPLIER ** 8 + 'rem',
-    fontWeight: 600,
-    lineHeight: '100%',
-    letterSpacing: '0',
-  },
+  // Removed unused xl, 2xl, 3xl, 4xl, 5xl, 6xl text styles to reduce bundle size
+  // These can be added back if needed in the future
 };
