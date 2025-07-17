@@ -1,14 +1,13 @@
-import { useAuth } from 'wasp/client/auth';
+// Selective Chakra UI imports for better tree shaking
 import { ChakraProvider, VStack, Box, Spacer } from '@chakra-ui/react';
 import { theme } from './theme';
-import { useState, useEffect, createContext, useCallback, useMemo, Suspense, lazy } from 'react';
+import { useState, useEffect, createContext, useCallback, useMemo, Suspense } from 'react';
 import NavBar from './components/NavBar';
 import { Footer } from './components/CallToAction';
 import { useLocation, Outlet } from 'react-router-dom';
 import { usePerformanceOptimizer } from './components/PerformanceOptimizer';
-
-// Lazy load heavy components
-const EditPopover = lazy(() => import('./components/Popover').then(module => ({ default: module.EditPopover })));
+import { LazyEditPopover, EditPopoverLoader, LazyLoadErrorBoundary } from './components/LazyComponents';
+import { useConditionalAuth, authPerformanceMonitor } from './utils/conditionalAuth';
 
 export const TextareaContext = createContext({
   textareaState: '',
@@ -24,8 +23,18 @@ export default function App() {
   const [isLnPayPending, setIsLnPayPending] = useState<boolean>(false);
 
   const location = useLocation();
-  const { data: user } = useAuth();
+  const { data: user, shouldCheckAuth, requiresAuth } = useConditionalAuth();
   const { throttle } = usePerformanceOptimizer();
+
+  // Track authentication performance
+  useEffect(() => {
+    if (shouldCheckAuth) {
+      authPerformanceMonitor.recordAuthCheck();
+      if (user) {
+        authPerformanceMonitor.recordAuthSuccess();
+      }
+    }
+  }, [shouldCheckAuth, user]);
 
   // Memoize context value to prevent unnecessary re-renders
   const contextValue = useMemo(() => ({
@@ -92,9 +101,11 @@ export default function App() {
           zIndex={100}
         >
           {!!user && (
-            <Suspense fallback={<div style={{ width: '20px', height: '20px' }} />}>
-              <EditPopover setTooltip={setTooltip} user={user} />
-            </Suspense>
+            <LazyLoadErrorBoundary>
+              <Suspense fallback={<EditPopoverLoader />}>
+                <LazyEditPopover setTooltip={setTooltip} user={user} />
+              </Suspense>
+            </LazyLoadErrorBoundary>
           )}
         </Box>
         <VStack gap={5} minHeight='100vh'>
