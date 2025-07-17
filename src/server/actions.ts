@@ -47,6 +47,7 @@ Write naturally about:
 - Specific examples from your background
 - Your contact info
 - Genuine interest in next steps
+- Don't use dashes or bullet points
 
 Don't follow a template. Write like you're telling a friend why you want this job.`,
 
@@ -72,6 +73,7 @@ Write naturally about:
 - Your contact info
 - A natural joke that relates to the job/industry (not forced)
 - Genuine interest in next steps
+- Don't use dashes or bullet points
 
 Don't follow a template. Write like you're telling a friend why you want this job.`,
 
@@ -106,6 +108,7 @@ function buildEnhancedPrompt(basePrompt: string, options?: CoverLetterOptionsDat
   enhancedPrompt += "- Let some thoughts feel incomplete or trail off mid-idea\n";
   enhancedPrompt += "- Mix sentence lengths dramatically - very short. Then longer rambling ones.\n";
 
+
   if (!options) return enhancedPrompt;
 
   const styleModifications: string[] = [];
@@ -139,7 +142,7 @@ function buildEnhancedPrompt(basePrompt: string, options?: CoverLetterOptionsDat
 
   // Anti-AI options
   const antiAiModifications: string[] = [];
-  
+
   if (options.antiAiOptions.addTyposAndInformalSpelling) {
     antiAiModifications.push("Include small typos and informal spellings that humans naturally make - don't be perfect");
   }
