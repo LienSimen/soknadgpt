@@ -282,13 +282,9 @@ export const theme = extendTheme({
   semanticTokens,
   styles,
   layerStyles: {
+    // Only include used layer styles for better tree shaking
     card: {
       bgColor: 'bg-contrast-xs',
-      border: 'sm',
-      rounded: 'lg',
-    },
-    cardMd: {
-      bgColor: 'bg-contrast-md',
       border: 'sm',
       rounded: 'lg',
     },
@@ -296,8 +292,8 @@ export const theme = extendTheme({
       bgColor: 'bg-contrast-lg',
       border: 'sm',
       rounded: 'lg',
-      // boxShadow: '0px 0px 0px 1px var(--chakra-colors-active)',
     },
+    // Removed unused cardMd to reduce bundle size
   },
   // shadows: { outline: '0 0 0 1px var(--chakra-colors-active)' },
 });
