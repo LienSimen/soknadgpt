@@ -6,13 +6,18 @@ app CoverLetterGPT {
   head: [
     "<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">",
     "<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>",
-    "<link rel=\"preconnect\" href=\"https://api.cartadeapresentacao.pt\">",
+    "<link rel=\"preconnect\" href=\"https://api.cvcv.no\">",
     "<link rel=\"dns-prefetch\" href=\"https://js.stripe.com\">",
+    "<link rel=\"dns-prefetch\" href=\"https://www.google-analytics.com\">",
+    "<link rel=\"dns-prefetch\" href=\"https://www.googletagmanager.com\">",
     "<link rel=\"preload\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap\" as=\"style\" onload=\"this.onload=null;this.rel='stylesheet'\">",
+    "<link rel=\"preload\" href=\"https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2\" as=\"font\" type=\"font/woff2\" crossorigin>",
+    "<link rel=\"preload\" href=\"https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fAZ9hiA.woff2\" as=\"font\" type=\"font/woff2\" crossorigin>",
     "<noscript><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap\"></noscript>",
-    "<style>body{font-family:system-ui,-apple-system,sans-serif}h1,h2,h3{font-weight:600}.loading{opacity:0.7;pointer-events:none}</style>",
+    "<style>/* Minimal critical CSS - only font fallbacks and loading state */body{font-family:system-ui,-apple-system,sans-serif}.loading{opacity:0.7;pointer-events:none}h1,h2,h3{font-family:'Inter',system-ui,-apple-system,sans-serif}</style>",
     "<meta charset=\"UTF-8\" />",
     "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />",
+    "<meta name=\"emotion-insertion-point\" content=\"\">",
     "<title>Søknad GPT: Lag Profesjonelle Søknadsbrev med AI</title>",
     "<meta name=\"description\" content=\"Få hjelp til å skrive profesjonelle og skreddersydde søknader på et blunk. Prøv helt gratis!\" />",
     "<link rel=\"canonical\" href=\"https://www.cvcv.no\" />",
@@ -58,46 +63,46 @@ app CoverLetterGPT {
 
 route RootRoute { path: "/", to: MainPage }
 page MainPage {
-  component: import Main from "@src/client/MainPage"
+  component: import Main from "@src/client/pages/MainPageWrapper"
 }
 
 route CoverLetterPage { path: "/cover-letter/:id", to: CoverLetterPage }
 page CoverLetterPage {
   authRequired: true,
-  component: import CoverLetter from "@src/client/CoverLetterPage"
+  component: import CoverLetter from "@src/client/pages/CoverLetterPageWrapper"
 }
 
 route LoginRoute { path: "/login", to: LoginPage }
 page LoginPage {
-  component: import Login from "@src/client/LoginPage"
+  component: import Login from "@src/client/pages/LoginPageWrapper"
 }
 
 route JobsRoute { path: "/jobs", to: JobsPage }
 page JobsPage {
   authRequired: true,
-  component: import Jobs from "@src/client/JobsPage"
+  component: import Jobs from "@src/client/pages/JobsPageWrapper"
 }
 
 route ProfileRoute { path: "/profile", to: ProfilePage }
 page ProfilePage {
   authRequired: true,
-  component: import Profile from "@src/client/ProfilePage"
+  component: import Profile from "@src/client/pages/ProfilePageWrapper"
 }
 
 route CheckoutRoute { path: "/checkout", to: CheckoutPage }
 page CheckoutPage {
   authRequired: true,
-  component: import Checkout from "@src/client/CheckoutPage"
+  component: import Checkout from "@src/client/pages/CheckoutPageWrapper"
 }
 
 route TosRoute { path: "/tos", to: TosPage }
 page TosPage {
-  component: import Tos from "@src/client/legal/TosPage"
+  component: import Tos from "@src/client/pages/TosPageWrapper"
 }
 
 route PrivacyRoute { path: "/privacy", to: PrivacyPage }
 page PrivacyPage {
-  component: import Privacy from "@src/client/legal/PrivacyPolicyPage"
+  component: import Privacy from "@src/client/pages/PrivacyPageWrapper"
 }
 
 action generateCoverLetter {
