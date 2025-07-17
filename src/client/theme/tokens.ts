@@ -1,12 +1,10 @@
+// Optimized semantic tokens - removed unused tokens for better tree shaking
 export const semanticTokens = {
   colors: {
+    // Core background colors - frequently used
     'bg-body': {
       default: 'white',
-      _dark: 'rgba(0, 0, 0, 0.50)', //'#0d0f10',
-    },
-    'bg-body-inverse': {
-      default: 'rgba(0, 0, 0, 0.90)',
-      _dark: 'gray.50',
+      _dark: 'rgba(0, 0, 0, 0.50)',
     },
     'bg-contrast-xs': {
       default: 'rgba(0, 30, 50, 0.025)',
@@ -24,14 +22,7 @@ export const semanticTokens = {
       default: 'rgba(0, 30, 50, 0.1)',
       _dark: 'rgba(255, 255, 255, 0.075)',
     },
-    'bg-contrast-xl': {
-      default: 'rgba(0, 30, 50, 0.125)',
-      _dark: 'rgba(255, 255, 255, 0.1)',
-    },
-    'bg-contrast-overlay': {
-      default: 'rgba(255, 255, 255, 0.82)',
-      _dark: 'rgba(0, 0, 0, 0.87)',
-    },
+    // Used in BorderBox component
     'bg-overlay': {
       default: 'rgba(237, 242, 247, .98)',
       _dark: 'rgba(0, 0, 0, 0.87)',
@@ -40,10 +31,7 @@ export const semanticTokens = {
       default: 'rgb(255, 255, 255)',
       _dark: '#1f1f1f',
     },
-    'text-contrast-xs': {
-      default: 'blackAlpha.600',
-      _dark: 'whiteAlpha.500',
-    },
+    // Core text colors - frequently used
     'text-contrast-sm': {
       default: 'blackAlpha.700',
       _dark: 'whiteAlpha.600',
@@ -56,10 +44,7 @@ export const semanticTokens = {
       default: 'blackAlpha.900',
       _dark: 'whiteAlpha.800',
     },
-    'text-contrast-xl': {
-      default: 'black',
-      _dark: 'white',
-    },
+    // Core border colors - frequently used
     'border-contrast-xs': {
       default: 'rgba(0, 0, 0, 0.2)',
       _dark: 'rgba(255, 255, 255, 0.1)',
@@ -72,14 +57,7 @@ export const semanticTokens = {
       default: 'rgba(0, 0, 0, 0.4)',
       _dark: 'rgba(255, 255, 255, 0.3)',
     },
-    'border-contrast-lg': {
-      default: 'rgba(0, 0, 0, 0.5)',
-      _dark: 'rgba(255, 255, 255, 0.4)',
-    },
-    'border-contrast-xl': {
-      default: 'rgba(0, 0, 0, 0.6)',
-      _dark: 'rgba(255, 255, 255, 0.5)',
-    },
+    // Active/focus color
     active: {
       default: 'purple.300',
       _dark: 'purple.300',
