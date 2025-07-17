@@ -12,6 +12,7 @@ export interface PdfProcessorProps {
 
 // Lazy-loaded PDF processing functionality
 function PdfProcessor({
+  pdfFile,
   onFileProcessed,
   onProcessingStart,
   onProcessingEnd,
@@ -21,12 +22,16 @@ function PdfProcessor({
 
   const processorRef = useRef<HTMLDivElement>(null);
 
-  async function processFile(event: ChangeEvent<HTMLInputElement>) {
+  async function processFileFromInput(event: ChangeEvent<HTMLInputElement>) {
     if (event.target.files == null) return;
     if (event.target.files.length == 0) return;
 
     onProcessingStart();
     const file = event.target.files[0];
+    await processFileContent(file);
+  }
+
+  async function processFileContent(file: File) {
     const fileReader = new FileReader();
 
     fileReader.onload = async function () {
@@ -90,9 +95,16 @@ function PdfProcessor({
     }
   }
 
+  // Process file when pdfFile prop changes
+  useEffect(() => {
+    if (pdfFile) {
+      processFileContent(pdfFile);
+    }
+  }, [pdfFile]);
+
   useEffect(() => {
     const handleProcessFile = (event: CustomEvent) => {
-      processFile(event.detail);
+      processFileFromInput(event.detail);
     };
 
     const element = processorRef.current;
