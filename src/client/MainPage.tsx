@@ -11,6 +11,7 @@ import {
 } from "wasp/client/operations";
 import { scrapeJob } from './scrapeJob';
 
+// Selective Chakra UI imports for better tree shaking
 import {
   Box,
   HStack,
@@ -52,14 +53,13 @@ const LightningIcon = (props: any) => (
 import BorderBox from './components/BorderBox';
 import { LeaveATip, LoginToBegin } from './components/AlertDialog';
 import { convertToSliderValue, convertToSliderLabel } from './components/CreativitySlider';
-import CoverLetterOptions, { type CoverLetterOptionsData } from './components/CoverLetterOptions';
-import * as pdfjsLib from 'pdfjs-dist';
+import { type CoverLetterOptionsData } from './components/CoverLetterOptions';
+import { LazyCoverLetterOptions, LazyLnPaymentModal, LazyPdfProcessor, CoverLetterOptionsLoader, PaymentModalLoader, PdfProcessorLoader, LazyLoadErrorBoundary } from './components/LazyComponents';
 import { useState, useEffect, useRef } from 'react';
 import { ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import React, { lazy, Suspense } from 'react';
-const LnPaymentModal = lazy(() => import('./components/LnPaymentModal'));
+import React, { Suspense } from 'react';
 import { fetchLightningInvoice } from './lightningUtils';
 import type { LightningInvoice } from './lightningUtils';
 
@@ -72,6 +72,7 @@ function MainPage() {
   const [showTooltip, setShowTooltip] = useState(false);
   const [lightningInvoice, setLightningInvoice] = useState<LightningInvoice | null>(null);
   const [isScraping, setIsScraping] = useState<boolean>(false);
+  const [isProcessingFile, setIsProcessingFile] = useState<boolean>(false);
   const [coverLetterOptions, setCoverLetterOptions] = useState<CoverLetterOptionsData | null>(null);
   const { data: user } = useAuth();
 
@@ -103,6 +104,7 @@ function MainPage() {
   let setLoadingTextTimeout: ReturnType<typeof setTimeout>;
   const loadingTextRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (jobIdParam) {
@@ -135,69 +137,32 @@ function MainPage() {
     }
   }
 
-  // file to text parser
-  async function onFileUpload(event: ChangeEvent<HTMLInputElement>) {
-    if (event.target.files == null) return;
-    if (event.target.files.length == 0) return;
+  // PDF processor handlers for lazy loading
+  const handleFileProcessed = (content: string) => {
+    setIsPdfReady(true);
+    setValue('pdf', content);
+    clearErrors('pdf');
+  };
 
+  const handleProcessingStart = () => {
     setValue('pdf', null);
     setIsPdfReady(false);
-    const file = event.target.files[0];
-    const fileReader = new FileReader();
+    setIsProcessingFile(true);
+  };
 
-    fileReader.onload = async function () {
-      if (this.result == null) return;
+  const handleProcessingEnd = () => {
+    setIsProcessingFile(false);
+  };
 
-      let textBuilder = '';
-      try {
-        if (file.type === 'application/pdf') {
-          const typedarray = new Uint8Array(this.result as ArrayBuffer);
-          pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
-          const loadingTask = pdfjsLib.getDocument(typedarray);
-          const pdf = await loadingTask.promise;
-          for (let i = 1; i <= pdf.numPages; i++) {
-            const page = await pdf.getPage(i);
-            const content = await page.getTextContent();
-            const text = content.items.map((item: any) => item.str || '').join(' ');
-            textBuilder += text;
-          }
-        } else if (file.type === 'text/plain') {
-          textBuilder = this.result as string;
-        } else if (
-          file.type === 'application/msword' ||
-          file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-        ) {
-          const mammoth = await import('mammoth');
-          const result = await mammoth.extractRawText({ arrayBuffer: this.result as ArrayBuffer });
-          textBuilder = result.value;
-        } else {
-          alert('Unsupported file type. Please upload a PDF, TXT, DOC, or DOCX file.');
-          return;
-        }
-        setIsPdfReady(true);
-        setValue('pdf', textBuilder);
-        clearErrors('pdf');
-      } catch (err) {
-        alert('An Error occured uploading your file. Please try again.');
-        console.error(err);
-      }
-    };
+  const handleProcessingError = (error: string) => {
+    alert(error);
+    setIsProcessingFile(false);
+  };
 
-    fileReader.onerror = function () {
-      alert('An Error occured reading the file. Please try again.');
-    };
-
-    if (
-      file.type === 'application/pdf' ||
-      file.type === 'application/msword' ||
-      file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    ) {
-      fileReader.readAsArrayBuffer(file);
-    } else if (file.type === 'text/plain') {
-      fileReader.readAsText(file);
-    } else {
-      alert('Unsupported file type. Please upload a PDF, TXT, DOC, or DOCX file.');
-    }
+  // file to text parser - now uses lazy-loaded PDF processor
+  async function onFileUpload(event: ChangeEvent<HTMLInputElement>) {
+    // The actual processing is now handled by the lazy-loaded PdfProcessor component
+    // This function is kept for compatibility but the heavy lifting is done elsewhere
   }
 
   async function checkIfLnAndPay(user: Omit<User, 'password'>): Promise<LnPayment | null> {
@@ -409,21 +374,20 @@ function MainPage() {
           style={{ width: '100%' }}
         >
 
-            <Heading size={'md'} alignSelf={'start'} mb={3} w='full'>
-              Jobbinformasjon {isCoverLetterUpdate && <Code ml={1}>Redigerer...</Code>}
-            </Heading>
+          <Heading size={'md'} alignSelf={'start'} mb={3} w='full'>
+            Jobbinformasjon {isCoverLetterUpdate && <Code ml={1}>Redigerer...</Code>}
+          </Heading>
           {showSpinner && <Spinner />}
           {showForm && (
             <>
-                          <FormControl isInvalid={!!formErrors.applicant_job_advertisement_url}>
-                <HStack>
+              <FormControl isInvalid={!!formErrors.applicant_job_advertisement_url}>
+                <HStack align="center" spacing={2}>
                   <Input
                     id="applicant_job_advertisement_url"
                     autoComplete="on"
                     placeholder="https://www.finn.no/job/fulltime/ad.html?finnkode=255413380"
                     pattern="^https:\/\/www\.finn\.no\/(?:\d+|.*\?finnkode=\d+)$"
-                    
-                    className="block mt-2 w-full px-5 py-2.5 bg-white rounded-md ring-1 ring-inset ring-gray-300 placeholder:text-indigo-600/40 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full px-5 py-2.5 bg-white rounded-md ring-1 ring-inset ring-gray-300 placeholder:text-indigo-600/40 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     type="text"
                     {...register('applicant_job_advertisement_url', {
                       required: 'Dette er påkrevd',
@@ -433,9 +397,8 @@ function MainPage() {
                       },
                     })}
                   />
-                    <Button
+                  <Button
                     colorScheme='purple'
-                    mt={2}
                     size='sm'
                     onClick={handleScrapeJob}
                     isLoading={isScraping}
@@ -447,9 +410,10 @@ function MainPage() {
                     _hover={{ bg: "purple.600" }}
                     _active={{ bg: "purple.600" }}
                     _disabled={{ bg: "gray.500", color: "gray.100" }}
-                    >
+                    flexShrink={0}
+                  >
                     Hent info
-                    </Button>
+                  </Button>
                 </HStack>
                 <FormErrorMessage>{!!formErrors.applicant_job_advertisement_url && formErrors.applicant_job_advertisement_url.message?.toString()}</FormErrorMessage>
               </FormControl>
@@ -532,7 +496,11 @@ function MainPage() {
                     required: 'Vennligst last opp CV/Resumé',
                   })}
                   onChange={(e) => {
-                    onFileUpload(e);
+                    if (e.target.files && e.target.files[0]) {
+                      handleProcessingStart();
+                      // Pass the file directly to the PDF processor via callback
+                      setPdfFile(e.target.files[0]);
+                    }
                   }}
                   display='none'
                   ref={fileInputRef}
@@ -553,9 +521,9 @@ function MainPage() {
                 >
                   <HStack>
                     <FormLabel textAlign='center' htmlFor='pdf'>
-                      <Button 
-                        size='sm' 
-                        colorScheme='purple' 
+                      <Button
+                        size='sm'
+                        colorScheme='purple'
                         onClick={handleFileButtonClick}
                         color="white"
                         bg="purple.500"
@@ -564,7 +532,8 @@ function MainPage() {
                         Last opp CV
                       </Button>
                     </FormLabel>
-                    {isPdfReady && <Text fontSize={'sm'}>👍 lastet opp</Text>}
+                    {isProcessingFile && <Text fontSize={'sm'} color="purple.500">⏳ behandler dokument...</Text>}
+                    {isPdfReady && !isProcessingFile && <Text fontSize={'sm'}>👍 lastet opp</Text>}
                     <FormErrorMessage>{!!formErrors.pdf && formErrors.pdf.message?.toString()}</FormErrorMessage>
                   </HStack>
                   <FormHelperText mt={0.5} fontSize={'xs'}>
@@ -673,9 +642,27 @@ function MainPage() {
                   </FormLabel>
                 </FormControl>
               </VStack>
-              <CoverLetterOptions
-                onChange={setCoverLetterOptions}
-              />
+              <LazyLoadErrorBoundary>
+                <Suspense fallback={<CoverLetterOptionsLoader />}>
+                  <LazyCoverLetterOptions
+                    onChange={setCoverLetterOptions}
+                  />
+                </Suspense>
+              </LazyLoadErrorBoundary>
+
+              {/* Lazy-loaded PDF processor for heavy document processing */}
+              <LazyLoadErrorBoundary>
+                <Suspense fallback={<PdfProcessorLoader />}>
+                  <LazyPdfProcessor
+                    pdfFile={pdfFile}
+                    onFileProcessed={handleFileProcessed}
+                    onProcessingStart={handleProcessingStart}
+                    onProcessingEnd={handleProcessingEnd}
+                    onError={handleProcessingError}
+                    fileInputRef={fileInputRef}
+                  />
+                </Suspense>
+              </LazyLoadErrorBoundary>
               <HStack alignItems='flex-end' gap={1}>
                 <Button
                   colorScheme='purple'
@@ -711,7 +698,7 @@ function MainPage() {
       {/* Value Proposition Section */}
       <Container maxW="container.lg" mt={12} px={0}>
         <VStack spacing={8}>
-          
+
           {/* Main Value Proposition */}
           <Box textAlign="center" maxW="800px">
             <Heading size="lg" mb={4} color="purple.600">
@@ -728,11 +715,11 @@ function MainPage() {
 
           {/* Key Benefits Grid */}
           <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6} w="full">
-            <VStack 
-              p={6} 
-              bg="bg-contrast-xs" 
-              borderRadius="lg" 
-              border="1px solid" 
+            <VStack
+              p={6}
+              bg="bg-contrast-xs"
+              borderRadius="lg"
+              border="1px solid"
               borderColor="border-contrast-sm"
               _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
               transition="all 0.3s"
@@ -740,15 +727,15 @@ function MainPage() {
               <Icon as={LightningIcon} w={8} h={8} color="purple.500" />
               <Text fontWeight="bold" fontSize="md">Sekunder</Text>
               <Text fontSize="sm" color="text-contrast-md" textAlign="center">
-              Levering av søknadsbrev på sekunder – ikke dager
+                Levering av søknadsbrev på sekunder – ikke dager
               </Text>
             </VStack>
 
-            <VStack 
-              p={6} 
-              bg="bg-contrast-xs" 
-              borderRadius="lg" 
-              border="1px solid" 
+            <VStack
+              p={6}
+              bg="bg-contrast-xs"
+              borderRadius="lg"
+              border="1px solid"
               borderColor="border-contrast-sm"
               _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
               transition="all 0.3s"
@@ -760,11 +747,11 @@ function MainPage() {
               </Text>
             </VStack>
 
-            <VStack 
-              p={6} 
-              bg="bg-contrast-xs" 
-              borderRadius="lg" 
-              border="1px solid" 
+            <VStack
+              p={6}
+              bg="bg-contrast-xs"
+              borderRadius="lg"
+              border="1px solid"
               borderColor="border-contrast-sm"
               _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
               transition="all 0.3s"
@@ -776,11 +763,11 @@ function MainPage() {
               </Text>
             </VStack>
 
-            <VStack 
-              p={6} 
-              bg="bg-contrast-xs" 
-              borderRadius="lg" 
-              border="1px solid" 
+            <VStack
+              p={6}
+              bg="bg-contrast-xs"
+              borderRadius="lg"
+              border="1px solid"
               borderColor="border-contrast-sm"
               _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
               transition="all 0.3s"
@@ -827,81 +814,6 @@ function MainPage() {
               </HStack>
             </VStack>
           </Box>
-          
-<Divider />
-
-{/* AI Detection & Personalization Section */}
-<Box maxW="800px" textAlign="center">
-  <Heading size="md" mb={6} color="purple.600">
-    100% menneskelig skriving + full personalisering
-  </Heading>
-  
-  <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8} w="full">
-    {/* Human Score Visual */}
-    <VStack 
-      p={6} 
-      bg="bg-contrast-xs" 
-      borderRadius="lg" 
-      border="1px solid" 
-      borderColor="border-contrast-sm"
-      _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
-      transition="all 0.3s"
-    >
-      {/* Percentage Circle */}
-      <Box 
-        w="80px" 
-        h="80px" 
-        borderRadius="50%" 
-        border="6px solid" 
-        borderColor="green.400"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        bg="green.50"
-        position="relative"
-        mb={3}
-      >
-        <Text fontWeight="bold" fontSize="lg" color="green.600">100%</Text>
-      </Box>
-      <Text fontWeight="bold" fontSize="md">Menneskelig skriving</Text>
-      <Text fontSize="sm" color="text-contrast-md" textAlign="center">
-        Passerer alle AI-deteksjonsverktøy
-      </Text>
-    </VStack>
-
-    {/* Personalization Visual */}
-    <VStack 
-      p={6} 
-      bg="bg-contrast-xs" 
-      borderRadius="lg" 
-      border="1px solid" 
-      borderColor="border-contrast-sm"
-      _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
-      transition="all 0.3s"
-    >
-      {/* Customization Icon */}
-      <Box 
-        w="80px" 
-        h="80px" 
-        borderRadius="50%" 
-        border="6px solid" 
-        borderColor="purple.400"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        bg="purple.50"
-        position="relative"
-        mb={3}
-      >
-        <Icon as={StarIcon} w={8} h={8} color="purple.500" />
-      </Box>
-      <Text fontWeight="bold" fontSize="md">Fullt personaliserbar</Text>
-      <Text fontSize="sm" color="text-contrast-md" textAlign="center">
-        Tone, stil og innhold tilpasset deg
-      </Text>
-    </VStack>
-  </SimpleGrid>
-</Box>
 
           <Divider />
 
@@ -915,16 +827,16 @@ function MainPage() {
                 {/* Empty column for centering */}
                 <Box display={{ base: 'none', md: 'block' }} />
                 {/* Column for "Our Service" */}
-                <VStack 
-                  p={6} 
-                  borderRadius="xl" 
-                  border="2px solid" 
-                  borderColor="purple.400" 
-                  shadow="xl" 
+                <VStack
+                  p={6}
+                  borderRadius="xl"
+                  border="2px solid"
+                  borderColor="purple.400"
+                  shadow="xl"
                   spacing={4}
                   transform="scale(1.05)"
                 >
-                    <Heading size="md" color="purple.600">Én betaling</Heading>
+                  <Heading size="md" color="purple.600">Én betaling</Heading>
                   <Divider />
                   <VStack>
                     <Text fontWeight="bold" fontSize="lg">49 kr</Text>
@@ -939,37 +851,113 @@ function MainPage() {
                     <Text fontSize="sm" color="text-contrast-md" textAlign="center">Høyeste AI-kvalitet</Text>
                   </VStack>
                 </VStack>
-
               </SimpleGrid>
             </Flex>
           </Box>
+          <Divider />
 
-        <Divider />
+          {/* AI Detection & Personalization Section */}
+          <Box maxW="800px" textAlign="center">
+            <Heading size="md" mb={6} color="purple.600">
+              100% menneskelig skriving + full personalisering
+            </Heading>
 
-        {/* Closing statement and future promise */}
-        <Box textAlign="center" maxW="800px">
-            <Heading size="md" mb={3} color="purple.600">Enkelt og ærlig</Heading>
-          <Text color="text-contrast-md" fontSize="md">
-            Ingen skjulte kostnader, ingen kompliserte abonnementer. Bare et kraftig verktøy til en rettferdig pris.
-          </Text>
-        </Box>
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8} w="full">
+              {/* Human Score Visual */}
+              <VStack
+                p={6}
+                bg="bg-contrast-xs"
+                borderRadius="lg"
+                border="1px solid"
+                borderColor="border-contrast-sm"
+                _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
+                transition="all 0.3s"
+              >
+                {/* Percentage Circle */}
+                <Box
+                  w="80px"
+                  h="80px"
+                  borderRadius="50%"
+                  border="6px solid"
+                  borderColor="green.400"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  bg="green.50"
+                  position="relative"
+                  mb={3}
+                >
+                  <Text fontWeight="bold" fontSize="lg" color="green.600">100%</Text>
+                </Box>
+                <Text fontWeight="bold" fontSize="md">Menneskelig skriving</Text>
+                <Text fontSize="sm" color="text-contrast-md" textAlign="center">
+                  Passerer alle AI-deteksjonsverktøy
+                </Text>
+              </VStack>
 
-      </VStack>
-    </Container>
-    
-    <LeaveATip
-      isOpen={isOpen}
-      onOpen={onOpen}
-      onClose={onClose}
-      credits={user?.credits || 0}
-      isUsingLn={user?.isUsingLn || false}
-    />
-    <LoginToBegin isOpen={loginIsOpen} onOpen={loginOnOpen} onClose={loginOnClose} />
-    <Suspense fallback={<Spinner />}>
-      <LnPaymentModal isOpen={lnPaymentIsOpen} onClose={lnPaymentOnClose} lightningInvoice={lightningInvoice} />
-    </Suspense>
-  </>
-);
+              {/* Personalization Visual */}
+              <VStack
+                p={6}
+                bg="bg-contrast-xs"
+                borderRadius="lg"
+                border="1px solid"
+                borderColor="border-contrast-sm"
+                _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
+                transition="all 0.3s"
+              >
+                {/* Customization Icon */}
+                <Box
+                  w="80px"
+                  h="80px"
+                  borderRadius="50%"
+                  border="6px solid"
+                  borderColor="purple.400"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  bg="purple.50"
+                  position="relative"
+                  mb={3}
+                >
+                  <Icon as={StarIcon} w={8} h={8} color="purple.500" />
+                </Box>
+                <Text fontWeight="bold" fontSize="md">Fullt personaliserbar</Text>
+                <Text fontSize="sm" color="text-contrast-md" textAlign="center">
+                  Tone, stil og innhold tilpasset deg
+                </Text>
+              </VStack>
+            </SimpleGrid>
+          </Box>
+
+          <Divider />
+
+
+          {/* Closing statement and future promise */}
+          <Box textAlign="center" maxW="800px">
+            <Heading size="md" mb={3} color="purple.600">Ærlig og billig</Heading>
+            <Text color="text-contrast-md" fontSize="md">
+              Ingen skjulte kostnader, ingen kompliserte abonnementer. Bare et kraftig verktøy til en rettferdig pris.
+            </Text>
+          </Box>
+
+        </VStack>
+      </Container>
+
+      <LeaveATip
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+        credits={user?.credits || 0}
+        isUsingLn={user?.isUsingLn || false}
+      />
+      <LoginToBegin isOpen={loginIsOpen} onOpen={loginOnOpen} onClose={loginOnClose} />
+      <LazyLoadErrorBoundary>
+        <Suspense fallback={<PaymentModalLoader />}>
+          <LazyLnPaymentModal isOpen={lnPaymentIsOpen} onClose={lnPaymentOnClose} lightningInvoice={lightningInvoice} />
+        </Suspense>
+      </LazyLoadErrorBoundary>
+    </>
+  );
 }
 
 export default MainPage;
