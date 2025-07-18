@@ -212,7 +212,7 @@ const PrivacyPolicy = () => {
 
         <LegalSection title="9. Internasjonale datatransfers">
           <Text mb={4}>
-            Dine data kan bli overført til og behandlet i land utenfor EU. Når
+            Din data kan bli overført til og behandlet i land utenfor EU. Når
             dette skjer, sørger vi for at passende sikkerhetstiltak er på plass
             gjennom:
           </Text>
