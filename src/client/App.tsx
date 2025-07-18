@@ -40,7 +40,19 @@ export default function App() {
     // Add a small delay to ensure selection is complete in Firefox
     setTimeout(() => {
       const selection = window.getSelection();
-      const selectedText = selection?.toString().trim();
+      let selectedText = selection?.toString().trim();
+
+      // Firefox fallback - check if we're selecting from a textarea or input
+      if (!selectedText || selectedText.length === 0) {
+        const activeElement = document.activeElement as HTMLTextAreaElement | HTMLInputElement;
+        if (activeElement && (activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'INPUT')) {
+          const start = activeElement.selectionStart;
+          const end = activeElement.selectionEnd;
+          if (start !== null && end !== null && start !== end) {
+            selectedText = activeElement.value.substring(start, end).trim();
+          }
+        }
+      }
 
       if (selectedText && selectedText.length > 0 && location.pathname.includes('cover-letter')) {
         // closes the tooltip when the user clicks a tooltip button
