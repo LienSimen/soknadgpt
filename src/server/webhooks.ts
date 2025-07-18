@@ -60,7 +60,7 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
           },
           data: {
             credits: {
-              increment: 150,
+              increment: 50,
             },
             gptModel: 'gpt-4o',
           },

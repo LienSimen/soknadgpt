@@ -708,7 +708,7 @@ function MainPage() {
               Det beste pengene kan kjøpe - til en billig pris
             </Heading>
             <Text fontSize="lg" color="text-contrast-md" lineHeight={1.8}>
-              Bruker GPT-4o, den beste modellen, for kun 49kr for 150 søknadsbrev, og leverer på sekunder i stedet for dager.
+              Bruker GPT-4o, den beste modellen, for kun 49kr for 50 søknadsbrev, og leverer på sekunder i stedet for dager.
             </Text>
           </Box>
 

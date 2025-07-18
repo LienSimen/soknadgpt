@@ -115,8 +115,8 @@ export default function ProfilePage({ user }: { user: User }) {
                     <VStack gap={3} alignItems='center'>
                       <Heading size='xl'>NOK 49</Heading>
                         <Text textAlign='center' fontSize='md'>
-                        150 kreditter<br />
-                        (150 søknadsbrev ) 😎
+                        50 kreditter<br />
+                        (50 søknadsbrev ) 😎
                         </Text>
                     </VStack>
                     <Button mr={3} isLoading={isCreditsLoading} onClick={handleCreditsClick}>
