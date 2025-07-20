@@ -36,7 +36,7 @@ const serverSetup: ServerSetupFn = async ({ app }) => {
     const cspDirectives = [
       "default-src 'self'",
       // Script sources - be restrictive with unsafe-inline/unsafe-eval
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.google-analytics.com https://www.googletagmanager.com https://cdn.jsdelivr.net",
+      "script-src 'self' https://js.stripe.com https://www.google-analytics.com https://www.googletagmanager.com https://cdn.jsdelivr.net",
       // Style sources
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net",
       // Font sources
@@ -69,11 +69,7 @@ const serverSetup: ServerSetupFn = async ({ app }) => {
     
     // Set CSP header in enforcement mode
     // Add report-uri for CSP violation reporting in production
-    if (process.env.NODE_ENV === 'production') {
-      res.set('Content-Security-Policy', cspDirectives + '; report-uri /api/csp-report');
-    } else {
-      res.set('Content-Security-Policy', cspDirectives);
-    }
+    res.set('Content-Security-Policy', cspDirectives + '; report-uri /csp-report');
     
     // Cross-Origin-Opener-Policy (COOP) - isolate browsing context
     res.set('Cross-Origin-Opener-Policy', 'same-origin');
