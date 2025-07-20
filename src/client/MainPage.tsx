@@ -756,7 +756,7 @@ function MainPage() {
               transition="all 0.3s"
             >
               <Icon as={CheckCircleIcon} w={8} h={8} color="purple.500" />
-              <Text fontWeight="bold" fontSize="md">0,33 kr per brev</Text>
+              <Text fontWeight="bold" fontSize="md">Under 1 krone</Text>
               <Text fontSize="sm" color="text-contrast-md" textAlign="center">
                 Ingen skjulte kostnader
               </Text>
@@ -839,7 +839,7 @@ function MainPage() {
                   <Divider />
                   <VStack>
                     <Text fontWeight="bold" fontSize="lg">49 kr</Text>
-                    <Text fontSize="sm" color="text-contrast-md" textAlign="center">for 150 søknadsbrev</Text>
+                    <Text fontSize="sm" color="text-contrast-md" textAlign="center">for 50 søknadsbrev</Text>
                   </VStack>
                   <VStack>
                     <Text fontWeight="bold" fontSize="lg">2-4 sekunder</Text>
@@ -886,7 +886,7 @@ function MainPage() {
                   position="relative"
                   mb={3}
                 >
-                  <Text fontWeight="bold" fontSize="lg" color="green.600">100%</Text>
+                  <Text fontWeight="bold" fontSize="lg" color="green.800">100%</Text>
                 </Box>
                 <Text fontWeight="bold" fontSize="md">Menneskelig skriving</Text>
                 <Text fontSize="sm" color="text-contrast-md" textAlign="center">
