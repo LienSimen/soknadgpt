@@ -20,7 +20,6 @@ app CoverLetterGPT {
     "<meta name=\"emotion-insertion-point\" content=\"\">",
     "<title>Søknad GPT: Lag Profesjonelle Søknadsbrev med AI</title>",
     "<meta name=\"description\" content=\"Få hjelp til å skrive profesjonelle og skreddersydde søknader på et blunk. Prøv helt gratis!\" />",
-    "<link rel=\"canonical\" href=\"https://www.cvcv.no\" />",
     "<meta property=\"og:type\" content=\"website\" />",
     "<meta property=\"og:url\" content=\"https://www.cvcv.no\" />",
     "<meta property=\"og:title\" content=\"SøknadGPT: Hjelp til søknad\" />",
