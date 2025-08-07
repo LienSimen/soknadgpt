@@ -1,3 +1,82 @@
+/*
+ * COPY THIS PROMPT FOR YOUR OWN AI COVER LETTER GENERATOR
+ * 
+ * This is the core prompt system that makes cover letters sound human and pass AI detection.
+ * You can copy this prompt and use it with ChatGPT, Gemini, or any other AI model.
+ * 
+ * Basic usage:
+ * 1. Copy the prompt below (starts with "Write a cover letter as the job applicant...")
+ * 2. Add your resume content and job description at the end
+ * 3. Paste into ChatGPT/Gemini with this format:
+ *    "My Resume: [YOUR RESUME TEXT]. Job title: [JOB TITLE] Job Description: [JOB DESCRIPTION]."
+ * 
+ * Main prompt for human-like cover letters:
+ * 
+ * "Write a cover letter as the job applicant themselves. Write exactly how they would write it - not like an AI describing them.
+ * 
+ * Write in the same language as the job description. Sound like a real person who is genuinely interested in this specific job.
+ * 
+ * CRITICAL - Avoid AI detection:
+ * - Write as "I" not "he/she" - you ARE the applicant
+ * - Include minor grammatical imperfections and casual language
+ * - Don't be overly perfect or polished
+ * - Use natural expressions and colloquialisms
+ * - Show real personality and enthusiasm
+ * - Vary sentence structure naturally
+ * - Include hesitations or corrections like real speech
+ * - Use everyday expressions and slang where appropriate
+ * - Write like you speak, not like formal writing
+ * 
+ * Write naturally about:
+ * - Why this specific job excites you
+ * - How your actual experience connects to what they need
+ * - Specific examples from your background
+ * - Your contact info
+ * - Genuine interest in next steps
+ * - Don't use dashes or bullet points
+ * 
+ * Don't follow a template. Write like you're telling a friend why you want this job."
+ * 
+ * For a version with a witty remark, add: "End with a natural, job-related joke."
+ * 
+ * ADVANCED ANTI-AI-DETECTION ENHANCEMENTS:
+ * Add these instructions to make it even more human-like:
+ * 
+ * "ANTI-AI-DETECTION REQUIREMENTS:
+ * - Use natural expressions and idioms in the same language as the job description
+ * - Include minor grammatical imperfections that humans make
+ * - Use contractions and informal language where appropriate
+ * - Avoid overly polished or perfect sentence structures
+ * - Include personal touches and authentic reactions
+ * - Use varied sentence starters - avoid repetitive patterns
+ * - Write with genuine emotion and personality
+ * - Don't use bullet points or structured formatting
+ * - Write in flowing paragraphs like natural speech
+ * - Include hesitations, corrections, and natural speech patterns
+ * - Add small typos or informal spellings that humans naturally make
+ * - Use regional expressions and local slang appropriate to the language
+ * - Include incomplete thoughts or sentences that trail off naturally
+ * - Mix formal and informal registers within the same paragraph
+ * - Add personal interjections like 'forresten' or 'altså' in Norwegian
+ * - Use run-on sentences occasionally, like people do when excited
+ * - Include self-corrections like 'eller rettere sagt' or similar phrases
+ * - Jump between topics naturally, like real conversations do
+ * - Include specific personal opinions that aren't perfectly balanced
+ * - Reference current trends or recent events when relevant
+ * - Let some thoughts feel incomplete or trail off mid-idea
+ * - Mix sentence lengths dramatically - very short. Then longer rambling ones."
+ * 
+ * ADDITIONAL STYLE OPTIONS:
+ * - "Write like you're talking to a friend - use casual expressions and natural speech patterns"
+ * - "Mix very short sentences with longer ones. Some sentences should be fragments. Others should ramble a bit like real speech."
+ * - "Share a specific, personal story from your actual experience. Make it feel real and authentic, not generic."
+ * - "Use specific technical terms from the industry, but explain them naturally like someone who actually works in the field"
+ * - "Show you're confident but not arrogant. Admit what you don't know while being excited to learn. Use natural phrases that show humility."
+ * - "Ask a genuine question that shows you've thought about the role. Make it sound like something you'd actually wonder about, not a textbook rhetorical question."
+ * 
+ * END OF COPYABLE PROMPT
+ */
+
 import { type Job, type CoverLetter, type User, type LnPayment } from "wasp/entities";
 import { HttpError } from "wasp/server";
 import axios from 'axios';
