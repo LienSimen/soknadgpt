@@ -45,30 +45,31 @@ export interface CoverLetterOptionsProps {
 
 const defaultOptions: CoverLetterOptionsData = {
   styleOptions: {
-    conversationalTone: false,
-    varySentenceLength: false,
-    addPersonalAnecdote: false,
+    conversationalTone: true,
+    varySentenceLength: true,
+    addPersonalAnecdote: true,
   },
   contentOptions: {
-    useIndustryTerminology: false,
-    includeConfidentUncertainty: false,
+    useIndustryTerminology: true,
+    includeConfidentUncertainty: true,
     addRhetoricalQuestion: false,
   },
   antiAiOptions: {
     addTyposAndInformalSpelling: false,
-    useRegionalExpressions: false,
+    useRegionalExpressions: true,
     includeIncompleteThoughts: false,
-    mixFormalInformalRegisters: false,
-    addPersonalInterjections: false,
+    mixFormalInformalRegisters: true,
+    addPersonalInterjections: true,
     useRunOnSentences: false,
-    includeSelfCorrections: false,
+    includeSelfCorrections: true,
     jumpBetweenTopics: false,
     includePersonalOpinions: false,
-    referenceCurrentTrends: false,
+    referenceCurrentTrends: true,
   },
 };
 
 const STORAGE_KEY = 'coverLetterOptions';
+const STORAGE_VERSION = '2.0'; // Updated version to reset to new defaults
 
 export const CoverLetterOptions: React.FC<CoverLetterOptionsProps> = ({
   onChange,
@@ -82,13 +83,18 @@ export const CoverLetterOptions: React.FC<CoverLetterOptionsProps> = ({
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        const parsedOptions = JSON.parse(saved);
-        // Merge with defaultOptions to ensure all properties exist
-        return {
-          styleOptions: { ...defaultOptions.styleOptions, ...parsedOptions.styleOptions },
-          contentOptions: { ...defaultOptions.contentOptions, ...parsedOptions.contentOptions },
-          antiAiOptions: { ...defaultOptions.antiAiOptions, ...parsedOptions.antiAiOptions },
-        };
+        const parsedData = JSON.parse(saved);
+        // Check if we have version info and if it matches current version
+        if (parsedData.version === STORAGE_VERSION && parsedData.options) {
+          // Use saved options with current version
+          return {
+            styleOptions: { ...defaultOptions.styleOptions, ...parsedData.options.styleOptions },
+            contentOptions: { ...defaultOptions.contentOptions, ...parsedData.options.contentOptions },
+            antiAiOptions: { ...defaultOptions.antiAiOptions, ...parsedData.options.antiAiOptions },
+          };
+        }
+        // Version mismatch or old format - use new defaults
+        return defaultOptions;
       }
       return defaultOptions;
     } catch {
@@ -99,7 +105,11 @@ export const CoverLetterOptions: React.FC<CoverLetterOptionsProps> = ({
   // Save to localStorage and notify parent when options change
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(options));
+      const dataToSave = {
+        version: STORAGE_VERSION,
+        options: options
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
     } catch (error) {
       console.warn('Failed to save options to localStorage:', error);
     }
@@ -133,6 +143,33 @@ export const CoverLetterOptions: React.FC<CoverLetterOptionsProps> = ({
         ...prev.antiAiOptions,
         [key]: value,
       },
+    }));
+  };
+
+  const areAllOptionsEnabled = () => {
+    const styleValues = Object.values(options.styleOptions);
+    const contentValues = Object.values(options.contentOptions);
+    const antiAiValues = Object.values(options.antiAiOptions);
+    return [...styleValues, ...contentValues, ...antiAiValues].every(value => value);
+  };
+
+  const toggleAllOptions = () => {
+    const allEnabled = areAllOptionsEnabled();
+    const newValue = !allEnabled;
+
+    setOptions(prev => ({
+      styleOptions: Object.keys(prev.styleOptions).reduce((acc, key) => ({
+        ...acc,
+        [key]: newValue,
+      }), {} as CoverLetterOptionsData['styleOptions']),
+      contentOptions: Object.keys(prev.contentOptions).reduce((acc, key) => ({
+        ...acc,
+        [key]: newValue,
+      }), {} as CoverLetterOptionsData['contentOptions']),
+      antiAiOptions: Object.keys(prev.antiAiOptions).reduce((acc, key) => ({
+        ...acc,
+        [key]: newValue,
+      }), {} as CoverLetterOptionsData['antiAiOptions']),
     }));
   };
 
@@ -173,6 +210,20 @@ export const CoverLetterOptions: React.FC<CoverLetterOptionsProps> = ({
 
       <Collapse in={isOpen} style={{ width: '100%' }}>
         <VStack px={3} pb={3} spacing={3} alignItems="flex-start" w="full" id="cover-letter-options-content">
+          <Box w="full">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={toggleAllOptions}
+              w="full"
+              colorScheme={areAllOptionsEnabled() ? "red" : "green"}
+            >
+              {areAllOptionsEnabled() ? "Deaktiver alle" : "Aktiver alle"}
+            </Button>
+          </Box>
+
+          <Divider />
+
           <Box w="full">
             <Text fontSize="sm" fontWeight="medium" color="text-contrast-lg" mb={2}>
               Stilalternativer:
