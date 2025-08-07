@@ -6,37 +6,26 @@
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 <url>
   <loc>https://www.cvcv.no/</loc>
-  <lastmod>2025-07-23</lastmod>
+  <lastmod>2025-08-04</lastmod>
   <priority>1.00</priority>
+  <changefreq>weekly</changefreq>
 </url>
 <url>
   <loc>https://www.cvcv.no/login</loc>
-  <lastmod>2025-07-12</lastmod>
+  <lastmod>2025-08-04</lastmod>
   <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.cvcv.no/jobs</loc>
-  <lastmod>2025-07-12</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.cvcv.no/profile</loc>
-  <lastmod>2025-07-12</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.cvcv.no/checkout</loc>
-  <lastmod>2025-07-12</lastmod>
-  <priority>0.80</priority>
+  <changefreq>monthly</changefreq>
 </url>
 <url>
   <loc>https://www.cvcv.no/tos</loc>
-  <lastmod>2025-07-23</lastmod>
-  <priority>0.80</priority>
+  <lastmod>2025-08-04</lastmod>
+  <priority>0.60</priority>
+  <changefreq>yearly</changefreq>
 </url>
 <url>
   <loc>https://www.cvcv.no/privacy</loc>
-  <lastmod>2025-07-12</lastmod>
-  <priority>0.80</priority>
+  <lastmod>2025-08-04</lastmod>
+  <priority>0.60</priority>
+  <changefreq>yearly</changefreq>
 </url>
 </urlset>

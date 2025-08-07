@@ -1,4 +1,7 @@
 User-agent: *
-Disallow: /api/
+
+Disallow: /jobs
+Disallow: /profile
+Disallow: /checkout
 Allow: /
 Sitemap: https://www.cvcv.no/sitemap.xml

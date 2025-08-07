@@ -1,4 +1,4 @@
-import { useSmartAuth } from "../utils/optimizedAuth";
+import { useAuth } from 'wasp/client/auth';
 import {
   HStack,
   Heading,
@@ -21,7 +21,7 @@ import { useRef } from 'react';
 import ThemeSwitch from './ThemeSwitch';
 
 export default function NavBar() {
-  const { data: user } = useSmartAuth();
+  const { data: user } = useAuth();
 
   const gptTextColor = useColorModeValue('purple.500', 'white');
   const borderColor = useColorModeValue('purple.300', 'purple.100');

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { type User, type LnPayment } from "wasp/entities";
 import { Link as WaspLink } from "wasp/client/router";
-import { useSmartAuth } from './utils/optimizedAuth';
+import { useAuth } from 'wasp/client/auth';
 
 import {
   generateCoverLetter,
@@ -101,7 +101,7 @@ function MainPage() {
   const [isScraping, setIsScraping] = useState<boolean>(false);
   const [isProcessingFile, setIsProcessingFile] = useState<boolean>(false);
   const [coverLetterOptions, setCoverLetterOptions] = useState<CoverLetterOptionsData | null>(null);
-  const { data: user, hasToken } = useSmartAuth();
+  const { data: user } = useAuth();
 
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
@@ -524,7 +524,7 @@ function MainPage() {
                     },
                   })}
                   onFocus={(e: any) => {
-                    if (!hasToken && user === null) {
+                    if (user === null) {
                       loginOnOpen();
                       e.target.blur();
                     }
@@ -762,7 +762,7 @@ function MainPage() {
                   mt={3}
                   size='sm'
                   isLoading={isSubmitting}
-                  disabled={!hasToken && user === null}
+                  disabled={user === null}
                   type='submit'
                   color="white"
                   bg="purple.500"
