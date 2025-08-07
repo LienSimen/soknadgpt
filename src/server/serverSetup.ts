@@ -1,9 +1,24 @@
 import express from 'express';
 import path from 'path';
+import compression from 'compression';
 import { type ServerSetupFn } from 'wasp/server';
 
 const serverSetup: ServerSetupFn = async ({ app }) => {
   const clientBuildPath = path.join(process.cwd(), 'build/client');
+  
+  // Add gzip compression middleware (should be one of the first middleware)
+  app.use(compression({
+    level: 6, // Balance between compression ratio and CPU usage
+    threshold: 1024, // Only compress responses that are at least 1KB
+    filter: (req, res) => {
+      // Don't compress responses with 'x-no-compression' header
+      if (req.headers['x-no-compression']) {
+        return false;
+      }
+      // Fall back to standard filter function
+      return compression.filter(req, res);
+    }
+  }));
   
   // HTTPS redirect middleware - redirect HTTP to HTTPS in production
   app.use((req, res, next) => {
