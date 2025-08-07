@@ -35,6 +35,11 @@ import { DeleteJob } from './components/AlertDialog';
 import { FiDelete } from 'react-icons/fi';
 
 function JobsPage({ user }: { user: User }) {
+  // Set page title
+  useEffect(() => {
+    document.title = 'Mine jobber - SøknadGPT';
+  }, []);
+
   const [jobId, setJobId] = useState<string>('');
   const [descriptionText, setDescriptionText] = useState<string | null>(null);
 
@@ -93,6 +98,9 @@ function JobsPage({ user }: { user: User }) {
 
   return (
     <VStack gap={1}>
+      <Heading as="h1" size="lg" textAlign="center" mb={4} color="purple.600">
+        Mine jobber
+      </Heading>
       <BorderBox>
         <Heading size='md'>Dine søknader</Heading>
         {isLoading && <Spinner />}
@@ -138,14 +146,14 @@ function JobsPage({ user }: { user: User }) {
                       </Text>
                       <HStack pb={1}>
                         <Text>
-                            <b>Beskrivelse:</b>
+                          <b>Beskrivelse:</b>
                         </Text>
                         <Button
                           size='xs'
                           fontSize='sm'
                           onClick={() => {
-                          setDescriptionText(job.description);
-                          desOnOpen();
+                            setDescriptionText(job.description);
+                            desOnOpen();
                           }}
                         >
                           Vis
@@ -164,7 +172,7 @@ function JobsPage({ user }: { user: User }) {
                 </AccordionItem>
               ))
             ) : (
-                <Text textAlign='center'>ingen søknader enda...</Text>
+              <Text textAlign='center'>ingen søknader enda...</Text>
             )}
           </Accordion>
         )}

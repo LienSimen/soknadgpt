@@ -2,7 +2,7 @@ import { useAuth, googleSignInUrl as signInUrl } from 'wasp/client/auth';
 import { getLnLoginUrl, useQuery, getLnUserInfo } from 'wasp/client/operations';
 import { AiOutlineGoogle } from 'react-icons/ai';
 import { BsCurrencyBitcoin } from 'react-icons/bs';
-import { VStack, Button, Spinner, Text, useDisclosure } from '@chakra-ui/react';
+import { VStack, Button, Spinner, Text, useDisclosure, Heading } from '@chakra-ui/react';
 import BorderBox from './components/BorderBox';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,11 @@ import React, { lazy, Suspense } from 'react';
 const LnLoginModal = lazy(() => import('./components/LnLoginModal'));
 
 export default function Login() {
+  // Set page title
+  useEffect(() => {
+    document.title = 'Logg inn - SøknadGPT';
+  }, []);
+
   const [encodedUrl, setEncodedUrl] = useState<string | null>(null);
   const [k1Hash, setK1Hash] = useState<string>('');
   const [lnIsLoading, setLnIsLoading] = useState<boolean>(false);
@@ -72,6 +77,9 @@ export default function Login() {
 
   return (
     <>
+      <Heading as="h1" size="lg" textAlign="center" mb={4} color="purple.600">
+        Logg inn på SøknadGPT
+      </Heading>
       <BorderBox>
         {isLoading || !encodedUrl ? (
           <Spinner />

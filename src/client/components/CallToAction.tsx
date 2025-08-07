@@ -33,13 +33,25 @@ export function Footer() {
         <Text fontSize="sm" color="text-contrast-md">
           Lien Tech - Orgnr. 935820057, Bergen, Norge - Alle priser inkl. mva
         </Text>
-        <WaspLink to="/tos">
-          <Text fontSize="sm" color="text-contrast-md" _hover={{ color: "purple.500" }}>
+        <WaspLink to="/tos" style={{ textDecoration: 'none' }}>
+          <Text
+            fontSize="sm"
+            color="text-contrast-md"
+            _hover={{ color: "purple.500" }}
+            cursor="pointer"
+            as="span"
+          >
             Brukerbetingelser
           </Text>
         </WaspLink>
-        <WaspLink to="/privacy">
-          <Text fontSize="sm" color="text-contrast-md" _hover={{ color: "purple.500" }}>
+        <WaspLink to="/privacy" style={{ textDecoration: 'none' }}>
+          <Text
+            fontSize="sm"
+            color="text-contrast-md"
+            _hover={{ color: "purple.500" }}
+            cursor="pointer"
+            as="span"
+          >
             Personvern
           </Text>
         </WaspLink>

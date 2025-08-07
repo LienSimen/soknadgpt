@@ -5,10 +5,15 @@ import { stripePayment, stripeGpt4Payment, stripeCreditsPayment, useQuery, getUs
 
 import BorderBox from './components/BorderBox';
 import { Box, Heading, Text, Button, Code, Spinner, VStack, HStack, Link } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { IoWarningOutline } from 'react-icons/io5';
 
 export default function ProfilePage({ user }: { user: User }) {
+  // Set page title
+  useEffect(() => {
+    document.title = 'Min profil - SøknadGPT';
+  }, []);
+
   const [isLoading, setIsLoading] = useState(false);
   const [isCreditsLoading, setIsCreditsLoading] = useState(false);
   const [isGpt4loading, setIsGpt4Loading] = useState(false);
@@ -55,104 +60,109 @@ export default function ProfilePage({ user }: { user: User }) {
   }
 
   return (
-    <BorderBox>
-      {!!userInfo ? (
-        <>
-          <Heading size='md'>👋 Hei {userInfo.email || 'der'} </Heading>
-          {userInfo.subscriptionStatus === 'past_due' ? (
-            <VStack gap={3} py={5} alignItems='center'>
-              <Box color='purple.400'>
-                <IoWarningOutline size={30} color='inherit' />
-              </Box>
-              <Text textAlign='center' fontSize='sm' textColor='text-contrast-lg'>
-                Abonnementet ditt er utløpt. <br /> Vennligst oppdater betalingsmetoden din{' '}
-                <Link textColor='purple.400' href='https://billing.stripe.com/p/login/00w00j1sLcqp4ZDaKX0Ny00'>
-                  ved å klikke her
-                </Link>
-              </Text>
-            </VStack>
-          ) : userInfo.hasPaid && !userInfo.isUsingLn ? (
-            <VStack gap={3} pt={5} alignItems='flex-start'>
-              <Text textAlign='initial'>Tusen takk for støtten!</Text>
+    <>
+      <Heading as="h1" size="lg" textAlign="center" mb={4} color="purple.600">
+        Min profil
+      </Heading>
+      <BorderBox>
+        {!!userInfo ? (
+          <>
+            <Heading size='md'>👋 Hei {userInfo.email || 'der'} </Heading>
+            {userInfo.subscriptionStatus === 'past_due' ? (
+              <VStack gap={3} py={5} alignItems='center'>
+                <Box color='purple.400'>
+                  <IoWarningOutline size={30} color='inherit' />
+                </Box>
+                <Text textAlign='center' fontSize='sm' textColor='text-contrast-lg'>
+                  Abonnementet ditt er utløpt. <br /> Vennligst oppdater betalingsmetoden din{' '}
+                  <Link textColor='purple.400' href='https://billing.stripe.com/p/login/00w00j1sLcqp4ZDaKX0Ny00'>
+                    ved å klikke her
+                  </Link>
+                </Text>
+              </VStack>
+            ) : userInfo.hasPaid && !userInfo.isUsingLn ? (
+              <VStack gap={3} pt={5} alignItems='flex-start'>
+                <Text textAlign='initial'>Tusen takk for støtten!</Text>
 
-              <Text textAlign='initial'>Du har ubegrenset tilgang til CoverLetterGPT med {user?.gptModel === 'gpt-4' || user?.gptModel === 'gpt-4o' ? 'GPT-4o.' : 'GPT-4o-mini.'}</Text>
+                <Text textAlign='initial'>Du har ubegrenset tilgang til CoverLetterGPT med {user?.gptModel === 'gpt-4' || user?.gptModel === 'gpt-4o' ? 'GPT-4o.' : 'GPT-4o-mini.'}</Text>
 
-              {userInfo.subscriptionStatus === 'canceled' && (
-                <Code alignSelf='center' fontSize='lg'>
-                  {oneMonthFromDatePaid.toUTCString().slice(0, -13)}
-                </Code>
-              )}
-              <Text alignSelf='initial' fontSize='sm' fontStyle='italic' textColor='text-contrast-sm'>
-                For å administrere abonnementet ditt, vennligst{' '}
-                <Link textColor='purple.600' href='https://billing.stripe.com/p/login/00w00j1sLcqp4ZDaKX0Ny00'>
-                  klikk her.
-                </Link>
-              </Text>
-            </VStack>
-          ) : (
-            !userInfo.isUsingLn && (
-              <HStack pt={3} textAlign='center'>
-                <Heading size='sm'>Du har </Heading>
-                <Code>{userInfo?.credits ? userInfo.credits : '0'}</Code>
-                <Heading size='sm'>søknadsbrev{userInfo?.credits === 1 ? '' : 'er'} igjen</Heading>
-              </HStack>
-            )
-          )}
-          {!userInfo.hasPaid && !userInfo.isUsingLn && (
-            <VStack py={3} gap={5}>
-              <VStack py={3} gap={2}>
-                <HStack gap={5} w='full' justifyContent='center'>
-                   <VStack
-                    layerStyle='card'
-                    py={5}
-                    px={7}
-                    gap={3}
-                    height='100%'
-                    justifyContent='space-between'
-                    alignItems='center'
-                    borderColor='purple.500'
-                  >
-                    <VStack gap={3} alignItems='center'>
-                      <Heading size='xl'>NOK 49</Heading>
+                {userInfo.subscriptionStatus === 'canceled' && (
+                  <Code alignSelf='center' fontSize='lg'>
+                    {oneMonthFromDatePaid.toUTCString().slice(0, -13)}
+                  </Code>
+                )}
+                <Text alignSelf='initial' fontSize='sm' fontStyle='italic' textColor='text-contrast-sm'>
+                  For å administrere abonnementet ditt, vennligst{' '}
+                  <Link textColor='purple.600' href='https://billing.stripe.com/p/login/00w00j1sLcqp4ZDaKX0Ny00'>
+                    klikk her.
+                  </Link>
+                </Text>
+              </VStack>
+            ) : (
+              !userInfo.isUsingLn && (
+                <HStack pt={3} textAlign='center'>
+                  <Heading size='sm'>Du har </Heading>
+                  <Code>{userInfo?.credits ? userInfo.credits : '0'}</Code>
+                  <Heading size='sm'>søknadsbrev{userInfo?.credits === 1 ? '' : 'er'} igjen</Heading>
+                </HStack>
+              )
+            )}
+            {!userInfo.hasPaid && !userInfo.isUsingLn && (
+              <VStack py={3} gap={5}>
+                <VStack py={3} gap={2}>
+                  <HStack gap={5} w='full' justifyContent='center'>
+                    <VStack
+                      layerStyle='card'
+                      py={5}
+                      px={7}
+                      gap={3}
+                      height='100%'
+                      justifyContent='space-between'
+                      alignItems='center'
+                      borderColor='purple.500'
+                    >
+                      <VStack gap={3} alignItems='center'>
+                        <Heading size='xl'>NOK 49</Heading>
                         <Text textAlign='center' fontSize='md'>
-                        50 kreditter<br />
-                        (50 søknadsbrev ) 😎
+                          50 kreditter<br />
+                          (50 søknadsbrev ) 😎
                         </Text>
+                      </VStack>
+                      <Button mr={3} isLoading={isCreditsLoading} onClick={handleCreditsClick}>
+                        Kjøp nå
+                      </Button>
                     </VStack>
-                    <Button mr={3} isLoading={isCreditsLoading} onClick={handleCreditsClick}>
-                      Kjøp nå
-                    </Button>
-                  </VStack>
-                </HStack>
+                  </HStack>
+                </VStack>
               </VStack>
-            </VStack>
-          )}
-          {userInfo.isUsingLn && (
-            <VStack py={3} gap={5}>
-              <VStack py={3} gap={2}>
-                <HStack gap={5} display='grid' gridTemplateColumns='1fr'>
-                  <VStack layerStyle='card' py={5} px={7} gap={3} height='100%' width='100%' justifyContent='center' alignItems='center'>
-                    <VStack gap={3} alignItems='center'>
-                      <Heading size='xl'>⚡️</Heading>
-                      <Text textAlign='start' fontSize='md'>
-                        Du har rimelig, bruk-betalt tilgang til SøknadGPT med GPT-4o via Lightning Network
-                      </Text>
-                      <Text textAlign='start' fontSize='sm'>
-                        Merk: hvis du foretrekker et månedlig abonnement, vennligst logg ut og logg inn med Google.
-                      </Text>
+            )}
+            {userInfo.isUsingLn && (
+              <VStack py={3} gap={5}>
+                <VStack py={3} gap={2}>
+                  <HStack gap={5} display='grid' gridTemplateColumns='1fr'>
+                    <VStack layerStyle='card' py={5} px={7} gap={3} height='100%' width='100%' justifyContent='center' alignItems='center'>
+                      <VStack gap={3} alignItems='center'>
+                        <Heading size='xl'>⚡️</Heading>
+                        <Text textAlign='start' fontSize='md'>
+                          Du har rimelig, bruk-betalt tilgang til SøknadGPT med GPT-4o via Lightning Network
+                        </Text>
+                        <Text textAlign='start' fontSize='sm'>
+                          Merk: hvis du foretrekker et månedlig abonnement, vennligst logg ut og logg inn med Google.
+                        </Text>
+                      </VStack>
                     </VStack>
-                  </VStack>
-                </HStack>
+                  </HStack>
+                </VStack>
               </VStack>
-            </VStack>
-          )}
-          <Button alignSelf='flex-end' size='sm' onClick={() => logout()}>
-            Logg ut
-          </Button>
-        </>
-      ) : (
-        <Spinner />
-      )}
-    </BorderBox>
+            )}
+            <Button alignSelf='flex-end' size='sm' onClick={() => logout()}>
+              Logg ut
+            </Button>
+          </>
+        ) : (
+          <Spinner />
+        )}
+      </BorderBox>
+    </>
   );
 }

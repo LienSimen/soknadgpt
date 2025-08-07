@@ -6,7 +6,7 @@ import NavBar from './components/NavBar';
 import { Footer } from './components/CallToAction';
 import { useLocation, Outlet } from 'react-router-dom';
 import { usePerformanceOptimizer } from './components/PerformanceOptimizer';
-import { useAuth } from 'wasp/client/auth';
+import { useSmartAuth } from './utils/optimizedAuth';
 import { Suspense } from 'react';
 import { LazyEditPopover, EditPopoverLoader } from './components/LazyComponents';
 export const TextareaContext = createContext({
@@ -25,7 +25,7 @@ export default function App() {
 
   const location = useLocation();
   const { throttle } = usePerformanceOptimizer();
-  const { data: user } = useAuth();
+  const { data: user } = useSmartAuth();
 
   // Memoize context value to prevent unnecessary re-renders
   const contextValue = useMemo(() => ({

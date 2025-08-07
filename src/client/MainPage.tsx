@@ -1,5 +1,12 @@
+// React imports must come first
+import React, { Suspense, useState, useEffect, useRef, lazy } from 'react';
+import { ChangeEvent } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+
 import { type User, type LnPayment } from "wasp/entities";
-import { useAuth } from "wasp/client/auth";
+import { Link as WaspLink } from "wasp/client/router";
+import { useSmartAuth } from './utils/optimizedAuth';
 
 import {
   generateCoverLetter,
@@ -11,6 +18,7 @@ import {
 } from "wasp/client/operations";
 import { scrapeJob } from './scrapeJob';
 
+// Optimized imports - only import what's needed for above-the-fold content
 import {
   Box,
   HStack,
@@ -33,36 +41,56 @@ import {
   SliderThumb,
   Tooltip,
   useDisclosure,
-  SimpleGrid,
-  Icon,
-  Flex,
-  Divider,
   Container,
 } from '@chakra-ui/react';
-import { CheckCircleIcon, TimeIcon, StarIcon } from '@chakra-ui/icons';
-// Custom LightningIcon since @chakra-ui/icons does not export one
+
+// Lazy load heavy UI components that are below the fold
+const SimpleGrid = lazy(() => import('@chakra-ui/react').then(module => ({ default: module.SimpleGrid })));
+const Icon = lazy(() => import('@chakra-ui/react').then(module => ({ default: module.Icon })));
+const Flex = lazy(() => import('@chakra-ui/react').then(module => ({ default: module.Flex })));
+const Divider = lazy(() => import('@chakra-ui/react').then(module => ({ default: module.Divider })));
+const Link = lazy(() => import('@chakra-ui/react').then(module => ({ default: module.Link })));
+// Lazy load icons to reduce initial bundle
+const CheckCircleIcon = lazy(() => import('@chakra-ui/icons').then(module => ({ default: module.CheckCircleIcon })));
+const TimeIcon = lazy(() => import('@chakra-ui/icons').then(module => ({ default: module.TimeIcon })));
+const StarIcon = lazy(() => import('@chakra-ui/icons').then(module => ({ default: module.StarIcon })));
+
+// Lazy load below-the-fold content
+const BelowTheFoldContent = lazy(() => import('./components/BelowTheFoldContent'));
 const LightningIcon = (props: any) => (
-  <Icon viewBox="0 0 24 24" {...props}>
-    <path
-      fill="currentColor"
-      d="M7 2v13h3v7l7-12h-4l4-8z"
-    />
-  </Icon>
+  <Suspense fallback={<div style={{ width: 24, height: 24, backgroundColor: '#e2e8f0' }} />}>
+    <Icon viewBox="0 0 24 24" {...props}>
+      <path
+        fill="currentColor"
+        d="M7 2v13h3v7l7-12h-4l4-8z"
+      />
+    </Icon>
+  </Suspense>
 );
 import BorderBox from './components/BorderBox';
 import { LeaveATip, LoginToBegin } from './components/AlertDialog';
 import { convertToSliderValue, convertToSliderLabel } from './components/CreativitySlider';
 import { type CoverLetterOptionsData } from './components/CoverLetterOptions';
 import { LazyCoverLetterOptions, LazyLnPaymentModal, LazyPdfProcessor, CoverLetterOptionsLoader, PaymentModalLoader, PdfProcessorLoader, LazyLoadErrorBoundary } from './components/LazyComponents';
-import { useState, useEffect, useRef } from 'react';
-import { ChangeEvent } from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import React, { Suspense } from 'react';
 import { fetchLightningInvoice } from './lightningUtils';
 import type { LightningInvoice } from './lightningUtils';
 
 function MainPage() {
+  // Set page title and optimize initial render
+  useEffect(() => {
+    document.title = 'SøknadGPT: Lag Profesjonelle Søknadsbrev med AI på Sekunder';
+
+    // Performance monitoring
+    if ('performance' in window) {
+      setTimeout(() => {
+        const perfData = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+        if (perfData) {
+          console.log('[MainPage] Time to Interactive:', Math.round(perfData.loadEventEnd - perfData.requestStart), 'ms');
+          console.log('[MainPage] DOM Content Loaded:', Math.round(perfData.domContentLoadedEventEnd - perfData.requestStart), 'ms');
+        }
+      }, 0);
+    }
+  }, []);
   const [isPdfReady, setIsPdfReady] = useState<boolean>(false);
   const [jobToFetch, setJobToFetch] = useState<string>('');
   const [isCoverLetterUpdate, setIsCoverLetterUpdate] = useState<boolean>(false);
@@ -73,7 +101,7 @@ function MainPage() {
   const [isScraping, setIsScraping] = useState<boolean>(false);
   const [isProcessingFile, setIsProcessingFile] = useState<boolean>(false);
   const [coverLetterOptions, setCoverLetterOptions] = useState<CoverLetterOptionsData | null>(null);
-  const { data: user } = useAuth();
+  const { data: user, hasToken } = useSmartAuth();
 
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
@@ -366,6 +394,72 @@ function MainPage() {
 
   return (
     <>
+      {/* Navigation and Header Section */}
+      <Container maxW="container.lg" px={0} mb={6}>
+        <VStack spacing={4}>
+          <Heading as="h1" size="xl" textAlign="center" color="purple.600">
+            Søknad GPT: Lag Profesjonelle Søknadsbrev med AI
+          </Heading>
+          <Text fontSize="lg" textAlign="center" color="text-contrast-md">
+            Få hjelp til å skrive profesjonelle og skreddersydde søknader på et blunk. Prøv helt gratis!
+          </Text>
+
+          {/* Navigation Links */}
+          <HStack spacing={6} flexWrap="wrap" justify="center">
+            <WaspLink to="/jobs" style={{ textDecoration: 'none' }}>
+              <Button
+                variant="ghost"
+                colorScheme="purple"
+                size="sm"
+                as="span"
+              >
+                Mine jobber
+              </Button>
+            </WaspLink>
+            <WaspLink to="/profile" style={{ textDecoration: 'none' }}>
+              <Button
+                variant="ghost"
+                colorScheme="purple"
+                size="sm"
+                as="span"
+              >
+                Profil
+              </Button>
+            </WaspLink>
+            <WaspLink to="/tos" style={{ textDecoration: 'none' }}>
+              <Button
+                variant="ghost"
+                colorScheme="purple"
+                size="sm"
+                as="span"
+              >
+                Vilkår
+              </Button>
+            </WaspLink>
+            <WaspLink to="/privacy" style={{ textDecoration: 'none' }}>
+              <Button
+                variant="ghost"
+                colorScheme="purple"
+                size="sm"
+                as="span"
+              >
+                Personvern
+              </Button>
+            </WaspLink>
+            <Link
+              href="https://www.finn.no/job"
+              isExternal
+              color="purple.600"
+              fontSize="sm"
+              fontWeight="medium"
+              _hover={{ textDecoration: "underline" }}
+            >
+              Søk jobber på Finn.no ↗
+            </Link>
+          </HStack>
+        </VStack>
+      </Container>
+
       {/* Cover letter count display removed */}
       <BorderBox>
         <form
@@ -430,7 +524,7 @@ function MainPage() {
                     },
                   })}
                   onFocus={(e: any) => {
-                    if (user === null) {
+                    if (!hasToken && user === null) {
                       loginOnOpen();
                       e.target.blur();
                     }
@@ -668,7 +762,7 @@ function MainPage() {
                   mt={3}
                   size='sm'
                   isLoading={isSubmitting}
-                  disabled={user === null}
+                  disabled={!hasToken && user === null}
                   type='submit'
                   color="white"
                   bg="purple.500"
@@ -694,253 +788,34 @@ function MainPage() {
         </form>
       </BorderBox>
 
-      {/* Value Proposition Section */}
-      <Container maxW="container.lg" mt={12} px={0}>
-        <VStack spacing={8}>
-
-          {/* Main Value Proposition */}
-          <Box textAlign="center" maxW="800px">
-            <Heading size="lg" mb={4} color="purple.600">
-              Prøv 3 helt gratis
-            </Heading>
-
-            <Heading size="lg" mb={4} color="purple.600">
-              Det beste pengene kan kjøpe - til en billig pris
-            </Heading>
-            <Text fontSize="lg" color="text-contrast-md" lineHeight={1.8}>
-              Bruker GPT-4o, den beste modellen, for kun 49kr for 50 søknadsbrev, og leverer på sekunder i stedet for dager.
-            </Text>
-          </Box>
-
-          {/* Key Benefits Grid */}
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6} w="full">
-            <VStack
-              p={6}
-              bg="bg-contrast-xs"
-              borderRadius="lg"
-              border="1px solid"
-              borderColor="border-contrast-sm"
-              _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
-              transition="all 0.3s"
+      {/* Lazy-loaded below-the-fold content */}
+      <Suspense fallback={
+        <Box
+          maxW="container.lg"
+          mx="auto"
+          mt={12}
+          px={4}
+          textAlign="center"
+        >
+          <VStack spacing={4}>
+            <Box
+              w="40px"
+              h="40px"
+              borderRadius="50%"
+              bg="purple.100"
+              mx="auto"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
             >
-              <Icon as={LightningIcon} w={8} h={8} color="purple.500" />
-              <Text fontWeight="bold" fontSize="md">Sekunder</Text>
-              <Text fontSize="sm" color="text-contrast-md" textAlign="center">
-                Levering av søknadsbrev på sekunder – ikke dager
-              </Text>
-            </VStack>
-
-            <VStack
-              p={6}
-              bg="bg-contrast-xs"
-              borderRadius="lg"
-              border="1px solid"
-              borderColor="border-contrast-sm"
-              _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
-              transition="all 0.3s"
-            >
-              <Icon as={StarIcon} w={8} h={8} color="purple.500" />
-              <Text fontWeight="bold" fontSize="md">Premium</Text>
-              <Text fontSize="sm" color="text-contrast-md" textAlign="center">
-                Beste AI-modell GPT-4o for alle
-              </Text>
-            </VStack>
-
-            <VStack
-              p={6}
-              bg="bg-contrast-xs"
-              borderRadius="lg"
-              border="1px solid"
-              borderColor="border-contrast-sm"
-              _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
-              transition="all 0.3s"
-            >
-              <Icon as={CheckCircleIcon} w={8} h={8} color="purple.500" />
-              <Text fontWeight="bold" fontSize="md">Under 1 krone</Text>
-              <Text fontSize="sm" color="text-contrast-md" textAlign="center">
-                Ingen skjulte kostnader
-              </Text>
-            </VStack>
-
-            <VStack
-              p={6}
-              bg="bg-contrast-xs"
-              borderRadius="lg"
-              border="1px solid"
-              borderColor="border-contrast-sm"
-              _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
-              transition="all 0.3s"
-            >
-              <Icon as={TimeIcon} w={8} h={8} color="purple.500" />
-              <Text fontWeight="bold" fontSize="md">Finn.no integrasjon</Text>
-              <Text fontSize="sm" color="text-contrast-md" textAlign="center">
-                Automatisk utfylling av jobbinfo
-              </Text>
-            </VStack>
-          </SimpleGrid>
-
-          <Divider />
-
-          {/* Best Practices Section */}
-          <Box maxW="800px" textAlign="left">
-            <Heading size="md" mb={4} color="purple.600">
-              Slik får du det beste resultat
-            </Heading>
-            <VStack spacing={3} alignItems="flex-start">
-              <HStack>
-                <Icon as={CheckCircleIcon} color="green.500" />
-                <Text fontSize="sm">
-                  <strong>Kjør 3-5 ganger:</strong> Hver generering er unik - velg den beste varianten
-                </Text>
-              </HStack>
-              <HStack>
-                <Icon as={CheckCircleIcon} color="green.500" />
-                <Text fontSize="sm">
-                  <strong>Juster kreativitet:</strong> Prøv forskjellige nivåer for å finne din stil
-                </Text>
-              </HStack>
-              <HStack>
-                <Icon as={CheckCircleIcon} color="green.500" />
-                <Text fontSize="sm">
-                  <strong>Legg til din touch:</strong> Personaliser med egne detaljer og erfaringer
-                </Text>
-              </HStack>
-              <HStack>
-                <Icon as={CheckCircleIcon} color="green.500" />
-                <Text fontSize="sm">
-                  <strong>Bruk som base:</strong> La AI gjøre grunnarbeidet, så finjuster selv
-                </Text>
-              </HStack>
-            </VStack>
-          </Box>
-
-          <Divider />
-
-          {/* Pricing Comparison */}
-          <Box maxW="100vw" mx="auto" my={8}>
-            <Heading size="md" mb={4} color="purple.600" textAlign="center">
-              Pris
-            </Heading>
-            <Flex justifyContent="center" alignItems="center" w="100%">
-              <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6} maxW="800px" width="100%" p={{ base: 2, md: 6 }} alignItems="stretch">
-                {/* Empty column for centering */}
-                <Box display={{ base: 'none', md: 'block' }} />
-                {/* Column for "Our Service" */}
-                <VStack
-                  p={6}
-                  borderRadius="xl"
-                  border="2px solid"
-                  borderColor="purple.400"
-                  shadow="xl"
-                  spacing={4}
-                  transform="scale(1.05)"
-                >
-                  <Heading size="md" color="purple.600">Én betaling</Heading>
-                  <Divider />
-                  <VStack>
-                    <Text fontWeight="bold" fontSize="lg">49 kr</Text>
-                    <Text fontSize="sm" color="text-contrast-md" textAlign="center">for 50 søknadsbrev</Text>
-                  </VStack>
-                  <VStack>
-                    <Text fontWeight="bold" fontSize="lg">2-4 sekunder</Text>
-                    <Text fontSize="sm" color="text-contrast-md" textAlign="center">Leveringstid</Text>
-                  </VStack>
-                  <VStack>
-                    <Text fontWeight="bold" fontSize="lg">GPT-4o</Text>
-                    <Text fontSize="sm" color="text-contrast-md" textAlign="center">Høyeste AI-kvalitet</Text>
-                  </VStack>
-                </VStack>
-              </SimpleGrid>
-            </Flex>
-          </Box>
-          <Divider />
-
-          {/* AI Detection & Personalization Section */}
-          <Box maxW="800px" textAlign="center">
-            <Heading size="md" mb={6} color="purple.600">
-              100% menneskelig skriving + full personalisering
-            </Heading>
-
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8} w="full">
-              {/* Human Score Visual */}
-              <VStack
-                p={6}
-                bg="bg-contrast-xs"
-                borderRadius="lg"
-                border="1px solid"
-                borderColor="border-contrast-sm"
-                _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
-                transition="all 0.3s"
-              >
-                {/* Percentage Circle */}
-                <Box
-                  w="80px"
-                  h="80px"
-                  borderRadius="50%"
-                  border="6px solid"
-                  borderColor="green.400"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  bg="green.50"
-                  position="relative"
-                  mb={3}
-                >
-                  <Text fontWeight="bold" fontSize="lg" color="green.800">100%</Text>
-                </Box>
-                <Text fontWeight="bold" fontSize="md">Menneskelig skriving</Text>
-                <Text fontSize="sm" color="text-contrast-md" textAlign="center">
-                  Passerer alle AI-deteksjonsverktøy
-                </Text>
-              </VStack>
-
-              {/* Personalization Visual */}
-              <VStack
-                p={6}
-                bg="bg-contrast-xs"
-                borderRadius="lg"
-                border="1px solid"
-                borderColor="border-contrast-sm"
-                _hover={{ bg: "bg-contrast-sm", transform: "translateY(-2px)" }}
-                transition="all 0.3s"
-              >
-                {/* Customization Icon */}
-                <Box
-                  w="80px"
-                  h="80px"
-                  borderRadius="50%"
-                  border="6px solid"
-                  borderColor="purple.400"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  bg="purple.50"
-                  position="relative"
-                  mb={3}
-                >
-                  <Icon as={StarIcon} w={8} h={8} color="purple.500" />
-                </Box>
-                <Text fontWeight="bold" fontSize="md">Fullt personaliserbar</Text>
-                <Text fontSize="sm" color="text-contrast-md" textAlign="center">
-                  Tone, stil og innhold tilpasset deg
-                </Text>
-              </VStack>
-            </SimpleGrid>
-          </Box>
-
-          <Divider />
-
-
-          {/* Closing statement and future promise */}
-          <Box textAlign="center" maxW="800px">
-            <Heading size="md" mb={3} color="purple.600">Ærlig og billig</Heading>
-            <Text color="text-contrast-md" fontSize="md">
-              Ingen skjulte kostnader, ingen kompliserte abonnementer. Bare et kraftig verktøy til en rettferdig pris.
-            </Text>
-          </Box>
-
-        </VStack>
-      </Container>
+              <Text fontSize="sm" color="purple.600">...</Text>
+            </Box>
+            <Text fontSize="sm" color="gray.500">Laster innhold...</Text>
+          </VStack>
+        </Box>
+      }>
+        <BelowTheFoldContent />
+      </Suspense>
 
       <LeaveATip
         isOpen={isOpen}

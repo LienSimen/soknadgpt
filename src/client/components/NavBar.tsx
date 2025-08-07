@@ -1,4 +1,4 @@
-import { useAuth } from "wasp/client/auth";
+import { useSmartAuth } from "../utils/optimizedAuth";
 import {
   HStack,
   Heading,
@@ -21,7 +21,7 @@ import { useRef } from 'react';
 import ThemeSwitch from './ThemeSwitch';
 
 export default function NavBar() {
-  const { data: user } = useAuth();
+  const { data: user } = useSmartAuth();
 
   const gptTextColor = useColorModeValue('purple.500', 'white');
   const borderColor = useColorModeValue('purple.300', 'purple.100');
@@ -139,18 +139,18 @@ function MobileButton({
       <MenuList bgColor='gray.900'>
         {isUser ? (
           <>
-            <Link as={RouterLink} to={`/jobs`}>
-                <MenuItem>Stillingsoversikt</MenuItem>
-            </Link>
-            <Link as={RouterLink} to={`/profile`}>
-              <MenuItem>Konto</MenuItem>
-            </Link>
+            <MenuItem as={RouterLink} to={`/jobs`}>
+              Stillingsoversikt
+            </MenuItem>
+            <MenuItem as={RouterLink} to={`/profile`}>
+              Konto
+            </MenuItem>
           </>
         ) : (
           <>
-            <Link as={RouterLink} to='/login'>
-              <MenuItem>Logg inn</MenuItem>
-            </Link>
+            <MenuItem as={RouterLink} to='/login'>
+              Logg inn
+            </MenuItem>
           </>
         )}
       </MenuList>
